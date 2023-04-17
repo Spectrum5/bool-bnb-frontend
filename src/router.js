@@ -1,15 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router';
-
-import ApartmentsIndex from './pages/ApartmentsIndex.vue';
+// import views
+import HomeView from './views/public/HomeView.vue';
+import ApartmentView from './views/ApartmentView.vue';
 
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
-            path: '/apartments-index',
-            name: 'apartments-index',
-            component: ApartmentsIndex
-        }
+            path: '/',
+            name: 'home',
+            component: HomeView
+        },{
+            path: '/apartments/:slug',
+            name: 'apartment',
+            component: ApartmentView
+        },
     ]
 });
 
