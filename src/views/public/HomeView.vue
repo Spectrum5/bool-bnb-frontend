@@ -54,7 +54,7 @@ export default {
     <div class="container">
 
         <div class="card" v-for="apartment in apartments" @click="$router.push(`/apartments/${apartment.slug}`)">
-            <h2>Titolo: {{ apartment.title }}</H2>
+            <h2>Titolo: {{ apartment.title }}</h2>
             <p>Descrizione: {{ apartment.description }}</p>
         </div>
 
