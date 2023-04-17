@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from './views/public/HomeView.vue';
 import ApartmentView from './views/public/ApartmentView.vue';
 import HomeSearch from './views/public/HomeSearch.vue';
+import Sponsor from './views/public/Sponsor.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -11,7 +12,8 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: HomeView
-        },{
+        },
+        {
             path: '/apartments/:slug',
             name: 'apartment',
             component: ApartmentView
@@ -20,6 +22,11 @@ const router = createRouter({
             path: '/apartments/search/:title',
             name: 'apartment-search',
             component: HomeSearch
+        },
+        {
+            path: '/sponsors',
+            name: 'sponsor',
+            component: Sponsor
         },
     ]
 });
