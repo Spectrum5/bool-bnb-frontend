@@ -3,5 +3,7 @@ import { createApp } from 'vue'
 // Non è obbligatorio, ma potremmo creare inutili conflitti
 // import './style.css'
 import App from './App.vue'
+// Import router
+import { router } from './router';
 
-createApp(App).mount('#app');
+createApp(App).use(router).mount('#app');
