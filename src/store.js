@@ -7,5 +7,5 @@ import axios from 'axios';
 
 
 export const store = reactive({
-    test: 'store.js funziona'
+    test: 'store.js funziona!'
 })
