@@ -2,15 +2,14 @@
 
 // Utilities
 import axios from 'axios';
-// import {router} from '../../router';
+import { router } from '../../router';
 
 export default {
-    name: 'HomeView',
+    name: 'HomeSearch',
     data() {
         return {
-            // router,
+            router,
             currentPage: 1,
-            searchTitle: '',
             apartments: []
         }
     },
@@ -18,27 +17,29 @@ export default {
         getApartments() {
             axios.get('http://localhost:8000/api/apartments', {
                 params: {
-                    page: this.currentPage
+                    title: this.$route.params.title,
+                    page: this.currentPage,
+                    adre
                 }
             })
                 .then((response) => {
-                    console.log('Index Appartamenti', response.data);
-                    this.apartments = this.apartments.concat(response.data.apartments.data);
+                    console.log('Index Appartamenti Cercati', response.data);
+                    this.apartments = this.apartments.concat(response.data.apartments);
                 })
                 .catch((response) => {
-                    console.log('Errore Index Appartamenti', response.data);
+                    console.log('Errore Index Appartamenti Cercati', response.data);
                 })
         },
         loadMore() {
             this.currentPage++;
             this.getApartments();
-        },
-        handleSearch() {
-            this.$router.push(`/apartments/search/${this.searchTitle}`);
         }
     },
     mounted() {
         this.getApartments();
+        console.log('searchTitle', this.$route.params.title);
+    },
+    computed: {
     }
 }
 </script>
@@ -47,7 +48,7 @@ export default {
 
     <div class="container">
         <label for="searchTitle">Titolo</label>
-        <input type="text" v-model="searchTitle" id="searchTitle" name="searchTitle" placeholder="Inserisci il titolo...">
+        <input type="text" id="searchTitle" name="searchTitle" placeholder="Inserisci il titolo...">
         <button @click="handleSearch()">Cerca</button>
     </div>
 
@@ -65,7 +66,6 @@ export default {
 <style lang="scss" scoped>
 h2 {
     font-size: 1rem;
-
 }
 
 .container {
