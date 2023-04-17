@@ -1,20 +1,59 @@
-/*
-    I parziali (come reset, variables, mixins ecc.) li possiamo:
-    - o importare qui uno ad uno (per poi importare nei vari componenti solo main.scss)
-    - o importare singolarmente nei vari componenti
-    - o importarli globalmente usando vite.config.js (vedi il file)
+// Import variables
+@use './partials/variables.scss';
 
-    Le importazioni si possono fare:
-    - con @import -> importa il file e lo rende visibile a tutti gli altri file importati
-    - con @use -> importa il file e NON lo rende visibile a tutti gli altri file importati
-        - se si scegli di usare @use, ricordarsi che questa direttiva crea un namespace per ogni file importato, quindi o scriviamo:
-            - @use 'persorso/al/file.scss'; e poi per accedere alle variabili/altro all'interno del file usiamo il suo namespace (ad es. se il file è variables.scss e all'interno c'è la variabile $primary-color, per utilizzare tale variabile dobbiamo scrivere variables.$primary-color)
-            - @use 'percorso/al/file.scss' as *; per utilizzare il namespace globale () (ad es. se il file è variables.scss e all'interno c'è la variabile $primary-color, per utilizzare tale variabile dobbiamo scrivere semplicemente $primary-color)
+// import di bootstrap
+@import 'bootstrap/scss/bootstrap.scss';
 
-    Ricordarsi che se si vogliono mischiare @import e @use, le direttive @use vanno scritte PRIMA di qualunque altra cosa (cioè in alto nel file)
 
-*/
+// Reset rules
+* {
+    vertical-align: baseline;
+    font-weight: inherit;
+    font-family: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    border: 0 none;
+    outline: 0;
+    padding: 0;
+    margin: 0;
+}
 
-ul, ol {
-    padding-left: 40px;
+a {
+    text-decoration: none;
+}
+
+nav ul {
+    list-style-type: none;
+}
+
+// Style rules
+
+h2,
+h3,
+h4,
+h5 {
+    font-weight: 500;
+}
+
+p,
+span {
+    text-align: left;
+}
+
+// Button
+.button {
+    border-radius: 1rem;
+    padding: 0.8rem 1.4rem;
+    color: $secondary-color;
+    font-weight: 500;
+    font-size: 1.1rem;
+    background-color: $secondary-background;
+}
+
+
+// Utilities
+.title-bnb {
+    // mark title with primary color
+    color: $primary-color;
+    font-weight: 700;
 }
