@@ -1,5 +1,7 @@
 <script>
 import { store } from './store';
+import Card from './components/Card.vue';
+
 export default {
     name: 'App',
     data() {
@@ -8,6 +10,7 @@ export default {
         }
     },
     components: {
+        Card,
     }
 }
 </script>
@@ -23,7 +26,9 @@ export default {
         </button>
         <div>{{ store.test }}</div>
         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo ut quae voluptate nihil officiis incidunt iure
-            neque inventore sequi omnis ipsum obcaecati totam, perspiciatis necessitatibus corrupti.</p>
+            neque inventore sequi omnis ipsum obcaecati totam, perspiciatis necessitatibus corrupti.
+        </p>
+        <Card/>
     </div>
 </template>
 
