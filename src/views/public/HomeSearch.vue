@@ -19,7 +19,6 @@ export default {
                 params: {
                     title: this.$route.params.title,
                     page: this.currentPage,
-                    adre
                 }
             })
                 .then((response) => {
