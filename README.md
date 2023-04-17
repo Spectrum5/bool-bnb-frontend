@@ -58,3 +58,19 @@ Passi successivi:
 2. Vado alla sezione Getting started/Introduction/First steps
 3. Vedo come installare via NPM [qual è il comando e qual è il pacchetto da installare (o i pacchetti, come per Bootstrap che vuole popper)]
 4. Vedo se c'è altro da configurare (come per Font Awesome con Vue)
+
+<!-- ------------------------------------------------ -->
+
+ICONA PISCINA: <font-awesome-icon icon="fa-solid fa-water-ladder" />
+ICONA WIFI: <font-awesome-icon icon="fa-solid fa-wifi" />
+ICONA CAR: <font-awesome-icon icon="fa-solid fa-car-side" />
+ICONA ASCIUGACAPELLI: 
+ICONA CUCINA: <font-awesome-icon icon="fa-solid, fa-utensils" />
+ICONA TV: <font-awesome-icon icon="fa-solid, fa-tv" />
+ICONA ARIA COND: <font-awesome-icon icon="fa-solid fa-snowflake" />
+ICONA SAUNA: 
+ICONA PORTINERIA: <font-awesome-icon icon="fa-solid fa-user-lock" />
+ICONA PULIZIE: <font-awesome-icon icon="fa-solid fa-broom" />
+ICONA LAVATRICE: <font-awesome-icon icon="fa-solid fa-soap" />
+ICONA ANIMALI: <font-awesome-icon icon="fa-solid fa-paw" />
+ICONA CASSAFORTE: <font-awesome-icon icon="fa-solid fa-vault" />
