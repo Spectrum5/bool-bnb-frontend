@@ -1,41 +1,38 @@
-<!--
-    Per passare da Composition API a Options API dobbiamo:
-    1. Rimuovere l'attributo setup da <script>
-    2. Aggiungere l'export default {}
-    3. Aggiungere la proprietà name nell'oggetto esportato che avrà come valore il nome del componente (opzionale, ma buona pratica)
--->
 <script>
 import { store } from './store';
-
-// Passi per utilizzare sottocomponenti
-// 1. Importazione
+import Card from './components/Card.vue';
 
 export default {
-    name: "App",
+    name: 'App',
     data() {
         return {
             store
         }
     },
-    // 2. Registrazione
     components: {
-        
-    },
-    methods: {
-        
+        Card,
     }
-};
+}
 </script>
 
 <template>
-    <!-- 3. Utilizzo (nuovo tag HTML self-closing) -->
-
+    <div class="container text-center">
+        <h1>Prova h1</h1>
+        <h2>Prova h2 <span class="title-bnb">testo evidenziato</span>
+        </h2>
+        <h3>prova testo 3</h3>
+        <button class="button">
+            Vedi tutti
+        </button>
+        <div>{{ store.test }}</div>
+        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo ut quae voluptate nihil officiis incidunt iure
+            neque inventore sequi omnis ipsum obcaecati totam, perspiciatis necessitatibus corrupti.
+        </p>
+        <Card/>
+    </div>
 </template>
 
-<!-- Nel componente App.vue, rimuoviamo anche l'attributo scoped su <style> -->
-<!-- E se voglio utilizzare sass, aggiungo l'attributo lang="scss" -->
 <style lang="scss">
-// Qui possiamo anche importare dei file .scss (attenzione al percorso)
 @import './styles/main';
 
 </style>
