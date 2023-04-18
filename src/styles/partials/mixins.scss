@@ -1,3 +1,5 @@
+@use '../partials/variables.scss' as *;
+
 @mixin flexSpaceBtwn ($gap: 0) {
     display: flex;
     justify-content: space-between;
@@ -13,7 +15,7 @@
 }
 
 @mixin largeContainer {
-    max-width: 1860px;
+    max-width: 1760px;
     margin: 0 auto;
 }
 

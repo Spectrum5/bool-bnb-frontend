@@ -34,6 +34,7 @@ export default {
 
     >img {
         height: 100%;
+        display: block;
     }
 }
 
