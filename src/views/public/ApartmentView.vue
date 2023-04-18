@@ -97,16 +97,16 @@ export default {
                         <!-- Se il numero di camere e il numero di letti è pari, avrò un letto matrimoniale per ogni stanza -->
                         <div v-if="apartment.beds_number % 2 == 0 && apartment.rooms_number % 2 == 0">
                             <span v-for="i in (apartment.beds_number / 2)">
-                                <i class="fa-solid fa-bed"></i>
-                                <!-- <font-awesome-icon icon="fa-solid fa-bed" /> -->
+                                <!-- <i class="fa-solid fa-bed"></i> -->
+                                <font-awesome-icon icon="fa-solid fa-bed" />
                             </span>
                             <p>1 letto matrimoniale a due piazze</p>
                         </div>
                         <div v-else>
                             <div>
                                 <span v-for=" i in (Math.floor(apartment.beds_number / apartment.rooms_number))">
-                                        <i class="fa-solid fa-bed"></i>
-                                        <!-- <font-awesome-icon icon="fa-solid fa-bed" /> -->
+                                        <!-- <i class="fa-solid fa-bed"></i> -->
+                                        <font-awesome-icon icon="fa-solid fa-bed" />
                                 </span>
                                 <p v-if="i == apartment.rooms_number">
                                     {{ Math.floor(apartment.beds_number / apartment.rooms_number) - 1 }} letto matrimoniale + 1 letto singolo
