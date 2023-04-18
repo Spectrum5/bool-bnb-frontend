@@ -35,11 +35,6 @@ h5 {
     font-weight: 500;
 }
 
-p,
-span {
-    text-align: left;
-}
-
 // Button
 .button {
     border-radius: 1rem;
@@ -50,10 +45,10 @@ span {
     background-color: $secondary-background;
 }
 
-
-// Utilities
-.title-bnb {
-    // mark title with primary color
-    color: $primary-color;
-    font-weight: 700;
+img{
+    display: inline-block;
+    height: 450px;
+    width: 650px;
+    border-radius: 8px;
+    object-position: center;
 }

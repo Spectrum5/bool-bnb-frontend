@@ -77,59 +77,100 @@ export default {
 <template>
     <div @click="$router.push('/')">torna alla home</div>
 
+    <!-- CONTAINER PRINCIPALE -->
     <div class="container">
-        <h2>{{ apartment.title }}</h2>
-        <h6>Indirizzo: 
-            <span class="text-decoration-underline">
-                <a class="text-dark" href="maps">{{ apartment.address }}</a>
-            </span>
-        </h6>
-
+        <!-- TITOLO E INDIRIZZO -->
+        <section>
+            <h3 class="mb-2">{{ apartment.title }}</h3>
+            <h6 class="mb-4">Dove si trova: 
+                <strong>
+                    <span class="text-decoration-underline">
+                        <a class="text-dark" href="#maps">{{ apartment.address }}</a>
+                    </span>
+                </strong>
+            </h6>
+        </section>
+        <!-- SEZIONE IMMAGINI APARTMENT -->
         <div>
             <img src="https://thumbs.dreamstime.com/b/camera-classica-con-il-giardino-di-fiore-751996.jpg" alt="">
         </div>
-
-        <div class="my-secondary-container">
+        <!-- CONTAINER PER INFO APARTMENT + MESSAGGIO -->
+        <div class="my-secondary-container mt-4">
             <div>
-                <h3>Host: {{ apartment.user_id }} (nome dell'Host)</h3>
-                <p class="amenities mb-3">
-                    <span>{{ apartment.rooms_number }} camere da letto</span>
-                    -
-                    <span>{{ apartment.beds_number }} letti</span>
-                    -
-                    <span>{{ apartment.bathrooms_number }} bagni</span>
-                </p>
-                <hr>
-                <div class="my-3">
-                    <h4>Descrizione</h4>
-                    <p>
-                        {{ apartment.description }}
+                <!-- INFO APARTMENT STANZE, LETTI, BAGNI -->
+                <section class="my-3">
+                    <h4 id="host-name" class="text-capitalize mb-1">Host: {{ apartment.user.first_name }} {{ apartment.user.last_name }}</h4>
+                    <p class="amenities mb-3">
+                        <span>{{ apartment.rooms_number }} camere da letto</span>
+                        &#183;
+                        <span>{{ apartment.beds_number }} letti</span>
+                        &#183;
+                        <span>{{ apartment.bathrooms_number }} bagni</span>
                     </p>
-                </div>
+                </section>
                 <hr>
-                <div class="my-3">
-                    <h4>Cosa troverai</h4>
-                    <div class="services" v-for="service in apartment.services">
-                        <span v-html="getIcon(service.name)"></span>
-                        {{ service.name }}
+                <!-- DESCRIZIONE APARTMENT -->
+                <section class="my-3">
+                    <div class="description">
+                        <h4 class="mb-1">Descrizione</h4>
+                        <p>
+                            {{ apartment.description }}
+                        </p>
                     </div>
-                </div>
+                </section>
+                <hr>
+                <!-- SERVIZI APARTMENT -->
+                <section class="my-3">
+                    <div>
+                        <h4 class="mb-1">Cosa troverai</h4>
+                        <div>
+                            <div class="services" v-for="service in apartment.services">
+                                <span v-html="getIcon(service.name)"></span>
+                                {{ service.name }}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <hr>
+                <!-- SEZIONE MAPPA -->
+                <section class="my-3">
+                    <h4 class="mb-1">Dove ti troverai</h4>
+                    <div id="maps">
+                        <h1>MAPPA</h1>
+                    </div>
+                </section>
             </div>
 
+            <!-- SEZIONE CONTATTA L'HOST -->
             <div class="contact">
                 <h3 class="text-center mb-3">Contatta l'host</h3>
-                <h5 class="mb-3">€ {{ apartment.price }} / per notte</h5>
-                    <form>
+                <h5 class="mb-3">
+                    <strong>
+                        € {{ apartment.price }}
+                    </strong>
+                     / per notte
+                </h5>
+                <form>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <label for="email" class="form-label mb-1">Indirizzo email</label>
+                        <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        placeholder="Inserisci la tua mail">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleFormControlTextarea1" class="form-label">Scrivi il tuo messaggio</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        <label for="message" class="form-label mb-1">Scrivi il tuo messaggio</label>
+                        <textarea
+                        class="form-control"
+                        name="message"
+                        id="message" 
+                        rows="6"
+                        placeholder="Scrivi il tuo messaggio"></textarea>
                     </div>
                     <button type="submit" class="btn my-btn">Invia richiesta</button>
-                    </form>
+                </form>
             </div>
         </div>
 
@@ -140,27 +181,41 @@ export default {
 <style lang="scss" scoped>
 
     *{
-        font-family: 'Mukta', sans-serif;
+        // font-family: 'Mukta', sans-serif;
+        font-family: 'Manrope', sans-serif;
+    }
+
+    h3, h4{
+        font-weight: 600;
     }
     .container {
         margin: auto;
         margin-top: 40px;
-        max-width: 80%;
+        max-width: 75%;
         // border: 1px dashed black;
     }
 
     .my-secondary-container {
         display: flex;
         gap: 40px;
-        margin-top: 50px;
-    }
+        justify-content: space-between;
+        // margin-top: 40px;
 
-    .contact{
-        min-width: 40%;
-        margin-left: auto;
-        border: 1px solid;
-        border-radius: 10px;
-        padding: 1rem;
+        #host-name{
+            font-weight: 700;
+        }
+
+        .description{
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .maps{
+            border: 1px solid;
+            height: 450px;
+            width: 600px;
+            background-color: antiquewhite;
+        }
     }
 
     .services{
@@ -169,13 +224,60 @@ export default {
         padding-inline: 7px;
         margin-right: 7px;
         display: inline-block;
-        margin-bottom: 5px;
+        margin-bottom: 7px;
+        vertical-align: middle;
+        line-height: 25px;
         // text-transform: capitalize;
+        span{
+            vertical-align: middle;
+            line-height: 25px;
+            font-size: 0.8rem;
+        }
     }
 
-    .my-btn{
-        padding: 4px 10px;
-        background-color: #ff4a86;
+    #maps{
+        height: 450px;
+        width: 600px;
+        background-color: bisque;
+        border: 1px dashed;
+    }
+    .contact{
+        min-width: 40%;
+        margin-left: auto;
+        border: 1px solid;
+        border-radius: 10px;
+        padding: 1rem;
+        align-self: flex-start;
+        position: sticky;
+        top: 70px;
+        z-index: 1;
+
+        input{
+            border: 1px solid black;
+            line-height: 30px;
+            border-radius: 10px;
+            padding: 3px 0 3px 3px;
+        }
+
+        textarea{
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 3px 0 3px 5px;
+        }
+        .my-btn{
+            display: block;
+            width: 100%;
+            color: white;
+            font-weight: 700;
+            padding: 7px 0px;
+            border-radius: 10px;
+            background-color: #ff4a86;
+        }
+
+        textarea::placeholder,
+        input::placeholder{
+            font-size: 0.8rem;
+        }
     }
 </style>
 
