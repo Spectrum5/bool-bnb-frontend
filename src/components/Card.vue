@@ -44,19 +44,5 @@ export default {
 
 <style lang="scss">
 @import '../styles/partials/variables.scss';
-.test {
-    color: $secondary-color;
-}
-.bg-gray {
-    background-color: rgb(255, 208, 132);
-}
-.active {
-    display: block;
-}
-img {
-    max-width: 100%;
-    display: none;
-    box-shadow: 0 0 10px gray;
-}
 
 </style>

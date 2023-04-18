@@ -1,13 +1,18 @@
 <script>
 
+// Components
+import AppLogo from '../../components/AppLogo.vue';
+
 // Utilities
 import axios from 'axios';
 // import {router} from '../../router';
 
 
-
 export default {
     name: 'HomeView',
+    components: {
+        AppLogo
+    },
     data() {
         return {
             isOpen: false,
@@ -91,9 +96,7 @@ export default {
         <nav class="navbar"  >
             <div class="container-fluid" >
                 <!-- MENU LOGO -->
-               <div class="logo-container">
-                   <h2>Boolbnb</h2>
-               </div>
+               <AppLogo />
 
                 <!-- MENU HIDDEN 2°SEARCHBAR -->
                 <div class="menu-hidden" v-if="isOpen">
