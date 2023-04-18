@@ -22,9 +22,13 @@ import { faUserLock } from '@fortawesome/free-solid-svg-icons'
 import {  faBroom } from '@fortawesome/free-solid-svg-icons'
 import { faSoap} from '@fortawesome/free-solid-svg-icons'
 import { faPaw } from '@fortawesome/free-solid-svg-icons'
-import {  faVault } from '@fortawesome/free-solid-svg-icons'
+import { faVault } from '@fortawesome/free-solid-svg-icons'
+import { faGun } from '@fortawesome/free-solid-svg-icons'
+import { faKitchenSet } from '@fortawesome/free-solid-svg-icons'
+import { faHotTubPerson } from '@fortawesome/free-solid-svg-icons'
+import { faBellConcierge } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faBars,faCircleUser,faMagnifyingGlass,faGlobe,faWaterLadder,faWifi,faCarSide,faUtensils,faTv,faSnowflake,faUserLock,faBroom,faSoap,faPaw,faVault)
+library.add(faBars,faCircleUser,faMagnifyingGlass,faGlobe,faWaterLadder,faWifi,faCarSide,faUtensils,faTv,faSnowflake,faUserLock,faBroom,faSoap,faPaw,faVault,faGun,faKitchenSet,faHotTubPerson,faBellConcierge)
 
 createApp(App)
   .use(router)
