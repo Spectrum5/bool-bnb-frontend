@@ -10,6 +10,8 @@ export default {
     name: 'HomeView',
     data() {
         return {
+            isOpen: false,
+            active: 0,
             // router,
             currentPage: 1,
             searchTitle: '',
@@ -25,10 +27,24 @@ export default {
                  { label: 'Affitta con Airbnb', link: '#' },
                  { icon: 'fa-solid fa-globe', link: '#' },
             ],
-               menuHamb: [
+            menuHamb: [
                    { icon: 'fa-solid fa-bars', link: '#' },
                    { icon: 'fa-solid fa-circle-user', link: '#' }
             ],
+
+            menuItem3: [
+                   { label: 'Dove', link: '#', active: 0 },
+                   { label: 'Check-in', link: '#' },
+                   { label: 'Check-out', link: '#' },
+                   { label: 'Chi', link: '#' },
+            ],
+              menuHidden: [
+                   { label: 'Soggioni', link: '#', active: 0 },
+                   { label: 'Esperienze', link: '#' },
+                   { label: 'Esperienze Online', link: '#' },
+            ],
+
+
 
             
         }
@@ -54,10 +70,17 @@ export default {
         },
         handleSearch() {
             this.$router.push(`/apartments/search/${this.searchTitle}`);
-        }
+        },
+         toggleSearchbar() {
+             this.isOpen = !this.isOpen;
+        },
+
+        
+    
     },
     mounted() {
         this.getApartments();
+        this.menuItem3[0].active= 0;
     }
 }
 </script>
@@ -65,27 +88,56 @@ export default {
 <template>
 
     <header>
-        <nav class="navbar">
-            <div class="container-fluid">
+        <nav class="navbar"  >
+            <div class="container-fluid" >
+                <!-- MENU LOGO -->
                <div class="logo-container">
-                  <img src="../../assets/img/logo.png" alt="logo">
-                  <h2>BollBnb</h2>
+                   <h2>Boolbnb</h2>
                </div>
 
-               <div class="searchbar">
-                  <ul class="group-list">
-                     <li class="item" v-for="(item, index) in menuItems" :key="index">
+                <!-- MENU HIDDEN 2°SEARCHBAR -->
+                <div class="menu-hidden" v-if="isOpen">
+                  <ul >
+                    <li class="item" v-for="(item, index) in menuHidden" :key="index"  :class="{ active: item.active === index}">
+                      {{ item.label }}
+                   </li>
+                  </ul>
+                </div>
+            
+               
+               <!-- MENU CENTRALE-->
+               <div class="searchbar first" :class="{ open: isOpen }">
+                 <!-- Prima searchbar -->
+                  <ul class="group-list" v-if="!isOpen">
+                     <li class="item" v-for="(item, index) in menuItems" :key="index" @click="toggleSearchbar">
                        <a :href="item.link">{{ item.label }}</a>
                        <i class="line"></i>
                      </li>
-                     <li class="item icon">
-                        <a href="#" >
+                     <li class="item icon" @click="toggleSearchbar">
+                        <a href="#">
                            <font-awesome-icon class="myicon" icon="fa-solid fa-magnifying-glass"/>
                         </a>
                      </li>
                   </ul>
+
+                    <!-- Seconda searchbar -->
+                   <ul class="group-list" v-else>
+                     <div class="overlay"></div>
+                     <li class="item" v-for="(item, index) in menuItem3" :key="index"  :class="{ active: item.active === index}"  @click="active = index">
+                       <a :href="item.link">{{ item.label }}</a>
+                       <i class="line" :class="{ active: item.active === index}" ></i>
+                     </li>
+
+                    <!-- ICONA SEARCH -->
+                     <li class="item big-search">
+                        <a href="#" >
+                           <font-awesome-icon class="myicon" icon="fa-solid fa-magnifying-glass"/>
+                        </a>
+                     </li>
+                   </ul>
                </div>
 
+               <!-- MENU A DESTRA -->
                <div class="right-menu">
                   <ul class="group-list">
                     <li class="item" v-for="item in menuItems2" :key="item.label">
@@ -95,7 +147,9 @@ export default {
                         <font-awesome-icon :icon="menuItems2[1].icon" class="globe"/>
                     </li>
                   </ul>
-                  <ul class="group-list">
+
+                 <!-- MENU DI LOGIN -->
+                  <ul class="group-list ">
                     <li class="item d-inline-block">
                        <font-awesome-icon :icon="menuHamb[0].icon" class="bars"/>
                     </li>
@@ -104,12 +158,13 @@ export default {
                     </li>
                   </ul>
                </div>
-
             </div>
            
             
         </nav>
     </header>
+   
+   
 <!-- 
     <div class="container">
         <label for="searchTitle">Titolo</label>
@@ -130,18 +185,53 @@ export default {
 <style lang="scss" scoped>
 
 header {
+    width: 100%;
     background-color: white;
-    padding: 18px 50px;
+    padding: 10px 50px;
     border-bottom: 1px solid #e2dbdb;
+    position: relative;
 
+     
     .navbar {
-      
         .container-fluid {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+          
+            .logo-container {
+                width: 200px;
+                height: 100px;
+                border: none;
+                 position: fixed;
+                top: 10px;
+                left: 10px;
 
-            .searchbar {
+               h2 {
+                color: #ff4a86;
+                padding: 10px 0px;
+               }
+            }
+
+            .menu-hidden {
+                 width: 100%;
+                 text-align: center;
+                 margin: 0 auto;
+                
+                .item {
+                     font-size: 16px;
+                     letter-spacing: 1.5px;
+                     margin-right: 30px;
+                     font-weight: lighter, bolder;
+                }
+
+                 .active {
+                    border-bottom: 1.5px solid black;
+                    padding: 8px 0px;
+                } 
+            }
+
+            .first {
+              margin: 0 auto;
+            }
+ 
+            .searchbar, .open, .menu-hidden {
                 .group-list, .group-list:last-child {
                     border: 1px solid  #B8B8B8;
                     padding: 12px 25px;
@@ -176,12 +266,80 @@ header {
                     
                 }
             }
+
+            .searchbar.open {
+              padding: 50px 0px;
+              margin-left: 220px;
+             
+             .overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 40%;
+                height: 100%;
+                background-color: white;
+                border: 1px solid white;
+                z-index: 999;
+                border-radius: 50px;
+             }
+                .group-list {
+                     width: 60%;
+                     padding: 18px 40px;
+                     position: absolute;
+                     top: 70%;
+                     left: 50%;
+                     transform: translate(-50%, -50%);
+                     display: flex;
+                     align-items: center;
+                     justify-content: space-between;
+                     background-color:#d8d7d7 ;
+                     border: none;
+
+                    .active {
+                       position: relative;
+                       z-index: 9999;
+                       
+                    }
+
+                    .line.active {
+                        background-color:transparent;
+                    }
+
+                    .item:nth-child(3) {
+                        margin-left: 200px;
+                    }
+                     .item {
+                        font-size: 16px;
+                        line-height: 50%;
+                     }
+
+                     .line {
+                        margin-left: 40px;
+                     }
+
+                     .big-search {
+                        background-color: #ff4a86;
+                        padding: 13px 13px;
+                        border-radius: 50px;
+                     
+                        
+                        .myicon {
+                            color: white;
+                            font-size: 20px;
+                        }
+                     }
+                    
+                }
+              }
  
             .right-menu {
                 width: calc(100% / 4);
                 display: flex;
                 justify-content: center;
                 align-items: baseline;
+                position: fixed;
+                top: 10px;
+                right: 10px;
 
                 .globe {
                     color: white;
@@ -194,8 +352,10 @@ header {
                 .group-list:last-child {
                     border: 1px solid  #e0dcdc;
                     border-radius: 50px;
-                    padding: 6px 4px;
+                   
                     margin-left: 18px;
+                    padding: 10px 0px;
+                   
 
                     .user {
                         font-size: 28px;
@@ -224,23 +384,5 @@ header {
     }
 }
 
-// h2 {
-//     font-size: 1rem;
-// }
 
-// .container {
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     flex-wrap: wrap;
-//     gap: 1.5rem;
-
-//     font-size: 0.8rem;
-// }
-
-// .card {
-//     width: 200px;
-//     padding: 1rem;
-//     border: 2px solid lightblue;
-// }
 </style>
