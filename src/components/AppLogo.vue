@@ -19,7 +19,7 @@ export default {
 <template>
     <router-link to="/">
         <div class="logoContainer">
-            <img src="../assets/logo.png" alt="boolbnb">
+            <img src="../assets/logo_full.png" alt="boolbnb">
         </div>
     </router-link>
 </template>
@@ -30,7 +30,6 @@ export default {
 
 .logoContainer {
     height: 48px;
-    background-color: red;
     cursor: pointer;
 
     >img {
