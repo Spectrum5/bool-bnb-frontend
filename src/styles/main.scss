@@ -1,8 +1,10 @@
 // Import variables
 @use './partials/variables.scss';
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200&display=swap');
+
 // import di bootstrap
-@import 'bootstrap/scss/bootstrap.scss';
+// @import 'bootstrap/scss/bootstrap.scss';
 
 
 // Reset rules
@@ -16,6 +18,10 @@
     outline: 0;
     padding: 0;
     margin: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
 }
 
 a {
@@ -32,28 +38,28 @@ h2,
 h3,
 h4,
 h5 {
-    font-weight: 500;
+    // font-weight: 500;
 }
 
 p,
 span {
-    text-align: left;
+    // text-align: left;
 }
 
 // Button
 .button {
-    border-radius: 1rem;
-    padding: 0.8rem 1.4rem;
-    color: $secondary-color;
-    font-weight: 500;
-    font-size: 1.1rem;
-    background-color: $secondary-background;
+    // border-radius: 1rem;
+    // padding: 0.8rem 1.4rem;
+    // color: $secondary-color;
+    // font-weight: 500;
+    // font-size: 1.1rem;
+    // background-color: $secondary-background;
 }
 
 
 // Utilities
 .title-bnb {
     // mark title with primary color
-    color: $primary-color;
-    font-weight: 700;
+    // color: $primary-color;
+    // font-weight: 700;
 }
