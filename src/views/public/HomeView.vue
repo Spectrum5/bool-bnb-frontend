@@ -197,19 +197,15 @@ header {
      
     .navbar {
         .container-fluid {
-          
+         
             .logo-container {
                 width: 200px;
                 height: 100px;
                 border: none;
-                 position: fixed;
+                position: fixed;
                 top: 10px;
                 left: 10px;
-
-               h2 {
-                color: #ff4a86;
-                padding: 10px 0px;
-               }
+              
             }
 
             .menu-hidden {
@@ -231,7 +227,10 @@ header {
             }
 
             .first {
-              margin: 0 auto;
+             margin: 0 auto;
+             transform: translate(-30%, -0%);
+
+               
             }
  
             .searchbar, .open, .menu-hidden {
@@ -242,6 +241,14 @@ header {
                     text-align: center;
                     -webkit-box-shadow: 1px 2px 9px -1px #B8B8B8; 
                     box-shadow: 1px 2px 9px -1px #B8B8B8;
+                    transition: box-shadow 0.5s ease-in-out;
+                    cursor: pointer;
+
+
+                     &:hover {
+                        -webkit-box-shadow: 1px 1px 6px 1px #B8B8B8; 
+                        box-shadow: 1px 1px 6px 1px #B8B8B8;
+                     }
 
                     .item {
                         margin-right: 2px;
@@ -350,16 +357,34 @@ header {
                     border-radius: 50px;
                     font-size: 16px;
                     vertical-align: middle;
-                 
+                }
+
+                .group-list:first-child {
+                    .item {
+                       transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out;
+
+                       &:hover {
+                             transform: scale(1.2);
+                            border: 1px solid #e6e2e2;
+                            padding: 8px 10px;
+                            border-radius: 50px;
+                            background: #e6e2e2;
+                       }
+                    }
                 }
                 .group-list:last-child {
                     border: 1px solid  #e0dcdc;
                     border-radius: 50px;
-                   
                     margin-left: 18px;
                     padding: 10px 0px;
-                   
+                    transition: transform 0.8s ease-in-out, box-shadow 0.5s ease-in-out;
 
+                    &:hover {
+                           -webkit-box-shadow: 1px 1px 6px 1px #B8B8B8; 
+                           box-shadow: 1px 1px 6px 1px #B8B8B8;
+                           transform: scale(1.2);
+                    }
+                   
                     .user {
                         font-size: 28px;
                         color: #6d6a6a;
