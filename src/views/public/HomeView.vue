@@ -82,7 +82,6 @@ export default {
 
         
     
-    },
     mounted() {
         this.getApartments();
         this.menuItem3[0].active= 0;
@@ -179,7 +178,7 @@ export default {
         <div class="card" v-for="apartment in apartments" @click="$router.push(`/apartments/${apartment.slug}`)">
             <h2>Titolo: {{ apartment.title }}</h2>
             <p>Descrizione: {{ apartment.description }}</p>
-        </div>
+        </div> -->
 
     </div>
     <button @click="loadMore()">LOAD MORE</button> -->
