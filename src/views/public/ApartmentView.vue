@@ -22,51 +22,7 @@ export default {
                 .catch((response) => {
                     console.log('Errore Index Appartamenti', response.data);
                 })
-        },
-
-        getIcon(name){
-
-            if(name == 'wi-fi'){
-                return `<i class="fa-solid fa-wifi"></i>`;
-            }
-            else if (name == 'piscina') {
-                return `<i class="fa-solid fa-water-ladder"></i>`;
-            }
-            else if (name == 'parcheggio') {
-                return `<i class="fa-solid fa-car-side"></i>`;
-            }
-            else if (name == 'asciuga capelli') {
-                return '';
-            }
-            else if (name == 'cucina') {
-                return `<i class="fa-solid fa-utensils"></i>`;
-            }
-            else if (name == 'tv') {
-                return '<i class="fa-solid fa-tv"></i>';
-            }
-            else if (name == 'aria condizionata') {
-                return `<i class="fa-solid fa-snowflake"></i>`;
-            }
-            else if (name == 'sauna') {
-                return '';
-            }
-            else if (name == 'portineria') {
-                return `<i class="fa-solid fa-user-lock"></i>`;
-            }
-            else if (name == 'servizio pulizie') {
-                return `<i class="fa-solid fa-broom"></i>`;
-            }
-            else if (name == 'lavatrice') {
-                return `<i class="fa-solid fa-soap"></i>`;
-            }
-            else if (name == 'amico degli animali') {
-                return `<i class="fa-solid fa-paw"></i>`;
-            }
-            else if (name == 'cassaforte') {
-                return `<i class="fa-solid fa-vault"></i>`;
-            }
-        
-        },       
+        },    
     },
     created() {
         this.getApartments();
@@ -125,7 +81,9 @@ export default {
                         <h4 class="mb-1">Cosa troverai</h4>
                         <div>
                             <div class="services" v-for="service in apartment.services">
-                                <span v-html="getIcon(service.name)"></span>
+                                <span>
+                                    <font-awesome-icon :icon="`fa-solid fa-${service.icon}`" />
+                                </span>
                                 {{ service.name }}
                             </div>
                         </div>
@@ -207,10 +165,6 @@ export default {
 
 <style lang="scss" scoped>
 
-    *:not(i){
-        // font-family: 'Mukta', sans-serif;
-        font-family: 'Manrope', sans-serif;
-    }
     img{
         display: inline-block;
         height: 450px;
