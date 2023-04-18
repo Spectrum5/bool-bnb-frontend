@@ -256,13 +256,13 @@ export default {
             border: 1px solid black;
             line-height: 30px;
             border-radius: 10px;
-            padding: 3px 0 3px 3px;
+            padding: 3px 0 3px 7px;
         }
 
         textarea{
             border: 1px solid black;
             border-radius: 10px;
-            padding: 3px 0 3px 5px;
+            padding: 3px 0 3px 7px;
         }
         .my-btn{
             display: block;
