@@ -54,10 +54,5 @@ export default {
 .active {
     display: block;
 }
-img {
-    max-width: 100%;
-    display: none;
-    box-shadow: 0 0 10px gray;
-}
 
 </style>
