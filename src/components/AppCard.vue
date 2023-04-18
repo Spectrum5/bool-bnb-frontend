@@ -53,15 +53,15 @@ export default {
 
 
 <template>
-    <div class="card" @click="goShow()">
+    <div class="card" tabindex="0">
 
         <button class="cardFavorites" @click.stop="addToFavorites()" ref="btn"></button>
 
         <div class="imageContainer">
-            <AppSlider :images="this.images" v-if="this.images"/>
+            <AppSlider :images="this.images" v-if="this.images" @goShowEvent="goShow()"/>
         </div>
 
-        <div class="infoContainer">
+        <div class="infoContainer" @click="goShow()">
             <div class="row inline">
                 <div class="cardTitle">
                     <h3>{{ this.apartment.title }}</h3>
@@ -88,6 +88,27 @@ export default {
 // @use '../styles/partials/variables.scss' as *;
 
 $cardWidth: 260px;
+$border-radius-small: 12px;
+$color-three-light: #faa95e;
+$color-three-dark: #f39237;
+
+@mixin customOutline {
+    outline-style: solid;
+    outline-color: $color-three-dark;
+    outline-offset: 2px;
+    outline-width: 0px;
+
+    transition: outline-width 0.05s, outline-color 0.03s;
+
+    &:hover,
+    &:focus-visible {
+        outline-width: 2px;
+    }
+
+    &:active {
+        outline-color: $color-three-light;
+    }
+}
 
 button {
     background: none;
@@ -96,15 +117,17 @@ button {
 
 .card {
     width: $cardWidth;
-    // border: 1px solid #141414;
     position: relative;
     cursor: pointer;
+    border-radius: $border-radius-small;
+
+    @include customOutline;
 
     .imageContainer {
         height: $cardWidth;
-        border: 2px solid lightpink;
-        border-radius: 12px;
         margin-bottom: 0.75rem;
+
+        border-radius: $border-radius-small;
         background-color: rgb(181, 241, 181);
     }
 
@@ -143,6 +166,7 @@ button {
 
     .cardPrice {
         font-weight: 400;
+
         span {
             font-weight: 600;
         }
