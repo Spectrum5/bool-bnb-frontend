@@ -74,3 +74,6 @@ ICONA PULIZIE: <font-awesome-icon icon="fa-solid fa-broom" />
 ICONA LAVATRICE: <font-awesome-icon icon="fa-solid fa-soap" />
 ICONA ANIMALI: <font-awesome-icon icon="fa-solid fa-paw" />
 ICONA CASSAFORTE: <font-awesome-icon icon="fa-solid fa-vault" />
+
+<!--  -->
+ICONA LETTO: <i class="fa-solid fa-bed"></i>

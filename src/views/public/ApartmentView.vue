@@ -66,7 +66,7 @@ export default {
                 return `<i class="fa-solid fa-vault"></i>`;
             }
         
-        },
+        },       
     },
     created() {
         this.getApartments();
@@ -132,6 +132,33 @@ export default {
                     </div>
                 </section>
                 <hr>
+                <section class="my-3">
+                    <h4 class="mb-1">Dove dormirai</h4>
+                    <div class="room-desc d-inline-block mb-1" v-for="i in apartment.rooms_number">
+                        <h6 class="mb-1">Camera da letto {{ i }}</h6>
+                        <!-- Se il numero di camere e il numero di letti è pari, avrò un letto matrimoniale per ogni stanza -->
+                        <div v-if="apartment.beds_number % 2 == 0 && apartment.rooms_number % 2 == 0">
+                            <span v-for="i in (apartment.beds_number / 2)">
+                                <i class="fa-solid fa-bed"></i>
+                                <!-- <font-awesome-icon icon="fa-solid fa-bed" /> -->
+                            </span>
+                            <p>1 letto matrimoniale a due piazze</p>
+                        </div>
+                        <div v-else>
+                            <div>
+                                <span v-for=" i in (Math.floor(apartment.beds_number / apartment.rooms_number))">
+                                        <i class="fa-solid fa-bed"></i>
+                                        <!-- <font-awesome-icon icon="fa-solid fa-bed" /> -->
+                                </span>
+                                <p v-if="i == apartment.rooms_number">
+                                    {{ Math.floor(apartment.beds_number / apartment.rooms_number) - 1 }} letto matrimoniale + 1 letto singolo
+                                </p>
+                                <p v-else>{{ Math.floor(apartment.beds_number / apartment.rooms_number) }} letti singoli</p>
+                            </div>
+                        </div>
+                    </div>                
+                </section>
+                <hr>
                 <!-- SEZIONE MAPPA -->
                 <section class="my-3">
                     <h4 class="mb-1">Dove ti troverai</h4>
@@ -180,9 +207,16 @@ export default {
 
 <style lang="scss" scoped>
 
-    *{
+    *:not(i){
         // font-family: 'Mukta', sans-serif;
         font-family: 'Manrope', sans-serif;
+    }
+    img{
+        display: inline-block;
+        height: 450px;
+        width: 650px;
+        border-radius: 8px;
+        object-position: center;
     }
 
     h3, h4{
@@ -208,6 +242,25 @@ export default {
         .description{
             text-align: justify;
             text-justify: inter-word;
+        }
+
+        .room-desc{
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 10px;
+            margin-right: 10px;
+
+            h6{
+                font-weight: 700;
+                font-size: 1rem;
+            }
+
+            span{
+                margin-right: 5px;
+            }
+            p{
+                font-size: 0.8rem;
+            }
         }
 
         .maps{
