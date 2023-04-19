@@ -1,34 +1,33 @@
 <script>
 
+// Utilities
 import axios from 'axios';
-import {router} from '../../../../router';
+import { router } from '../../../../router';
 
 export default {
     name: 'AppEditApartment',
     data() {
         return {
             router,
-            apartment: null,
             form: {},
-            services: [],
-            checked: true
+            allServices: [],
+            selectedServices: []
         }
     },
     methods: {
-        // recupero dati del mio appartamento per la modifica
+        // Recupero dati dell'appartamento per la modifica
         getApartment() {
             axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}/edit`)
                 .then((response) => {
-                    console.log('Form', response.data.apartment);
-                    this.apartment = response.data.apartment;
+                    console.log('Dati Appartamento', response.data.apartment);
                     this.form = response.data.apartment;
-                    this.services = response.data.services;
+                    this.allServices = response.data.services;
+                    this.setCheckboxes();
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti', response.data);
                 })
         },
-
         updateApartment() {
             axios.put('http://localhost:8000/api/apartments', {
                 title: 'valore1',
@@ -52,26 +51,16 @@ export default {
                     console.log('Errore creazione', response.data);
                 })
         },
-
-        // isChecked(){
-        //     return 'checked';
-        // }
-
-        isChecked(id, index) {
-            if (this.form.services[index]) {
-                if (this.form.services[index].id == id) {
-                    return this.$refs.checkbox.checked = true;
+        setCheckboxes() {
+            this.allServices.forEach(service => {
+                if (this.form.services.some(e => e.id == service.id)) {
+                    this.selectedServices.push(service.id);
                 }
-            }
+            });
         }
-        
     },
     created() {
-
         this.getApartment();
-    },
-    computed:{
-        
     }
 }
 </script>
@@ -127,19 +116,13 @@ export default {
                 <label for="user_id">user id prova</label>
                 <input v-model="form.user_id" type="number" name="user_id" id="user_id">
             </div>
-            <div v-for="(service, index) in services">
+            <div v-for="(service, index) in allServices">
                 <label :for="service.name">{{ service.name }}</label>
-                <!-- :checked="isChecked(service.id, index)" -->
-                <input
-                type="checkbox"
-                v-model="checked"
-                ref="checkbox"
-                :name="service.name"
-                :id="service.name"
-                :value="service.id">
-                </div>
+                <input v-model="selectedServices" type="checkbox" :name="service.name" :id="service.name"
+                    :value="service.id">
+            </div>
         </div>
-        <button type="submit">Crea appartamento</button>
+        <button>Crea appartamento</button>
     </form>
 </template>
 
@@ -148,16 +131,16 @@ export default {
 @use '././../../../../styles/partials/variables.scss' as*;
 @use '././../../../../styles/partials/mixins.scss' as*;
 
-.row{
-    div{
+.row {
+    div {
         margin-bottom: 15px;
         padding-bottom: 15px;
         border-bottom: 1px solid;
-        input{
+
+        input {
             line-height: 20px;
             margin-left: 7px;
         }
     }
 }
-    
 </style>
