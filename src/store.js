@@ -6,6 +6,8 @@ import {
 import axios from 'axios';
 
 export const store = reactive({
+    errors: [],
+    user: null,
     test: 'store.js funziona!',
     images: [
         {
