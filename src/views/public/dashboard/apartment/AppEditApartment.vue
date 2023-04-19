@@ -11,6 +11,7 @@ export default {
             apartment: null,
             form: {},
             services: [],
+            checked: true
         }
     },
     methods: {
@@ -128,10 +129,10 @@ export default {
             </div>
             <div v-for="(service, index) in services">
                 <label :for="service.name">{{ service.name }}</label>
+                <!-- :checked="isChecked(service.id, index)" -->
                 <input
                 type="checkbox"
-                v-model="form.services"
-                :checked="isChecked(service.id, index)"
+                v-model="checked"
                 ref="checkbox"
                 :name="service.name"
                 :id="service.name"
