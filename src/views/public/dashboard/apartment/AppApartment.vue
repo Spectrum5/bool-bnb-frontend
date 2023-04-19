@@ -76,7 +76,7 @@ export default {
 </template>
 
 <style scoped lang="scss">
-
+@use './../../../../styles/partials/mixins.scss' as *;
     .my-container {
         @include flexSpaceBtwn ($gap: 0);
 
