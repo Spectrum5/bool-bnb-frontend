@@ -8,6 +8,7 @@ import Sponsor from './views/public/Sponsor.vue';
 
 // Authentication Pages
 import AppLogin from './views/auth/AppLogin.vue';
+import AppApartment from './views/public/dashboard/apartment/AppApartment.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -38,6 +39,11 @@ const router = createRouter({
             path: '/sponsors',
             name: 'sponsor',
             component: Sponsor
+        },
+        {
+            path: '/apartments/appapartment',
+            name: 'app-apartment',
+            component: AppApartment
         },
     ]
 });

@@ -165,6 +165,10 @@ export default {
 
 <style lang="scss" scoped>
 
+    a{
+        color: black;
+    }
+
     img{
         display: inline-block;
         height: 450px;
