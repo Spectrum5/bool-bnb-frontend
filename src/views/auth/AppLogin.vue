@@ -6,6 +6,7 @@ import AppLogo from '../../components/AppLogo.vue';
 // Utilities
 import { store } from '../../store';
 import { router } from '../../router';
+
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
@@ -87,7 +88,7 @@ export default {
                 passwordInput.classList.add('invalid');
             }
 
-            // Controlla se validazione e' adnata a buon fine
+            // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.getCookie();
             else {
                 console.log('Login fallito');
@@ -112,12 +113,14 @@ export default {
             })
                 .then((response) => {
                     console.log('Risposta Login', response);
+
+                    // Emette ad App.vue l'evento per richiedere l'utente autenticato
                     this.$emit('getUserEvent');
                 }
                 )
                 .catch((response) => {
                     console.log('Errore Login', response);
-                    // this.store.errors = response;
+                    this.store.errors = response;
                 })
         },
         handleLogout() {
@@ -128,7 +131,7 @@ export default {
         },
     },
     mounted() {
-
+        document.title = 'Boolbnb | Login';
     }
 }
 </script>
@@ -140,6 +143,7 @@ export default {
             <button @click="handleLogout()">logout</button>
         </div>
     </header>
+    
     <main>
         <div class="container">
             <div class="formContainer">
@@ -160,9 +164,12 @@ export default {
                         </div>
                     </div>
 
-                    <button>login</button>
+                    <div class="row">
+                        <button class="btn">login</button>
+                    </div>
+
                 </form>
-                <a href="" class="customLink">Non hai un account? Creane uno.</a>
+                <router-link to="/register" class="customLink">Non hai un account? Creane uno.</router-link>
             </div>
         </div>
     </main>
@@ -179,19 +186,20 @@ export default {
 @use '../../styles/partials/mixins.scss' as *;
 @use '../../styles/partials/form.scss' as *;
 
-.mainTitle {
-    margin-bottom: 1rem;
-    text-transform: capitalize
-}
 
-.customLink {
-    color: $color-one-dark;
-    font-size: 0.9rem
+.btn {
+    text-transform: capitalize;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    padding: 0.5rem;
+    // border: none;
+    // background: none;
 }
 
 .container {
     @include largeContainer;
     @include flexRowCenter;
+    padding: 0 1rem;
 }
 
 header {
