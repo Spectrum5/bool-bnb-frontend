@@ -28,6 +28,11 @@ import { faKitchenSet } from '@fortawesome/free-solid-svg-icons'
 import { faHotTubPerson } from '@fortawesome/free-solid-svg-icons'
 import { faBellConcierge } from '@fortawesome/free-solid-svg-icons'
 import { faBed } from '@fortawesome/free-solid-svg-icons'
+import { faHouseChimney } from '@fortawesome/free-solid-svg-icons'
+import { faPencil } from '@fortawesome/free-solid-svg-icons'
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { faChartSimple } from '@fortawesome/free-solid-svg-icons'
+import { faShuttleSpace } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faBars,
   faCircleUser,
@@ -48,7 +53,12 @@ library.add(faBars,
   faKitchenSet,
   faHotTubPerson,
   faBellConcierge,
-  faBed)
+  faBed,
+  faHouseChimney,
+  faPencil,
+  faTrashCan,
+  faChartSimple,
+  faShuttleSpace)
 
 createApp(App)
   .use(router)
