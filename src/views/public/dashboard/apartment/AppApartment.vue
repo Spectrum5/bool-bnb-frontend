@@ -41,7 +41,7 @@ export default {
         <section class="lato-dx">
             <div>
                 <h2>I miei Appartamenti</h2>
-                <div class="create">
+                <div class="create" @click="$router.push('/apartments/create')">
                     <button class="btn btn-create">
                         <font-awesome-icon icon="fa-solid fa-house-chimney" />
                         Aggiungi un nuovo appartmento
@@ -53,7 +53,7 @@ export default {
                     <p>{{ myApartment.title }}</p>
                 </div>
                 <div>
-                    <button class="btn btn-edit">
+                    <button class="btn btn-edit" @click="$router.push(`/apartments/${myApartment.slug}/edit`)">
                         <font-awesome-icon icon="fa-solid fa-pencil" />
                         Modifica
                     </button>

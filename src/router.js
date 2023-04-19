@@ -10,6 +10,8 @@ import Sponsor from './views/public/Sponsor.vue';
 import AppLogin from './views/auth/AppLogin.vue';
 import AppApartment from './views/public/dashboard/apartment/AppApartment.vue';
 import AppRegister from './views/auth/AppRegister.vue';
+import AppCreateApartment from './views/public/dashboard/apartment/AppCreateApartment.vue';
+import AppEditApartment from './views/public/dashboard/apartment/AppEditApartment.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -50,6 +52,16 @@ const router = createRouter({
             path: '/apartments/appapartment',
             name: 'app-apartment',
             component: AppApartment
+        },
+        {
+            path: '/apartments/create',
+            name: 'apartment-create',
+            component: AppCreateApartment
+        },
+        {
+            path: '/apartments/:slug/edit',
+            name: 'apartment-edit',
+            component: AppEditApartment
         },
     ]
 });
