@@ -8,6 +8,7 @@ export default {
                 title: 'il nostro team',
                 members: [
                     { name: 'salvatore capano', link: 'https://github.com/SalvatoreCapano' },
+                    { name: 'sergio tosku', link: 'https://github.com/Spectrum5' },
                     // Inserite qui i vostri link
                 ]
             }
