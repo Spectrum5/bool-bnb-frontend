@@ -2,6 +2,7 @@
 
 // Components
 import AppLogo from '../../components/AppLogo.vue';
+import AppFooter from '../../components/AppFooter.vue';
 
 // Utilities
 import { store } from '../../store';
@@ -13,7 +14,8 @@ axios.defaults.withCredentials = true;
 export default {
     name: 'AppRegister',
     components: {
-        AppLogo
+        AppLogo,
+        AppFooter
     },
     data() {
         return {
@@ -251,11 +253,7 @@ export default {
         </div>
     </main>
 
-    <footer>
-        <div class="container">
-            FOOTER
-        </div>
-    </footer>
+    <AppFooter />
 </template>
 
 <style lang="scss" scoped>
@@ -290,11 +288,5 @@ header {
 
 main {
     height: 100vh;
-}
-
-footer {
-    padding: 1.5rem;
-    background-color: darkgrey;
-    text-align: center;
 }
 </style>
