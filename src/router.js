@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from './views/public/HomeView.vue';
 import ApartmentView from './views/public/ApartmentView.vue';
 import HomeSearch from './views/public/HomeSearch.vue';
+import Sponsor from './views/public/Sponsor.vue';
 
 // Authentication Pages
 import AppLogin from './views/auth/AppLogin.vue';
@@ -32,6 +33,11 @@ const router = createRouter({
             path: '/login',
             name: 'login',
             component: AppLogin
+        },
+        {
+            path: '/sponsors',
+            name: 'sponsor',
+            component: Sponsor
         },
     ]
 });
