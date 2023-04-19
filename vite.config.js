@@ -17,11 +17,8 @@ export default defineConfig({
         preprocessorOptions: {
             scss: {
                 // Attenzione al percorso!
-                additionalData: `
-                    @import './src/styles/partials/reset.scss';
-                    @import './src/styles/partials/variables.scss';
-                    @import './src/styles/partials/mixins.scss';
-                `
+                additionalData: 
+                `@use './src/styles/main.scss';`
             }
         }
     }

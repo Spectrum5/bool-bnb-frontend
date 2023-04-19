@@ -168,6 +168,10 @@ export default {
         </nav>
     </header>
 
+    <div>
+        <p>Link per i test, li potete eliminare</p>
+        <router-link to="/login">login</router-link>
+    </div>
 
     <!-- 
         <div class="container">
