@@ -2,7 +2,7 @@
 
 // Utilities
 import axios from 'axios';
-import { router } from '../../../../router';
+import { router } from '../../../router';
 
 export default {
     name: 'AppEditApartment',
@@ -127,9 +127,9 @@ export default {
 </template>
 
 <style scoped lang="scss">
-@use '././../../../../styles/partials/form.scss' as*;
-@use '././../../../../styles/partials/variables.scss' as*;
-@use '././../../../../styles/partials/mixins.scss' as*;
+@use '../../../styles/partials/mixins.scss' as *;
+@use '../../../styles/partials/form.scss' as *;
+@use '../../../styles/partials/variables.scss' as *;
 
 .row {
     div {
