@@ -177,13 +177,9 @@ export default {
                 })
         }
     },
-    handleLogout() {
-        axios.post('http://localhost:8000/logout');
-        this.store.user = null;
-        console.log('Logged Out');
-        router.push('/');
-    },
-
+    mounted() {
+        document.title = 'Boolbnb | Register';
+    }
 }
 </script>
 
@@ -193,7 +189,7 @@ export default {
             <AppLogo />
         </div>
     </header>
-    
+
     <main>
         <div class="container">
             <div class="formContainer">
@@ -282,21 +278,10 @@ export default {
     // background: none;
 }
 
-.mainTitle {
-    margin-bottom: 1rem;
-    text-transform: capitalize;
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    user-select: none;
-}
-
-.customLink {
-    color: $color-one-dark;
-    font-size: 0.9rem
-}
-
 .container {
     @include largeContainer;
     @include flexRowCenter;
+    padding: 0 1rem;
 }
 
 header {
