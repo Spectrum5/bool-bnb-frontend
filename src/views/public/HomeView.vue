@@ -171,6 +171,7 @@ export default {
     <div>
         <p>Link per i test, li potete eliminare</p>
         <router-link to="/login">login</router-link>
+        <router-link to="/register">register</router-link>
     </div>
 
     <!-- 

@@ -9,6 +9,7 @@ import Sponsor from './views/public/Sponsor.vue';
 // Authentication Pages
 import AppLogin from './views/auth/AppLogin.vue';
 import AppApartment from './views/public/dashboard/apartment/AppApartment.vue';
+import AppRegister from './views/auth/AppRegister.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -34,6 +35,11 @@ const router = createRouter({
             path: '/login',
             name: 'login',
             component: AppLogin
+        },
+        {
+            path: '/register',
+            name: 'register',
+            component: AppRegister
         },
         {
             path: '/sponsors',
