@@ -124,13 +124,7 @@ export default {
                     console.log('Errore Login', response);
                     this.store.errors = response;
                 })
-        },
-        handleLogout() {
-            axios.post('http://localhost:8000/logout');
-            this.store.user = null;
-            console.log('Logged Out');
-            router.push('/');
-        },
+        }
     },
     mounted() {
         document.title = 'Boolbnb | Login';
@@ -142,7 +136,6 @@ export default {
     <header>
         <div class="container">
             <AppLogo />
-            <button @click="handleLogout()">logout</button>
         </div>
     </header>
     
