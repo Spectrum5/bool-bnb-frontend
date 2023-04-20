@@ -7,6 +7,7 @@ import AppErrorForm from '../../../components/AppErrorForm.vue';
 // Utilities
 import axios from 'axios';
 import { router } from '../../../router';
+import { store } from '../../../store';
 
 export default {
     name: 'ApartmentCreate',
@@ -17,6 +18,7 @@ export default {
     data() {
         return {
             router,
+            store,
             form: {
                 title: '',
                 lat: null,
@@ -30,7 +32,7 @@ export default {
                 beds_number: null,
                 description: '',
                 size: null,
-                user_id: 1,
+                user_id: store.user.id,
                 services: []
             },
             services: [],
@@ -144,10 +146,10 @@ export default {
                         max="500" -->
                 </div>
                 <div>
-                    <label for="user_id">user id prova</label>
-                    <input v-model="form.user_id" type="number" name="user_id" id="user_id" required>
-                    <!-- da eliminare questo campo -->
-                </div>
+                    <label>Indica se il tuo appartamento non sarà subito disponibile</label>
+                    <input type="checkbox" name="visibility" id="visibility">
+                    <label for="visibility">Al momento non disponibile</label>
+                    </div>
                 <div class="services">
 
                     <span class="service" v-for="service in services">

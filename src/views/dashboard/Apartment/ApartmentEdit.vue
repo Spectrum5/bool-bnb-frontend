@@ -46,7 +46,7 @@ export default {
                 beds_number: this.form.beds_number,
                 description: this.form.description,
                 size: this.form.size,
-                user_id: 1
+                user_id: this.form.user_id
             })
                 .then((response) => {
                     console.log('Appartamento aggiornato', response);
@@ -115,10 +115,6 @@ export default {
             <div>
                 <label for="size">MQ</label>
                 <input v-model="form.size" type="number" name="size" id="size">
-            </div>
-            <div>
-                <label for="user_id">user id prova</label>
-                <input v-model="form.user_id" type="number" name="user_id" id="user_id">
             </div>
             <div v-for="(service, index) in allServices">
                 <label :for="service.name">{{ service.name }}</label>
