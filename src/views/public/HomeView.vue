@@ -4,6 +4,7 @@
 import AppLogo from '../../components/AppLogo.vue';
 import AppDestination from '../../components/AppDestination.vue';
 import AppCard from '../../components/AppCard.vue';
+import AppLoginModal from '../../components/AppLoginModal.vue'
 
 // Utilities
 import axios from 'axios';
@@ -15,7 +16,8 @@ export default {
     components: {
         AppLogo,
         AppDestination,
-        AppCard
+        AppCard,
+        AppLoginModal
     },
     data() {
         return {
@@ -24,6 +26,7 @@ export default {
             show: false,
             overlayPosition: { left: 0, top: 0 },
             isActiveOverlay: false,
+            loginModal:false,
 
 
             router,
@@ -102,7 +105,15 @@ export default {
             }, 500);
 
         },
+        getLogin() {
+            if (this.loginModal) {
+                this.loginModal = false;
+                } else {
+                this.loginModal = true;
+                }
+            }
     },
+
     mounted() {
         this.menuItem3[0].active = 0;
         this.getApartments();
@@ -157,8 +168,8 @@ export default {
                         <li class="item big-search">
                             <a href="#">
                                 <font-awesome-icon class="myicon" icon="fa-solid fa-magnifying-glass" />
-                                <button class="button-search">Cerca</button>
                             </a>
+                            <button class="button-search">Cerca</button>
                         </li>
                     </ul>
 
@@ -173,19 +184,23 @@ export default {
                             <a :href="item.link">{{ item.label }}</a>
                         </li>
                         <li class="item">
-                            <font-awesome-icon :icon="menuItems2[1].icon" class="globe" />
+                            <font-awesome-icon :icon="menuItems2[1].icon" class="globe"  />
                         </li>
                     </ul>
-
+                           
                     <!-- MENU DI LOGIN -->
                     <ul class="group-list ">
-                        <li class="item d-inline-block">
-                            <font-awesome-icon :icon="menuHamb[0].icon" class="bars" />
+                        <li class="item menu-bars d-inline-block">
+                            <font-awesome-icon :icon="menuHamb[0].icon" class="bars" @click="getLogin()"/>
                         </li>
+                        <AppLoginModal :loginModal="loginModal" />
                         <li class="item d-inline-block">
                             <font-awesome-icon :icon="menuHamb[1].icon" class="user" />
                         </li>
                     </ul>
+                    
+                 
+
                 </div>
             </div>
 
@@ -193,10 +208,10 @@ export default {
         </nav>
     </header>
 
-    <div>
+    <!-- <div>
         <router-link class="customLink" to="/login">login</router-link> <br>
         <router-link to="/register">register</router-link>
-    </div>
+    </div> -->
 
     <div class="cardsContainer">
         <AppCard v-for="apartment in apartments" :apartment="apartment" />
@@ -237,30 +252,21 @@ export default {
 header {
     width: 100%;
     background-color: white;
-    padding: 10px 50px;
+    padding: 15px 20px;
     border-bottom: 1px solid #e2dbdb;
-    position: relative;
     z-index: 1;
-
-
+    position: relative;
     .navbar {
+        max-width: 100%;
+        width: 100%;
         .container-fluid {
-
-            .logo-container {
-                width: 200px;
-                height: 100px;
-                border: none;
-                position: fixed;
-                top: 10px;
-                left: 10px;
-
-            }
-
+            display: flex;
+            align-items: center;
             .menu-hidden {
                 width: 100%;
                 text-align: center;
                 margin: 0 auto;
-
+              
                 .item {
                     font-size: 16px;
                     letter-spacing: 1.5px;
@@ -268,6 +274,7 @@ header {
                     font-weight: lighter, bolder;
                     transition: all 0.4s ease-in;
                     cursor: pointer;
+                    
 
                     &:hover {
                         border-bottom: 1.5px solid #B8B8B8;
@@ -285,14 +292,15 @@ header {
             .first {
                 margin: 0 auto;
                 transform: translate(-30%, -0%);
-
+                width: 30%;
+             
             }
 
             .searchbar,
             .open,
             .menu-hidden {
-                position: relative;
-
+             
+   
                 .group-list,
                 .group-list:last-child {
                     border: 1px solid #B8B8B8;
@@ -312,6 +320,10 @@ header {
 
                     .item {
                         margin-right: 2px;
+
+                        a {
+                            text-decoration: none;
+                        }
                     }
 
                     .line {
@@ -328,7 +340,7 @@ header {
                         border: 1px solid none;
                         padding: 6px 9px;
                         border-radius: 50px;
-                        background-color: #ff4a86;
+                        background-color:$color-one-light;
 
                         .myicon {
                             color: white;
@@ -340,11 +352,11 @@ header {
 
             .searchbar.open {
                 padding: 50px 0px;
-                margin-left: 220px;
-                width: 100%;
-                position: relative;
-
-
+                width: 80%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-70%, 20%);
 
 
                 .overlay,
@@ -358,10 +370,7 @@ header {
                     border: 1px solid white;
                     z-index: 999;
                     border-radius: 50px;
-
-
                 }
-
 
                 .group-list {
                     position: absolute;
@@ -370,7 +379,6 @@ header {
                     width: 80%;
                     display: flex;
                     align-items: center;
-                    justify-content: space-between;
                     background-color: #d8d7d7;
                     border: none;
                     padding: 5px 10px;
@@ -379,66 +387,68 @@ header {
                         position: relative;
                         z-index: 9999;
                         left: 30px;
-
                     }
 
                     .line.active {
                         background-color: transparent;
                     }
-
-                    .item:nth-child(3) {
-                        margin-left: 150px;
-                    }
-
                     .item {
                         font-size: 16px;
-                        line-height: 50%;
+                        line-height: 10%;
                         transition: transform 0.5s;
-
                         &:hover {
                             transform: scale(0.95);
                         }
-
                     }
-
+                    .item:nth-child(3) {
+                        margin-left: 40px;
+                    }
                     .line {
-                        margin-left: 50px;
+                        margin-left: 110px;
+                        vertical-align: top;
                     }
 
 
                     .big-search {
                         background-image: linear-gradient(to right, $color-one-dark, $color-one-light);
-                        padding: 15px 10px;
-                        padding-right: 50px;
+                        padding: 20px 45px;
                         border-radius: 50px;
                         transition: all 0.5s ease-in;
-
+        
                         &:hover {
                             padding: 15px 10px;
                             padding-right: 50px;
                             background-image: linear-gradient(to left, $color-one-light, $color-two-dark);
+                              
+                             .myicon {
+                                display: none;
+                             }
+                             .button-search {
+                                 display: block;
+                             }
                         }
 
+                        
 
                         .myicon {
                             color: white;
-                            font-size: 18px;
+                            font-size: 20px;
                             vertical-align: middle;
+                            
                         }
+
+                            .button-search {
+                                border: none;
+                                background: none;
+                                width: 0px;
+                                color: white;
+                                display: none;
+                                font-size: 18px;
+                                padding: 10px 10px;
+
                     }
-
-                    .button-search {
-                        border: none;
-                        background: none;
-                        padding: 0 8px;
-                        width: 30px;
-                        color: white;
-
                     }
-
                 }
-
-
             }
 
             .right-menu {
@@ -449,6 +459,7 @@ header {
                 position: fixed;
                 top: 10px;
                 right: 10px;
+               
 
                 .globe {
                     color: white;
@@ -469,8 +480,14 @@ header {
                             border-radius: 50px;
                             background: #e6e2e2;
                         }
+
+                        a {
+                            text-decoration: none;
+                        }
                     }
                 }
+
+               
 
                 .group-list:last-child {
                     border: 1px solid #e0dcdc;

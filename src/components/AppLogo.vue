@@ -29,11 +29,13 @@ export default {
 @import '../styles/partials/variables.scss';
 
 .logoContainer {
-    height: 48px;
-    cursor: pointer;
+    width: 150px;
+    height: 30px;
 
     >img {
+        width: 100%;
         height: 100%;
+        object-fit: contain;
         display: block;
     }
 }

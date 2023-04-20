@@ -43,7 +43,7 @@ export default {
             </li>
             <li class="item-maps" v-for="item in destinationsMenu" :key="item.id">
                 <a :href="`#${item.label}`">
-                    <img :src="`../../../${item.img}`">
+                    <img :src="`../../../../${item.img}`">
                 </a>
             </li>
         </ul>
@@ -58,7 +58,7 @@ export default {
         position: absolute;
         left: 30%;
         top: 87%;
-        width: 45%;
+        width: 50%;
         background-color: white;
         margin-top: 15px;
         padding: 20px 20px;
