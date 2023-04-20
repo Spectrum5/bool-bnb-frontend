@@ -24,253 +24,39 @@ export default {
     <div @click="$router.push('/')">torna alla home</div>
 
     <div class="container">
-        <div class="card">
-            <div class="sponsor">
-                <div>
-                    Name
-                </div>
-                <div class="price">
-                    price
-                </div>
-                <div class="time">
-                    tempo
-                </div>
-            </div>
-
-            <div class="description">
-                <div>
-                    descrizione
-                </div>
-                <div>
-                    <ul>
-                        <li>
-                            Lorem, ipsum dolor.
-                        </li>
-                        <li>
-                            Lorem ipsum dolor sit.
-                        </li>
-                        <li>
-                            Lorem ipsum dolor sit amet.
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div>
-                <button>select plan</button>
-            </div>
-
-        </div>
-
-        <div class="card">
-            <div class="bg-card">
-                <div class="sponsor">
-                    <div>
-                        Name
-                    </div>
-                    <div class="price">
-                        price
-                    </div>
-                    <div class="time">
-                        tempo
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="description">
-                <div>
-                    descrizione
-                </div>
-                <div>
-                    <ul>
-                        <li>
-                            Lorem, ipsum dolor.
-                        </li>
-                        <li>
-                            Lorem ipsum dolor sit.
-                        </li>
-                        <li>
-                            Lorem ipsum dolor sit amet.
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div>
-                <button>select plan</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="sponsor">
-                <div>
-                    Name
-                </div>
-                <div class="price">
-                    price
-                </div>
-                <div class="time">
-                    tempo
-                </div>
-            </div>
-
-            <div class="description">
-                <div>
-                    descrizione
-            </div>
-            <div>
+        <div class="cards">
+            <div class="card shadow">
                 <ul>
-                    <li>
-                        Lorem, ipsum dolor.
-                    </li>
-                    <li>
-                        Lorem ipsum dolor sit.
-                    </li>
-                    <li>
-                        Lorem ipsum dolor sit amet.
-                    </li>
+                    <li class="pack">standard</li>
+                    <li id="standard" class="price bottom-bar">&euro;2.99</li>
+                    <li class="bottom-bar">Time: 24 ore</li>
+                    <li class="bottom-bar">2 case</li>
+                    <li class="bottom-bar">no support</li>
+                    <li><button class="btn">Attiva</button></li>
+                </ul>
+            </div>
+            <div class="card active">
+                <ul>
+                    <li class="pack">premium</li>
+                    <li id="plus" class="price bottom-bar">&euro;5.99</li>
+                    <li class="bottom-bar">Time: 72 ore</li>
+                    <li class="bottom-bar">case infinite</li>
+                    <li class="bottom-bar">Support 24/7 (non è vero)</li>
+                    <li><button class="btn active-btn">Attiva</button></li>
+                </ul>
+            </div>
+            <div class="card shadow">
+                <ul>
+                    <li class="pack">plus</li>
+                    <li id="premium" class="price bottom-bar">&euro;9.99</li>
+                    <li class="bottom-bar">Time: 48 ore</li>
+                    <li class="bottom-bar">case non infinite</li>
+                    <li class="bottom-bar">support 9-12</li>
+                    <li><button class="btn">Attiva</button></li>
                 </ul>
             </div>
         </div>
-        <div>
-            <button>select plan</button>
-        </div>
     </div>
-</div>
-
-<!-- <div class="container">
-        <div class="text-center">
-            <h2 class="fw-bold fs-3">
-                Sponsor
-            </h2>
-            <p class="text-center">
-                Dai una spinta al tuo annuncio con uno dei nostri abbonamenti!
-            </p>
-        </div>
-        <div class="mt-3 rounded-3 shadow">
-            <div class="col-md-4 float-start">
-                <div class="p-3">
-                    <h3 class="fw-bold">
-                        Title
-                    </h3>
-                    <p class="">
-                        Descrizione molto bellissimissima della fregatura di questi abbonamenti!
-                    </p>
-                    <div class="d-flex align-items-center">
-                        <h4 class="text-indigo">
-                            What's included
-                        </h4>
-                        <div class="flex-grow-1 bg-secondary" style="height: 1px;"></div>
-                    </div>
-                    <ul class="list-unstyled mt-3">
-                        <li>
-                            prova 1
-                        </li>
-                        <li>
-                            prova 2
-                        </li>
-                    </ul>
-                </div>
-                <div class="bg-gray-50 text-center p-3">
-                    <p class="fw-bold text-center">
-                        Durata:
-                    </p>
-                    <p class="mb-5 text-center">
-                        <span class="fw-bold fs-1"> &euro; 2.99 </span>
-                    </p>
-                    <a href="#" class="btn btn-danger w-100">
-                        Acquista
-                    </a>
-                    <p class="text-secondary mb-0 text-center">
-                        <small>
-                            Paga ora e non ne uscirai più
-                        </small>
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-4 float-start">
-                <div class="p-3">
-                    <h3 class="fw-bold">
-                        Title
-                    </h3>
-                    <p class="">
-                        Descrizione molto bellissimissima della fregatura di questi abbonamenti!
-                    </p>
-                    <div class="d-flex align-items-center">
-                        <h4 class="text-indigo">
-                            What's included
-                        </h4>
-                        <div class="flex-grow-1 bg-secondary" style="height: 1px;"></div>
-                    </div>
-                    <ul class="list-unstyled mt-3">
-                        <li>
-                            prova 1
-                        </li>
-                        <li>
-                            prova 2
-                        </li>
-                    </ul>
-                </div>
-                <div class="bg-gray-50 text-center p-3">
-                    <p class="fw-bold text-center">
-                        Durata:
-                    </p>
-                    <p class="mb-5 text-center">
-                        <span class="fw-bold fs-1"> &euro; 5.99 </span>
-                    </p>
-                    <a href="#" class="btn btn-danger w-100">
-                        Acquista
-                    </a>
-                    <p class="text-secondary mb-0 text-center">
-                        <small>
-                            Paga ora e non ne uscirai più
-                        </small>
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-4 float-start">
-                <div class="p-3">
-                    <h3 class="fw-bold">
-                        Title
-                    </h3>
-                    <p class="">
-                        Descrizione molto bellissimissima della fregatura di questi abbonamenti!
-                    </p>
-                    <div class="d-flex align-items-center">
-                        <h4 class="text-indigo">
-                            What's included
-                        </h4>
-                        <div class="flex-grow-1 bg-secondary" style="height: 1px;"></div>
-                    </div>
-                    <ul class="list-unstyled mt-3">
-                        <li>
-                            prova 1
-                        </li>
-                        <li>
-                            prova 2
-                        </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                    <div class="bg-gray-50 text-center p-3">
-                                                                        <p class="fw-bold text-center">
-                                                                            Durata:
-                                                                        </p>
-                                                                        <p class="mb-5 text-center">
-                                                                            <span class="fw-bold fs-1"> &euro; 5.99 </span>
-                                                                        </p>
-                                                                        <a href="#" class="btn btn-danger w-100">
-                                                                            Acquista
-                                                                        </a>
-                                                                        <p class="text-secondary mb-0 text-center">
-                                                                            <small>
-                                                                                Paga ora e non ne uscirai più
-                                                                            </small>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-        
-                                                        </div> -->
 </template>
 
 <style lang="scss" scoped>
@@ -278,27 +64,87 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 
-    .card {
-        height: 500px;
-        background-color: rgba(244, 244, 244, 0.541);
-        width: 300px;
+    .cards {
         display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
+        justify-content: center;
         align-items: center;
-        border-radius: 25px;
-        box-shadow: 2px;
-        margin: 10px 10px;
+        flex-wrap: wrap;
 
-        .sponsor {
+        .card {
+            background: #fff;
+            color: hsl(233, 13%, 49%);
+            border-radius: 0.8rem;
 
-            // background-color: lightcoral;
-            div {
-                padding-bottom: 8px;
+            ul {
+                margin: 2.6rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-around;
             }
         }
+
+        .shadow {
+            box-shadow: -5px 5px 15px 1px rgba(0, 0, 0, 0.1);
+        }
     }
+
+    .cards .card.active {
+        background: linear-gradient(135deg,
+                rgb(163, 240, 218) 0%,
+                rgba(105, 111, 221, 1) 100%);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        transform: scale(1.1);
+        z-index: 1;
+    }
+
+    ul li {
+        list-style-type: none;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 1rem 0;
+
+        .btn {
+            margin-top: 1rem;
+            height: 2.6rem;
+            width: 13.3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            background: linear-gradient(135deg,
+                    rgba(163, 168, 240, 1) 0%,
+                    rgb(105, 217, 221) 100%);
+            color: #fff;
+            border: none;
+            font-weight: bold;
+        }
+    }
+
+    ul li.price {
+        font-size: 3rem;
+        padding-bottom: 2rem;
+    }
+
+    .card.active .price {
+        color: #fff;
+    }
+
+    .bottom-bar {
+        border-bottom: 2px solid hsla(240, 8%, 85%, 0.582);
+    }
+
+    .card.active .bottom-bar {
+        border-bottom: 2px solid hsla(240, 8%, 85%, 0.253);
+    }
+
+    .pack {
+        font-size: 1.3rem;
+    }
+
 }
 </style>
