@@ -7,7 +7,6 @@ import AppErrorForm from '../../components/AppErrorForm.vue';
 
 // Utilities
 import { store } from '../../store';
-import { router } from '../../router';
 
 import axios from 'axios';
 axios.defaults.withCredentials = true;
@@ -35,126 +34,158 @@ export default {
         handleRegister() {
             this.validateData();
         },
-        validateData() {
-            // Front End Validation
-            console.log('Validazione dati registrazione...');
-
+        addError(message, field) {
+            // Controlla se in store.errors sono presenti errori con lo stesso campo di quello passato
+            // e se non ci sono aggiunge l'errore passato come argomento, altrimenti no
+            if (this.store.errors.length == 0) {
+                this.store.errors.push({
+                    message: message,
+                    field: field
+                });
+            }
+            else {
+                if (!this.store.errors.some(error => error.field == field)) {
+                    this.store.errors.push({
+                        message: message,
+                        field: field
+                    });
+                }
+            }
+        },
+        firstNameValidation() {
             let firstNameInput = document.getElementById('first_name');
-            let lastNameInput = document.getElementById('last_name');
-            let emailInput = document.getElementById('email');
-            let passwordInput = document.getElementById('password');
-            let passwordConfirmationInput = document.getElementById('password_confirmation');
-
-            // Reset Form Validation
-            this.store.errors = [];
             firstNameInput.classList.remove('invalid');
-            lastNameInput.classList.remove('invalid');
-            emailInput.classList.remove('invalid');
-            passwordInput.classList.remove('invalid');
-            passwordConfirmationInput.classList.remove('invalid');
 
             // First Name Length
-            if (firstNameInput.value.length == 0) {
-                this.store.errors.push({
-                    message: 'Il campo nome deve essere compilato'
-                });
+            if (firstNameInput.value.trim().length == 0) {
+                this.addError('Il campo nome deve essere compilato', 'first_name');
                 firstNameInput.classList.add('invalid');
             }
-            else if (firstNameInput.value.length < 3) {
-                this.store.errors.push({
-                    message: 'Il campo nome deve essere almeno di 3 caratteri'
-                });
+            else if (firstNameInput.value.trim().length < 3) {
+                this.addError('Il campo nome deve essere almeno di 3 caratteri', 'first_name');
                 firstNameInput.classList.add('invalid');
             }
-            else if (firstNameInput.value.length > 128) {
-                this.store.errors.push({
-                    message: 'Il campo nome non deve superare i 128 caratteri'
-                });
+            else if (firstNameInput.value.trim().length > 128) {
+                this.addError('Il campo nome non deve superare i 128 caratteri', 'first_name');
                 firstNameInput.classList.add('invalid');
             }
+        },
+        lastNameValidation() {
+            let lastNameInput = document.getElementById('last_name');
+            lastNameInput.classList.remove('invalid');
+
             // Last Name Length
-            if (lastNameInput.value.length == 0) {
-                this.store.errors.push({
-                    message: 'Il campo cognome deve essere compilato'
-                });
+            if (lastNameInput.value.trim().length == 0) {
+                this.addError('Il campo cognome deve essere compilato', 'last_name');
                 lastNameInput.classList.add('invalid');
             }
-            else if (lastNameInput.value.length < 3) {
-                this.store.errors.push({
-                    message: 'Il campo cognome deve essere almeno di 3 caratteri'
-                });
+            else if (lastNameInput.value.trim().length < 3) {
+                this.addError('Il campo cognome deve essere almeno di 3 caratteri', 'last_name');
                 lastNameInput.classList.add('invalid');
             }
-            else if (lastNameInput.value.length > 128) {
-                this.store.errors.push({
-                    message: 'Il campo cognome non deve superare i 128 caratteri'
-                });
+            else if (lastNameInput.value.trim().length > 128) {
+                this.addError('Il campo cognome non deve superare i 128 caratteri', 'last_name');
                 lastNameInput.classList.add('invalid');
             }
+        },
+        emailValidation() {
+            let emailInput = document.getElementById('email');
+            emailInput.classList.remove('invalid');
+
             // Email Validation
-            if (!emailInput.value.toLowerCase().match(
+            if (emailInput.value.trim().length == 0) {
+                this.addError('Il campo email deve essere compilato', 'email');
+                emailInput.classList.add('invalid');
+            }
+            else if (emailInput.value.trim().length < 10) {
+                this.addError('L\'email deve essere lunga almeno 10 caratteri', 'email');
+                emailInput.classList.add('invalid');
+            }
+            else if (emailInput.value.trim().length > 64) {
+                this.addError('L\'email non deve superare i 64 caratteri', 'email');
+                emailInput.classList.add('invalid');
+            }
+            else if (!emailInput.value.toLowerCase().match(
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             )) {
-                this.store.errors.push({
-                    message: 'La tua email contiene caratteri non permessi'
-                });
+                this.addError('La tua email contiene caratteri non permessi', 'email');
                 emailInput.classList.add('invalid');
             }
-            // Email Lenght
-            if (emailInput.value.length == 0) {
-                this.store.errors.push({
-                    message: 'Il campo email deve essere compilato'
-                });
-                emailInput.classList.add('invalid');
-            }
-            else if (emailInput.value.length < 10) {
-                this.store.errors.push({
-                    message: 'L\'email deve essere lunga almeno 10 caratteri'
-                });
-                emailInput.classList.add('invalid');
-            }
-            else if (emailInput.value.length > 64) {
-                this.store.errors.push({
-                    message: 'L\'email non deve superare i 64 caratteri'
-                });
-                emailInput.classList.add('invalid');
-            }
+        },
+        passwordValidation() {
+            let passwordInput = document.getElementById('password');
+            passwordInput.classList.remove('invalid');
+
             // Password Lenght
             if (passwordInput.value.length == 0) {
-                this.store.errors.push({
-                    message: 'Il campo password deve essere compilato'
-                });
+                this.addError('Il campo password deve essere compilato', 'password');
                 passwordInput.classList.add('invalid');
             }
             else if (passwordInput.value.length < 10) {
-                this.store.errors.push({
-                    message: 'La password deve essere lunga almeno 10 caratteri'
-                });
+                this.addError('La password deve essere lunga almeno 10 caratteri', 'password');
                 passwordInput.classList.add('invalid');
             }
             else if (passwordInput.value.length > 64) {
-                this.store.errors.push({
-                    message: 'La password non deve superare i 64 caratteri'
-                });
+                this.addError('La password non deve superare i 64 caratteri', 'password');
                 passwordInput.classList.add('invalid');
             }
+        },
+        passwordConfirmationValidation() {
+            let passwordConfirmationInput = document.getElementById('password_confirmation');
+            let passwordInput = document.getElementById('password');
+            passwordConfirmationInput.classList.remove('invalid');
+
             // Password Confirmation
             if (passwordConfirmationInput.value.length == 0) {
-                this.store.errors.push({
-                    message: 'Il campo conferma password deve essere compilato'
-                });
+                this.addError('Il campo conferma password deve essere compilato', 'password_confirmation');
                 passwordConfirmationInput.classList.add('invalid');
             }
             if (passwordInput.value != passwordConfirmationInput.value) {
-                this.store.errors.push({
-                    message: 'Le password inserite non coincidono'
-                });
+                this.addError('Le password inserite non coincidono', 'password_confirmation');
                 passwordConfirmationInput.classList.add('invalid');
             }
+        },
+        dateOfBirthValidation() {
+            let datOfBirthInput = document.getElementById('date_of_birth');
+            datOfBirthInput.classList.remove('invalid');
+
+            const [year, month, day] = datOfBirthInput.value.split('-');
+            const now = new Date();
+
+            if (datOfBirthInput.value == '' || datOfBirthInput.value == null) {
+                this.addError('Devi impostare una data di nascita', 'date_of_birth');
+                datOfBirthInput.classList.add('invalid');
+            }
+            else {
+                if ((now.getFullYear() - year) <= 9) {
+                    this.addError('Devi avere almeno 9 anni per poterti registrare', 'date_of_birth');
+                    datOfBirthInput.classList.add('invalid');
+                }
+                if (month < 1 || month > 12) {
+                    this.addError('Il mese deve essere compreso tra 1 e 12', 'date_of_birth');
+                    datOfBirthInput.classList.add('invalid');
+                }
+                if (day < 1 || day > 31) {
+                    this.addError('Il giorno di nascita deve essere compreso tra 1 e 31', 'date_of_birth');
+                    datOfBirthInput.classList.add('invalid');
+                }
+            }
+        },
+        validateData() {
+            // Front End Validation
+            console.log('Validazione dati registrazione...');
+            this.store.errors = [];
+
+            this.firstNameValidation();
+            this.lastNameValidation();
+            this.emailValidation();
+            this.passwordValidation();
+            this.passwordConfirmationValidation();
+            this.dateOfBirthValidation();
 
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.postRegisterData();
-            else console.log('Registrazione fallita');
+            else console.log('Hai inserito dati non corretti. Riprova.');
         },
         postRegisterData() {
             // Crea un istanza di FormData e ci inserisce delle coppie chiave: valore
@@ -172,17 +203,17 @@ export default {
 
                     // Emette ad App.vue l'evento per richiedere l'utente autenticato
                     this.$emit('getUserEvent');
-                    // router.push('/dashboard');
                 }
                 )
                 .catch((response) => {
-                    console.log('Errore Register:', response);
-                    this.store.errors = response;
+                    this.addError('Errore del server. Riprovare piú tardi', 'server_error');
+                    console.log('Errore Invio dati Register:', response.response);
                 })
         }
     },
     mounted() {
         document.title = 'Boolbnb | Register';
+        this.store.errors = [];
     }
 }
 </script>
@@ -203,66 +234,59 @@ export default {
                     <!-- First Name & Last Name -->
                     <div class="row inline-center">
                         <div class="group small">
-                            <label for="first_name">first name</label>
-                            <input type="text" id="first_name" name="first_name" placeholder="Your first name"
-                                v-model="form.first_name">
-                                <!-- minlength="10"
-                                maxlength="128" -->
+                            <label for="first_name">nome *</label>
+                            <input type="text" id="first_name" name="first_name" placeholder="Il tuo nome"
+                                v-model="form.first_name" v-on:blur="firstNameValidation()">
                         </div>
 
                         <div class="group small">
-                            <label for="last_name">last name</label>
-                            <input type="text" id="last_name" name="last_name" placeholder="Your last name"
-                                v-model="form.last_name">
-                                <!-- minlength="10"
-                                maxlength="128" -->
+                            <label for="last_name">cognome *</label>
+                            <input type="text" id="last_name" name="last_name" placeholder="Il tuo cognome"
+                                v-model="form.last_name" v-on:blur="lastNameValidation()">
                         </div>
                     </div>
 
                     <!-- Email -->
                     <div class="row">
                         <div class="group large">
-                            <label for="email">email</label>
-                            <input type="text" id="email" name="email" placeholder="test@example.com" v-model="form.email">
-                            <!-- type email
-                            minlength="10"
-                            maxlength="64" -->
+                            <label for="email">email *</label>
+                            <input type="text" id="email" name="email" placeholder="test@example.com" v-model="form.email"
+                                v-on:blur="emailValidation()">
                         </div>
                     </div>
 
                     <!-- Password & Password Confirmation -->
                     <div class="row inline-center">
                         <div class="group small">
-                            <label for="password">password</label>
-                            <input type="password" id="password" name="password" placeholder="Your password"
-                                v-model="form.password">
-                                <!-- minlength="10"
-                                maxlength="64" -->
+                            <label for="password">password *</label>
+                            <input type="password" id="password" name="password" placeholder="La tua password"
+                                v-model="form.password" v-on:blur="passwordValidation()">
                         </div>
 
                         <div class="group small">
-                            <label for="password_confirmation">confirm password</label>
+                            <label for="password_confirmation">conferma password *</label>
                             <input type="password" id="password_confirmation" name="password_confirmation"
-                                placeholder="Confirm your password" v-model="form.password_confirmation">
-                                <!-- minlength="10"
-                                maxlength="64" -->
+                                placeholder="Conferma la tua password" v-model="form.password_confirmation"
+                                v-on:blur="passwordConfirmationValidation()">
                         </div>
                     </div>
 
                     <!-- Date of Birth -->
                     <div class="row">
                         <div class="group large">
-                            <label for="date_of_birth">date of birth</label>
-                            <input type="date" id="date_of_birth" name="date_of_birth" v-model="form.date_of_birth">
+                            <label for="date_of_birth">data di nascita *</label>
+                            <input type="date" id="date_of_birth" name="date_of_birth" v-model="form.date_of_birth"
+                                v-on:blur="dateOfBirthValidation()">
                         </div>
                     </div>
 
                     <div class="row">
-                        <button class="btn">register</button>
+                        <button class="btn">registrati</button>
                     </div>
-                    <AppErrorForm/>
+                    <AppErrorForm v-if="store.errors.length > 0"/>
                 </form>
                 <router-link to="/login" class="customLink">Hai gia' un account? Accedi.</router-link>
+                <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
             </div>
         </div>
     </main>
@@ -279,6 +303,12 @@ export default {
     .group {
         flex-grow: 1;
     }
+}
+
+.campi-required {
+    font-size: 0.75rem;
+    margin-top: 1rem;
+    font-style: italic;
 }
 
 .btn {

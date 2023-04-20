@@ -32,71 +32,77 @@ export default {
         handleLogin() {
             this.validateData();
         },
-        validateData() {
-            // Front End Validation
-            console.log('Validazione dati login...');
-
+        addError(message, field) {
+            // Controlla se in store.errors sono presenti errori con lo stesso campo di quello passato
+            // e se non ci sono aggiunge l'errore passato come argomento, altrimenti no
+            if (this.store.errors.length == 0) {
+                this.store.errors.push({
+                    message: message,
+                    field: field
+                });
+            }
+            else {
+                if (!this.store.errors.some(error => error.field == field)) {
+                    this.store.errors.push({
+                        message: message,
+                        field: field
+                    });
+                }
+            }
+        },
+        emailValidation() {
             let emailInput = document.getElementById('email');
-            let passwordInput = document.getElementById('password');
-
-            // Reset Form Validation
-            this.store.errors = [];
             emailInput.classList.remove('invalid');
-            passwordInput.classList.remove('invalid');
 
             // Email Validation
-            if (!emailInput.value.toLowerCase().match(
+            if (emailInput.value.trim().length == 0) {
+                this.addError('Il campo email deve essere compilato', 'email');
+                emailInput.classList.add('invalid');
+            }
+            else if (emailInput.value.trim().length < 10) {
+                this.addError('L\'email deve essere lunga almeno 10 caratteri', 'email');
+                emailInput.classList.add('invalid');
+            }
+            else if (emailInput.value.trim().length > 64) {
+                this.addError('L\'email non deve superare i 64 caratteri', 'email');
+                emailInput.classList.add('invalid');
+            }
+            else if (!emailInput.value.toLowerCase().match(
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             )) {
-                this.store.errors.push({
-                    message: 'La tua email contiene caratteri non permessi'
-                });
+                this.addError('La tua email contiene caratteri non permessi', 'email');
                 emailInput.classList.add('invalid');
             }
-            // Email Lenght
-            if (emailInput.value.length == 0) {
-                this.store.errors.push({
-                    message: 'Il campo email deve essere compilato'
-                });
-                emailInput.classList.add('invalid');
-            }
-            else if (emailInput.value.length < 10) {
-                this.store.errors.push({
-                    message: 'L\'email deve essere lunga almeno 10 caratteri'
-                });
-                emailInput.classList.add('invalid');
-            }
-            else if (emailInput.value.length > 64) {
-                this.store.errors.push({
-                    message: 'L\'email non deve superare i 64 caratteri'
-                });
-                emailInput.classList.add('invalid');
-            }
+        },
+        passwordValidation() {
+            let passwordInput = document.getElementById('password');
+            passwordInput.classList.remove('invalid');
+
             // Password Lenght
             if (passwordInput.value.length == 0) {
-                this.store.errors.push({
-                    message: 'Il campo password deve essere compilato'
-                });
+                this.addError('Il campo password deve essere compilato', 'password');
                 passwordInput.classList.add('invalid');
             }
             else if (passwordInput.value.length < 10) {
-                this.store.errors.push({
-                    message: 'La password deve essere lunga almeno 10 caratteri'
-                });
+                this.addError('La password deve essere lunga almeno 10 caratteri', 'password');
                 passwordInput.classList.add('invalid');
             }
             else if (passwordInput.value.length > 64) {
-                this.store.errors.push({
-                    message: 'La password non deve superare i 64 caratteri'
-                });
+                this.addError('La password non deve superare i 64 caratteri', 'password');
                 passwordInput.classList.add('invalid');
             }
+        },
+        validateData() {
+            // Front End Validation
+            console.log('Validazione dati login...');
+            this.store.errors = [];
+
+            this.emailValidation();
+            this.passwordValidation();
 
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.getCookie();
-            else {
-                console.log('Login fallito');
-            }
+            else console.log('Hai inserito dati non corretti. Riprova.');
         },
         getCookie() {
             // Richiesta Cookie CSRF
@@ -130,6 +136,7 @@ export default {
     },
     mounted() {
         document.title = 'Boolbnb | Login';
+        this.store.errors = [];
     }
 }
 </script>
@@ -140,7 +147,7 @@ export default {
             <AppLogo />
         </div>
     </header>
-    
+
     <main>
         <div class="container">
             <div class="formContainer">
@@ -149,10 +156,8 @@ export default {
                     <div class="row">
                         <div class="group large">
                             <label for="email">email *</label>
-                            <input type="text" id="email" name="email" placeholder="test@example.com" v-model="form.email">
-                            <!-- type email
-                            minlength="10"
-                            maxlength="64" -->
+                            <input type="text" id="email" name="email" placeholder="test@example.com" v-model="form.email"
+                                v-on:blur="emailValidation()">
                         </div>
                     </div>
 
@@ -160,16 +165,14 @@ export default {
                         <div class="group large">
                             <label for="password">password *</label>
                             <input type="password" id="password" name="password" placeholder="Your password"
-                                v-model="form.password">
-                                <!-- minlength="10"
-                                maxlength="64" -->
+                                v-model="form.password" v-on:blur="passwordValidation()">
                         </div>
                     </div>
 
                     <div class="row">
                         <button class="btn">login</button>
                     </div>
-                    <AppErrorForm/>
+                    <AppErrorForm v-if="store.errors.length > 0" />
                 </form>
                 <router-link to="/register" class="customLink">Non hai un account? Creane uno.</router-link>
                 <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
@@ -184,7 +187,6 @@ export default {
 @use '../../styles/partials/variables.scss' as *;
 @use '../../styles/partials/mixins.scss' as *;
 @use '../../styles/partials/form.scss' as *;
-
 
 .btn {
     text-transform: capitalize;
@@ -208,7 +210,8 @@ header {
 main {
     height: 100vh;
 }
-.campi-required{
+
+.campi-required {
     font-size: 0.75rem;
     margin-top: 1rem;
     font-style: italic;
