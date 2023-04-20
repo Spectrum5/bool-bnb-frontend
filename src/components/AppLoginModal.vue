@@ -1,7 +1,7 @@
 <script>
 
 // Utilities
-import axios from 'axios';
+
 import { store } from '../store';
 import { router } from '../router';
 
@@ -26,13 +26,7 @@ export default {
           },
     },
     methods: {
-        // getImages() {
-        //     axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
-        //         .then((response) => {
-        //             this.images = response.data.images;
-        //             console.log('Images', response.data);
-        //         })
-        // },
+    
        
     },
     mounted() {
