@@ -2,23 +2,28 @@
 
 // Components
 import AppLogo from '../../components/AppLogo.vue';
+import AppDestination from '../../components/AppDestination.vue';
 
 // Utilities
 import axios from 'axios';
 // import {router} from '../../router';
-import { store } from '../../store';
 
 
 export default {
     name: 'HomeView',
     components: {
-        AppLogo
+        AppLogo,
+        AppDestination
     },
     data() {
         return {
-            store,
             isOpen: false,
-            active: 0,
+            active: false,
+            show: false,
+            overlayPosition: { left: 0, top: 0 },
+            isActiveOverlay: false,
+            
+          
             // router,
             currentPage: 1,
             searchTitle: '',
@@ -46,7 +51,7 @@ export default {
                 { label: 'Chi', link: '#' },
             ],
             menuHidden: [
-                { label: 'Soggioni', link: '#', active: 0 },
+                { label: 'Soggiorni', link: '#', active: 0 },
                 { label: 'Esperienze', link: '#' },
                 { label: 'Esperienze Online', link: '#' },
             ],
@@ -81,130 +86,144 @@ export default {
         toggleSearchbar() {
             this.isOpen = !this.isOpen;
         },
-
-
-
-        mounted() {
-            this.getApartments();
-            this.menuItem3[0].active = 0;
+        openAppDestination(index) {
+            this.show = true;
+            const currentItem = this.menuItem3[index];
+            this.menuItem3.forEach(item => item.active = false);
+            currentItem.active = index;
+            const itemPosition = currentItem.$el.getBoundingClientRect();
+            this.overlayPosition = { left: itemPosition.left, top: itemPosition.bottom };
+            this.isActiveOverlay = true;
+             setTimeout(() => {
+               this.isActiveOverlay = false;
+             }, 500);
+            
+          },
+            mounted() {
+                this.getApartments();
+                this.menuItem3[0].active = 0;
+            }
         }
     }
-}
 </script>
 
 <template>
+
     <header>
-        <nav class="navbar">
-            <div class="container-fluid">
+        <nav class="navbar"  >
+            <div class="container-fluid" >
                 <!-- MENU LOGO -->
-                <AppLogo />
+               <AppLogo />
 
                 <!-- MENU HIDDEN 2°SEARCHBAR -->
                 <div class="menu-hidden" v-if="isOpen">
-                    <ul>
-                        <li class="item" v-for="(item, index) in menuHidden" :key="index"
-                            :class="{ active: item.active === index }">
-                            {{ item.label }}
-                        </li>
-                    </ul>
+                  <ul >
+                    <li class="item" v-for="(item, index) in menuHidden" :key="index"  :class="{ active: item.active === index}">
+                      {{ item.label }}
+                   </li>
+                  </ul>
                 </div>
-
-
-                <!-- MENU CENTRALE-->
-                <div class="searchbar first" :class="{ open: isOpen }">
-                    <!-- Prima searchbar -->
-                    <ul class="group-list" v-if="!isOpen">
-                        <li class="item" v-for="(item, index) in menuItems" :key="index" @click="toggleSearchbar">
-                            <a :href="item.link">{{ item.label }}</a>
-                            <i class="line"></i>
-                        </li>
-                        <li class="item icon" @click="toggleSearchbar">
-                            <a href="#">
-                                <font-awesome-icon class="myicon" icon="fa-solid fa-magnifying-glass" />
-                            </a>
-                        </li>
-                    </ul>
+            
+               
+               <!-- MENU CENTRALE-->
+               <div class="searchbar first" :class="{ open: isOpen }">
+                 <!-- Prima searchbar -->
+                  <ul class="group-list" v-if="!isOpen">
+                     <li class="item" v-for="(item, index) in menuItems" :key="index" @click="toggleSearchbar">
+                       <a :href="item.link">{{ item.label }}</a>
+                       <i class="line"></i>
+                     </li>
+                     <li class="item icon" @click="toggleSearchbar">
+                        <a href="#">
+                           <font-awesome-icon class="myicon" icon="fa-solid fa-magnifying-glass"/>
+                        </a>
+                     </li>
+                  </ul>
 
                     <!-- Seconda searchbar -->
-                    <ul class="group-list" v-else>
-                        <div class="overlay"></div>
-                        <li class="item" v-for="(item, index) in menuItem3" :key="index"
-                            :class="{ active: item.active === index }" @click="active = index">
-                            <a :href="item.link">{{ item.label }}</a>
-                            <i class="line" :class="{ active: item.active === index }"></i>
-                        </li>
+                   <ul class="group-list" v-else>
+                      <div class="overlay"  :class="{ active: isActiveOverlay }" :style="{ left: overlayPosition.left + 'px', top: overlayPosition.top + 'px' }"></div>
+                     <li class="item" v-for="(item, index) in menuItem3" :key="item.label"  :class="{ active: item.active === index}"  @click="openAppDestination(index)" >
+                       <a :href="item.link">{{ item.label }}</a>
+                       <i class="line" :class="{ active: item.active === index}" ></i>
+                     </li>
 
-                        <!-- ICONA SEARCH -->
-                        <li class="item big-search">
-                            <a href="#">
-                                <font-awesome-icon class="myicon" icon="fa-solid fa-magnifying-glass" />
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                    <!-- ICONA SEARCH -->
+                     <li class="item big-search">
+                        <a href="#" >
+                          <font-awesome-icon  class="myicon" icon="fa-solid fa-magnifying-glass"/>
+                          <button class="button-search">Cerca</button>
+                        </a>
+                     </li>
+                   </ul>
 
-                <!-- MENU A DESTRA -->
-                <div class="right-menu">
-                    <ul class="group-list">
-                        <li class="item" v-for="item in menuItems2" :key="item.label">
-                            <a :href="item.link">{{ item.label }}</a>
-                        </li>
-                        <li class="item">
-                            <font-awesome-icon :icon="menuItems2[1].icon" class="globe" />
-                        </li>
-                    </ul>
+                 <AppDestination :show="show" />
+                   
+               </div>
 
-                    <!-- MENU DI LOGIN -->
-                    <ul class="group-list ">
-                        <li class="item d-inline-block">
-                            <font-awesome-icon :icon="menuHamb[0].icon" class="bars" />
-                        </li>
-                        <li class="item d-inline-block">
-                            <font-awesome-icon :icon="menuHamb[1].icon" class="user" />
-                        </li>
-                    </ul>
-                </div>
+               <!-- MENU A DESTRA -->
+               <div class="right-menu">
+                  <ul class="group-list">
+                    <li class="item" v-for="item in menuItems2" :key="item.label">
+                        <a :href="item.link">{{ item.label }}</a>
+                    </li>
+                    <li class="item">
+                        <font-awesome-icon :icon="menuItems2[1].icon" class="globe"/>
+                    </li>
+                  </ul>
+
+                 <!-- MENU DI LOGIN -->
+                  <ul class="group-list ">
+                    <li class="item d-inline-block">
+                       <font-awesome-icon :icon="menuHamb[0].icon" class="bars"/>
+                    </li>
+                    <li class="item d-inline-block">
+                       <font-awesome-icon :icon="menuHamb[1].icon" class="user"/>
+                    </li>
+                  </ul>
+               </div>
             </div>
-
-
+           
+            
         </nav>
     </header>
-
-    <div v-if="store.user == null">
-        <p>Autenticazione</p>
-        <router-link to="/login">login</router-link>
-        <router-link to="/register">register</router-link>
+   
+   
+<!-- 
+    <div class="container">
+        <label for="searchTitle">Titolo</label>
+        <input type="text" v-model="searchTitle" id="searchTitle" name="searchTitle" placeholder="Inserisci il titolo...">
+        <button @click="handleSearch()">Cerca</button>
     </div>
 
-    <!-- 
-        <div class="container">
-            <label for="searchTitle">Titolo</label>
-            <input type="text" v-model="searchTitle" id="searchTitle" name="searchTitle" placeholder="Inserisci il titolo...">
-            <button @click="handleSearch()">Cerca</button>
+    <div class="container">
+        <div class="card" v-for="apartment in apartments" @click="$router.push(`/apartments/${apartment.slug}`)">
+            <h2>Titolo: {{ apartment.title }}</h2>
+            <p>Descrizione: {{ apartment.description }}</p>
         </div>
-
-        <div class="container">
-            <div class="card" v-for="apartment in apartments" @click="$router.push(`/apartments/${apartment.slug}`)">
-                <h2>Titolo: {{ apartment.title }}</h2>
-                <p>Descrizione: {{ apartment.description }}</p>
-            </div>
 
     </div>
     <button @click="loadMore()">LOAD MORE</button> -->
 </template>
 
 <style lang="scss" scoped>
+
+
+@import '../../styles/partials/mixins.scss';
+@import '../../styles/partials/variables.scss';
+
 header {
     width: 100%;
     background-color: white;
     padding: 10px 50px;
     border-bottom: 1px solid #e2dbdb;
     position: relative;
+    z-index: 1;
 
-
+     
     .navbar {
         .container-fluid {
-
+         
             .logo-container {
                 width: 200px;
                 height: 100px;
@@ -212,53 +231,63 @@ header {
                 position: fixed;
                 top: 10px;
                 left: 10px;
-
-                h2 {
-                    color: #ff4a86;
-                    padding: 10px 0px;
-                }
+              
             }
 
             .menu-hidden {
-                width: 100%;
-                text-align: center;
-                margin: 0 auto;
-
+                 width: 100%;
+                 text-align: center;
+                 margin: 0 auto;
+                
                 .item {
-                    font-size: 16px;
-                    letter-spacing: 1.5px;
-                    margin-right: 30px;
-                    font-weight: lighter, bolder;
+                     font-size: 16px;
+                     letter-spacing: 1.5px;
+                     margin-right: 30px;
+                     font-weight: lighter, bolder;
+                     transition: all 0.4s ease-in;
+                     cursor: pointer;
+
+                     &:hover {
+                           border-bottom: 1.5px solid #B8B8B8;
+                           padding: 8px 0px;
+                           font-weight: lighter;
+                     }
                 }
 
-                .active {
+                 .active {
                     border-bottom: 1.5px solid black;
                     padding: 8px 0px;
-                }
+                } 
             }
 
             .first {
-                margin: 0 auto;
+             margin: 0 auto;
+             transform: translate(-30%, -0%);
+
             }
-
-            .searchbar,
-            .open,
-            .menu-hidden {
-
-                .group-list,
-                .group-list:last-child {
-                    border: 1px solid #B8B8B8;
+ 
+            .searchbar, .open, .menu-hidden {
+                position: relative;
+                .group-list, .group-list:last-child {
+                    border: 1px solid  #B8B8B8;
                     padding: 12px 25px;
                     border-radius: 50px;
                     text-align: center;
-                    -webkit-box-shadow: 1px 2px 9px -1px #B8B8B8;
+                    -webkit-box-shadow: 1px 2px 9px -1px #B8B8B8; 
                     box-shadow: 1px 2px 9px -1px #B8B8B8;
+                    transition: box-shadow 0.5s ease-in-out;
+                    cursor: pointer;
+
+
+                     &:hover {
+                        -webkit-box-shadow: 1px 1px 6px 1px #B8B8B8; 
+                        box-shadow: 1px 1px 6px 1px #B8B8B8;
+                     }
 
                     .item {
                         margin-right: 2px;
                     }
-
-                    .line {
+                     .line {
                         display: inline-block;
                         color: black;
                         background-color: black;
@@ -266,89 +295,123 @@ header {
                         height: 1px;
                         transform: rotate(90deg);
                         vertical-align: middle;
-                    }
+                   }
 
-                    .icon {
-                        border: 1px solid none;
-                        padding: 6px 9px;
-                        border-radius: 50px;
-                        background-color: #ff4a86;
+                   .icon {
+                      border: 1px solid none;
+                      padding: 6px 9px;
+                      border-radius: 50px;
+                      background-color: #ff4a86;
 
-                        .myicon {
-                            color: white;
-                        }
-                    }
-
+                      .myicon {
+                        color: white;
+                      }
+                   }
+                    
                 }
             }
 
             .searchbar.open {
-                padding: 50px 0px;
-                margin-left: 220px;
+              padding: 50px 0px;
+              margin-left: 220px;
+              width: 100%;
+              position: relative;
+                   
 
-                .overlay {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 40%;
-                    height: 100%;
-                    background-color: white;
-                    border: 1px solid white;
-                    z-index: 999;
-                    border-radius: 50px;
-                }
+        
 
+            .overlay, .active {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 30%;
+            height: 100%;
+            background-color: white;
+            border: 1px solid white;
+            z-index: 999;
+            border-radius: 50px;
+
+  
+}
+
+             
                 .group-list {
-                    width: 60%;
-                    padding: 18px 40px;
-                    position: absolute;
-                    top: 70%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    background-color: #d8d7d7;
-                    border: none;
-
+                     position: absolute;
+                     top: 25%;
+                     left: 30%;
+                     width: 80%;
+                     display: flex;
+                     align-items: center;
+                     justify-content: space-between;
+                     background-color:#d8d7d7 ;
+                     border: none;
+                     padding: 5px 10px;
                     .active {
-                        position: relative;
-                        z-index: 9999;
-
+                       position: relative;
+                       z-index: 9999;
+                       left: 30px;
+                       
                     }
 
                     .line.active {
-                        background-color: transparent;
+                        background-color:transparent;
                     }
 
                     .item:nth-child(3) {
-                        margin-left: 200px;
+                        margin-left: 150px;
                     }
 
-                    .item {
+                     .item {
                         font-size: 16px;
                         line-height: 50%;
-                    }
+                        transition: transform 0.5s; 
 
-                    .line {
-                        margin-left: 40px;
-                    }
+                        &:hover {
+                           transform: scale(0.95);
+                        }
+                        
+                     }
 
-                    .big-search {
-                        background-color: #ff4a86;
-                        padding: 13px 13px;
+                     .line {
+                        margin-left: 50px;
+                     }
+
+
+                     .big-search {
+                        background-image: linear-gradient(to right, $color-one-dark, $color-one-light);
+                        padding: 15px 10px;
+                        padding-right: 50px;
                         border-radius: 50px;
+                          transition: all 0.5s ease-in;
 
-
+                        &:hover {
+                             padding: 15px 10px;
+                             padding-right: 50px;
+                             background-image: linear-gradient(to left, $color-one-light, $color-two-dark);
+                        }
+                        
+                         
                         .myicon {
                             color: white;
-                            font-size: 20px;
+                            font-size: 18px;
+                            vertical-align: middle;
                         }
-                    }
+                     }
 
+                     .button-search {
+                        border: none;
+                        background: none;
+                        padding: 0 8px;
+                        width: 30px;
+                        color: white;
+
+                     }
+                    
                 }
-            }
 
+            
+              }
+ 
             .right-menu {
                 width: calc(100% / 4);
                 display: flex;
@@ -364,17 +427,34 @@ header {
                     border-radius: 50px;
                     font-size: 16px;
                     vertical-align: middle;
-
                 }
 
-                .group-list:last-child {
-                    border: 1px solid #e0dcdc;
-                    border-radius: 50px;
+                .group-list:first-child {
+                    .item {
+                       transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out;
 
+                       &:hover {
+                             transform: scale(1.2);
+                            border: 1px solid #e6e2e2;
+                            padding: 8px 10px;
+                            border-radius: 50px;
+                            background: #e6e2e2;
+                       }
+                    }
+                }
+                .group-list:last-child {
+                    border: 1px solid  #e0dcdc;
+                    border-radius: 50px;
                     margin-left: 18px;
                     padding: 10px 0px;
+                    transition: transform 0.8s ease-in-out, box-shadow 0.5s ease-in-out;
 
-
+                    &:hover {
+                           -webkit-box-shadow: 1px 1px 6px 1px #B8B8B8; 
+                           box-shadow: 1px 1px 6px 1px #B8B8B8;
+                           transform: scale(1.2);
+                    }
+                   
                     .user {
                         font-size: 28px;
                         color: #6d6a6a;
@@ -387,6 +467,7 @@ header {
                 }
             }
 
+           
             .item {
                 display: inline-block;
                 margin-right: 10px;
@@ -401,4 +482,7 @@ header {
             }
         }
     }
-}</style>
+}
+
+
+</style>
