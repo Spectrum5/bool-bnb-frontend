@@ -42,7 +42,7 @@ const router = createRouter({
             component: AppRegister
         },
         {
-            path: '/sponsors',
+            path: '/dashboard/sponsors',
             name: 'sponsor',
             component: Sponsor
         },
