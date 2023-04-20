@@ -33,6 +33,7 @@ export default {
                 description: '',
                 size: null,
                 user_id: store.user.id,
+                visibility: false,
                 services: []
             },
             services: [],
@@ -62,7 +63,7 @@ export default {
                 description: this.form.description,
                 size: this.form.size,
                 user_id: this.form.user_id,
-                visibility: 1,
+                visibility: !this.form.visibility,
                 services: this.form.services
             })
                 .then((response) => {
@@ -148,11 +149,10 @@ export default {
                 </div>
                 <div>
                     <label class="d-block">Indica se il tuo appartamento non sarà subito disponibile</label>
-                    <input type="checkbox" name="visibility" id="visibility">
+                    <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility">
                     <label for="visibility">Al momento non disponibile</label>
-                    </div>
+                </div>
                 <div class="services">
-
                     <span class="service" v-for="service in services">
                         <input v-model="form.services" type="checkbox" :name="service.name" :id="service.name"
                         :value="service.id">

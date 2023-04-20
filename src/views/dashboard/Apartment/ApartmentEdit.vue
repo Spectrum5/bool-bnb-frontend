@@ -27,6 +27,7 @@ export default {
                     this.form = response.data.apartment;
                     this.allServices = response.data.services;
                     this.setCheckboxes();
+                    this.setVisibility();
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti', response.data);
@@ -39,7 +40,7 @@ export default {
                 lng: -103.6998280,
                 address: this.form.address,
                 image: 'img.1',
-                visibility: 1,
+                visibility: this.form.visibility,
                 price: this.form.price,
                 rooms_number: this.form.rooms_number,
                 bathrooms_number: this.form.bathrooms_number,
@@ -61,6 +62,14 @@ export default {
                     this.selectedServices.push(service.id);
                 }
             });
+        },
+        setVisibility(){
+            if (this.form.visibility == 0) {
+                return this.form.visibility = true;
+            }
+            else{
+                return this.form.visibility = false;
+            }
         }
     },
     created() {
@@ -115,6 +124,11 @@ export default {
             <div>
                 <label for="size">MQ</label>
                 <input v-model="form.size" type="number" name="size" id="size">
+            </div>
+            <div>
+                <label class="d-block">Indica se il tuo appartamento non sarà subito disponibile</label>
+                <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility" >
+                <label for="visibility">Al momento non disponibile</label>
             </div>
             <div v-for="(service, index) in allServices">
                 <label :for="service.name">{{ service.name }}</label>
