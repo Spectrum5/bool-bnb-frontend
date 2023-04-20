@@ -6,6 +6,7 @@ import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
 // Utilities
 import axios from 'axios';
 import { router } from '../../../router';
+import { store } from '../../../store';
 
 export default {
     name: 'ApartmentIndex',
@@ -15,6 +16,7 @@ export default {
     data() {
         return {
             router,
+            store,
             apartments: null
         }
     },
