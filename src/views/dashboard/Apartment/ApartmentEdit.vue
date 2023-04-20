@@ -3,9 +3,13 @@
 // Utilities
 import axios from 'axios';
 import { router } from '../../../router';
+import AppErrorForm from '../../../components/AppErrorForm.vue';
 
 export default {
     name: 'ApartmentEdit',
+    components: { 
+        AppErrorForm
+    },
     data() {
         return {
             router,
@@ -123,6 +127,7 @@ export default {
             </div>
         </div>
         <button>Aggiorna appartamento</button>
+        <AppErrorForm/>
     </form>
 </template>
 

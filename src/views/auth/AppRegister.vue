@@ -3,6 +3,7 @@
 // Components
 import AppLogo from '../../components/AppLogo.vue';
 import AppFooter from '../../components/AppFooter.vue';
+import AppErrorForm from '../../components/AppErrorForm.vue';
 
 // Utilities
 import { store } from '../../store';
@@ -15,7 +16,8 @@ export default {
     name: 'AppRegister',
     components: {
         AppLogo,
-        AppFooter
+        AppFooter,
+        AppErrorForm
     },
     data() {
         return {
@@ -54,38 +56,38 @@ export default {
             // First Name Length
             if (firstNameInput.value.length == 0) {
                 this.store.errors.push({
-                    message: 'il campo nome deve essere compilato'
+                    message: 'Il campo nome deve essere compilato'
                 });
                 firstNameInput.classList.add('invalid');
             }
             else if (firstNameInput.value.length < 3) {
                 this.store.errors.push({
-                    message: 'il campo nome deve essere almeno di 3 caratteri'
+                    message: 'Il campo nome deve essere almeno di 3 caratteri'
                 });
                 firstNameInput.classList.add('invalid');
             }
             else if (firstNameInput.value.length > 128) {
                 this.store.errors.push({
-                    message: 'il campo nome non deve superare i 128 caratteri'
+                    message: 'Il campo nome non deve superare i 128 caratteri'
                 });
                 firstNameInput.classList.add('invalid');
             }
             // Last Name Length
             if (lastNameInput.value.length == 0) {
                 this.store.errors.push({
-                    message: 'il campo cognome deve essere compilato'
+                    message: 'Il campo cognome deve essere compilato'
                 });
                 lastNameInput.classList.add('invalid');
             }
             else if (lastNameInput.value.length < 3) {
                 this.store.errors.push({
-                    message: 'il campo cognome deve essere almeno di 3 caratteri'
+                    message: 'Il campo cognome deve essere almeno di 3 caratteri'
                 });
                 lastNameInput.classList.add('invalid');
             }
             else if (lastNameInput.value.length > 128) {
                 this.store.errors.push({
-                    message: 'il campo cognome non deve superare i 128 caratteri'
+                    message: 'Il campo cognome non deve superare i 128 caratteri'
                 });
                 lastNameInput.classList.add('invalid');
             }
@@ -94,58 +96,58 @@ export default {
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             )) {
                 this.store.errors.push({
-                    message: 'la tua email contiene caratteri non permessi'
+                    message: 'La tua email contiene caratteri non permessi'
                 });
                 emailInput.classList.add('invalid');
             }
             // Email Lenght
             if (emailInput.value.length == 0) {
                 this.store.errors.push({
-                    message: 'il campo email deve essere compilato'
+                    message: 'Il campo email deve essere compilato'
                 });
                 emailInput.classList.add('invalid');
             }
             else if (emailInput.value.length < 10) {
                 this.store.errors.push({
-                    message: 'l\'email deve essere lunga almeno 10 caratteri'
+                    message: 'L\'email deve essere lunga almeno 10 caratteri'
                 });
                 emailInput.classList.add('invalid');
             }
             else if (emailInput.value.length > 64) {
                 this.store.errors.push({
-                    message: 'l\'email non deve superare i 64 caratteri'
+                    message: 'L\'email non deve superare i 64 caratteri'
                 });
                 emailInput.classList.add('invalid');
             }
             // Password Lenght
             if (passwordInput.value.length == 0) {
                 this.store.errors.push({
-                    message: 'il campo password deve essere compilato'
+                    message: 'Il campo password deve essere compilato'
                 });
                 passwordInput.classList.add('invalid');
             }
             else if (passwordInput.value.length < 10) {
                 this.store.errors.push({
-                    message: 'la password deve essere lunga almeno 10 caratteri'
+                    message: 'La password deve essere lunga almeno 10 caratteri'
                 });
                 passwordInput.classList.add('invalid');
             }
             else if (passwordInput.value.length > 64) {
                 this.store.errors.push({
-                    message: 'la password non deve superare i 64 caratteri'
+                    message: 'La password non deve superare i 64 caratteri'
                 });
                 passwordInput.classList.add('invalid');
             }
             // Password Confirmation
             if (passwordConfirmationInput.value.length == 0) {
                 this.store.errors.push({
-                    message: 'il campo conferma password deve essere compilato'
+                    message: 'Il campo conferma password deve essere compilato'
                 });
                 passwordConfirmationInput.classList.add('invalid');
             }
             if (passwordInput.value != passwordConfirmationInput.value) {
                 this.store.errors.push({
-                    message: 'le password inserite non coincidono'
+                    message: 'Le password inserite non coincidono'
                 });
                 passwordConfirmationInput.classList.add('invalid');
             }
@@ -204,12 +206,16 @@ export default {
                             <label for="first_name">first name</label>
                             <input type="text" id="first_name" name="first_name" placeholder="Your first name"
                                 v-model="form.first_name">
+                                <!-- minlength="10"
+                                maxlength="128" -->
                         </div>
 
                         <div class="group small">
                             <label for="last_name">last name</label>
                             <input type="text" id="last_name" name="last_name" placeholder="Your last name"
                                 v-model="form.last_name">
+                                <!-- minlength="10"
+                                maxlength="128" -->
                         </div>
                     </div>
 
@@ -218,6 +224,9 @@ export default {
                         <div class="group large">
                             <label for="email">email</label>
                             <input type="text" id="email" name="email" placeholder="test@example.com" v-model="form.email">
+                            <!-- type email
+                            minlength="10"
+                            maxlength="64" -->
                         </div>
                     </div>
 
@@ -227,12 +236,16 @@ export default {
                             <label for="password">password</label>
                             <input type="password" id="password" name="password" placeholder="Your password"
                                 v-model="form.password">
+                                <!-- minlength="10"
+                                maxlength="64" -->
                         </div>
 
                         <div class="group small">
                             <label for="password_confirmation">confirm password</label>
                             <input type="password" id="password_confirmation" name="password_confirmation"
                                 placeholder="Confirm your password" v-model="form.password_confirmation">
+                                <!-- minlength="10"
+                                maxlength="64" -->
                         </div>
                     </div>
 
@@ -247,6 +260,7 @@ export default {
                     <div class="row">
                         <button class="btn">register</button>
                     </div>
+                    <AppErrorForm/>
                 </form>
                 <router-link to="/login" class="customLink">Hai gia' un account? Accedi.</router-link>
             </div>
