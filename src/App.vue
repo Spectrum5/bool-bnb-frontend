@@ -17,13 +17,11 @@ export default {
     },
     methods: {
         getUser() {
-            this.store.loadingWidth = 55;
             axios.get('http://localhost:8000/api/user')
                 .then((response) => {
                     console.log('User', response.data)
-                    this.store.user = response.data.user;
-                    this.store.userDetail = response.data.user_detail;
-                    // router.push('/dashboard');
+                    this.store.user = response.data;
+                    router.push('/dashboard/apartments');
                 })
                 .catch((response) => {
                     console.log('Ottenimento user fallito');

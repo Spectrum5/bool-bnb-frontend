@@ -6,6 +6,7 @@ import AppLogo from '../../components/AppLogo.vue';
 // Utilities
 import axios from 'axios';
 // import {router} from '../../router';
+import { store } from '../../store';
 
 
 export default {
@@ -15,6 +16,7 @@ export default {
     },
     data() {
         return {
+            store,
             isOpen: false,
             active: 0,
             // router,
@@ -168,8 +170,8 @@ export default {
         </nav>
     </header>
 
-    <div>
-        <p>Link per i test, li potete eliminare</p>
+    <div v-if="store.user == null">
+        <p>Autenticazione</p>
         <router-link to="/login">login</router-link>
         <router-link to="/register">register</router-link>
     </div>
