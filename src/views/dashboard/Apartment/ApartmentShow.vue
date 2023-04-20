@@ -59,7 +59,7 @@ export default {
         <div v-if="apartment.services.length > 0">
             <h4>Servizi:</h4>
             <div v-for="service in apartment.services">
-                <p>{{ apartment.services.name }}</p>
+                <p>{{ service.name }}</p>
             </div>
         </div>
     </div>
