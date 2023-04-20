@@ -146,6 +146,48 @@ export default {
     .pack {
         font-size: 1.3rem;
     }
+}
 
+
+@media (min-width: 320px) and (max-width: 768px) {
+    .cards {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .cards .card.active {
+        transform: scale(1);
+    }
+}
+
+@media (min-width: 600px) and (max-width: 700px) {
+    .card {
+        margin-bottom: 1rem;
+        margin-right: 1rem;
+    }
+
+    .cards .card.active {
+        transform: scale(1);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 900px) {
+    .cards {
+        display: flex;
+        height: fit-content;
+    }
+
+    .card {
+        margin-bottom: 2rem;
+        margin-right: 1rem;
+    }
+
+    .cards .card.active {
+        transform: scale(1);
+    }
 }
 </style>
