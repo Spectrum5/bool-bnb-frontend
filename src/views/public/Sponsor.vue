@@ -38,7 +38,7 @@ export default {
             <div class="card active">
                 <ul>
                     <li class="pack">premium</li>
-                    <li id="plus" class="price bottom-bar">&euro;5.99</li>
+                    <li id="plus" class="price bottom-bar">&euro;9.99</li>
                     <li class="bottom-bar">Time: 72 ore</li>
                     <li class="bottom-bar">case infinite</li>
                     <li class="bottom-bar">Support 24/7 (non è vero)</li>
@@ -48,7 +48,7 @@ export default {
             <div class="card shadow">
                 <ul>
                     <li class="pack">plus</li>
-                    <li id="premium" class="price bottom-bar">&euro;9.99</li>
+                    <li id="premium" class="price bottom-bar">&euro;5.99</li>
                     <li class="bottom-bar">Time: 48 ore</li>
                     <li class="bottom-bar">case non infinite</li>
                     <li class="bottom-bar">support 9-12</li>
@@ -64,7 +64,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
 
     .cards {
         display: flex;
