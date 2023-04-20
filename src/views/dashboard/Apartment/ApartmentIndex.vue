@@ -22,11 +22,16 @@ export default {
     },
     methods: {
         getApartments() {
+            console.log('USER ID', store.user.id);
             axios.get('http://localhost:8000/api/apartments',
-            {user_id : store.user_id})
+                {
+                    params: {
+                        user_id: this.store.user.id,
+                    }
+                })
                 .then((response) => {
-                    console.log('Index Appartamenti', response.data.apartments.data);
-                    this.apartments = response.data.apartments.data;
+                    console.log('Index Appartamenti', response.data);
+                    this.apartments = response.data.apartments;
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti', response.data);
@@ -54,10 +59,10 @@ export default {
         <!-- LATO SX DASHBOARD / ASIDE -->
         <!-- <section class="lato-sx">
                 
-                </section> -->
+                        </section> -->
 
         <!-- LATO DESTRO A TUTTA PAGINA 
-                <section class="lato-dx" v-if="myApartment">-->
+                        <section class="lato-dx" v-if="myApartment">-->
         <div>
             <h2>I miei Appartamenti</h2>
             <div class="create" @click="$router.push('/dashboard/apartments/create')">
@@ -68,8 +73,8 @@ export default {
             </div>
         </div>
 
-        <div class="row-my-partm" v-for="apartment in apartments" >
-            <div >
+        <div class="row-my-partm" v-for="apartment in apartments">
+            <div>
                 <p @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)"> {{ apartment.title }}</p>
             </div>
             <div>
@@ -92,7 +97,7 @@ export default {
             </div>
         </div>
         <!-- </section>
-            </div>  -->
+                    </div>  -->
     </AppDashboardLayoutVue>
 </template>
 
@@ -150,4 +155,5 @@ export default {
 .btn-sponsor {
     background-color: #59DCC0;
     border: 2px solid #59DCC0;
-}</style>
+}
+</style>
