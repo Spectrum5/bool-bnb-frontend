@@ -14,7 +14,7 @@ import AppRegister from './views/auth/AppRegister.vue';
 // Dashboard - Apartment
 import ApartmentIndex from './views/dashboard/Apartment/ApartmentIndex.vue';
 import ApartmentCreate from './views/dashboard/Apartment/ApartmentCreate.vue';
-import AppEditApartment from './views/dashboard/Apartment/AppEditApartment.vue';
+import ApartmentEdit from './views/dashboard/Apartment/ApartmentEdit.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -59,11 +59,23 @@ const router = createRouter({
         {
             path: '/dashboard/apartments/create',
             name: 'apartment-create',
-            component: ApartmentCreate
+            component: ApartmentCreate,
+            beforeEnter: (to, from) => {
+                if (store.user == null) return { name: 'login' }
+            },
+        },
+        {
+            path: '/apartments/:slug/edit',
+            name: 'apartment-edit',
+            component: ApartmentEdit,
+            beforeEnter: (to, from) => {
+                if (store.user == null) return { name: 'login' }
+            },
         },
 
 
 
+        
 
 
         {
@@ -79,11 +91,7 @@ const router = createRouter({
         },
 
         
-        {
-            path: '/apartments/:slug/edit',
-            name: 'apartment-edit',
-            component: AppEditApartment
-        },
+
     ]
 });
 

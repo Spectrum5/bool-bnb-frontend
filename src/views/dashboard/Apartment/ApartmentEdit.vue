@@ -5,7 +5,7 @@ import axios from 'axios';
 import { router } from '../../../router';
 
 export default {
-    name: 'AppEditApartment',
+    name: 'ApartmentEdit',
     data() {
         return {
             router,
@@ -29,26 +29,26 @@ export default {
                 })
         },
         updateApartment() {
-            axios.put('http://localhost:8000/api/apartments', {
-                title: 'valore1',
-                lat: 51.857142,
-                lng: 24.418224,
-                address: 'valore1',
+            axios.put(`http://localhost:8000/api/apartments/${this.form.id}`, {
+                title: this.form.title,
+                lat: this.form.lat,
+                lng: this.form.lng,
+                address: this.form.address,
                 image: 'img.1',
                 visibility: 1,
-                price: 67,
-                rooms_number: 4,
-                bathrooms_number: 4,
-                beds_number: 4,
-                description: 'valore1',
-                size: 100,
+                price: this.form.price,
+                rooms_number: this.form.rooms_number,
+                bathrooms_number: this.form.bathrooms_number,
+                beds_number: this.form.beds_number,
+                description: this.form.description,
+                size: this.form.size,
                 user_id: 1
             })
                 .then((response) => {
-                    console.log('Appartamento nuovo', response);
+                    console.log('Appartamento aggiornato', response);
                 })
                 .catch((response) => {
-                    console.log('Errore creazione', response.data);
+                    console.log('Errore aggiornamento', response.data);
                 })
         },
         setCheckboxes() {
@@ -122,7 +122,7 @@ export default {
                     :value="service.id">
             </div>
         </div>
-        <button>Crea appartamento</button>
+        <button>Aggiorna appartamento</button>
     </form>
 </template>
 

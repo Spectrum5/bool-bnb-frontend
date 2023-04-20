@@ -57,7 +57,8 @@ export default {
                 beds_number: this.form.beds_number,
                 description: this.form.description,
                 size: this.form.size,
-                user_id: this.form.user_id
+                user_id: this.form.user_id,
+                visibility: 1
             })
                 .then((response) => {
                     console.log('Appartamento nuovo', response);
