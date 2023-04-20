@@ -20,7 +20,8 @@ export default {
     },
     methods: {
         getApartments() {
-            axios.get('http://localhost:8000/api/apartments')
+            axios.get('http://localhost:8000/api/apartments',
+            {user_id : store.user_id})
                 .then((response) => {
                     console.log('Index Appartamenti', response.data.apartments.data);
                     this.apartments = response.data.apartments.data;
