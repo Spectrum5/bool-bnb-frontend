@@ -65,12 +65,12 @@ export default {
             </div>
         </div>
 
-        <div class="row-my-partm" v-for="apartment in apartments">
-            <div>
-                <p>{{ apartment.title }}</p>
+        <div class="row-my-partm" v-for="apartment in apartments" >
+            <div >
+                <p @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)"> {{ apartment.title }}</p>
             </div>
             <div>
-                <button class="btn btn-edit" @click="$router.push(`/apartments/${apartment.slug}/edit`)">
+                <button class="btn btn-edit" @click="$router.push(`/dashboard/apartments/${apartment.slug}/edit`)">
                     <font-awesome-icon icon="fa-solid fa-pencil" />
                     Modifica
                 </button>

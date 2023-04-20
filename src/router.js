@@ -15,6 +15,7 @@ import AppRegister from './views/auth/AppRegister.vue';
 import ApartmentIndex from './views/dashboard/Apartment/ApartmentIndex.vue';
 import ApartmentCreate from './views/dashboard/Apartment/ApartmentCreate.vue';
 import ApartmentEdit from './views/dashboard/Apartment/ApartmentEdit.vue';
+import ApartmentShow from './views/dashboard/Apartment/ApartmentShow.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -65,9 +66,17 @@ const router = createRouter({
             },
         },
         {
-            path: '/apartments/:slug/edit',
+            path: '/dashboard/apartments/:slug/edit',
             name: 'apartment-edit',
             component: ApartmentEdit,
+            beforeEnter: (to, from) => {
+                if (store.user == null) return { name: 'login' }
+            },
+        },
+        {
+            path: '/dashboard/apartments/:slug',
+            name: 'apartment-show',
+            component: ApartmentShow,
             beforeEnter: (to, from) => {
                 if (store.user == null) return { name: 'login' }
             },
