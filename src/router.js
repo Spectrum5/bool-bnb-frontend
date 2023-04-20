@@ -94,7 +94,7 @@ const router = createRouter({
         },
 
         {
-            path: '/sponsors',
+            path: '/dashboard/sponsors',
             name: 'sponsor',
             component: Sponsor
         },

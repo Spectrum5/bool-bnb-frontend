@@ -10,8 +10,8 @@ import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
-
-
+import { faStar } from '@fortawesome/free-solid-svg-icons'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { faWaterLadder } from '@fortawesome/free-solid-svg-icons'
 import { faWifi } from '@fortawesome/free-solid-svg-icons'
 import { faCarSide } from '@fortawesome/free-solid-svg-icons'
