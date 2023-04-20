@@ -1,59 +1,40 @@
 // Import variables
-@use './partials/variables.scss';
+@use './partials/variables.scss' as *;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200&display=swap%27');
 
 // import di bootstrap
-@import 'bootstrap/scss/bootstrap.scss';
-
+// @import 'bootstrap/scss/bootstrap.scss';
 
 // Reset rules
 * {
-    vertical-align: baseline;
-    font-weight: inherit;
-    font-family: inherit;
-    font-style: inherit;
-    font-size: 100%;
-    border: 0 none;
-    outline: 0;
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
 }
 
-a {
-    text-decoration: none;
+:root {
+    font-size: 16px;
 }
 
-nav ul {
-    list-style-type: none;
+body {
+    font-family: 'Poppins', sans-serif;
 }
 
-// Style rules
-
-h2,
-h3,
-h4,
-h5 {
-    font-weight: 500;
+.mainTitle {
+    // Da usare sugli h1 nelle pagine
+    margin-bottom: 1rem;
+    text-transform: capitalize;
+    font-size: clamp(2rem, 5vw, 2.5rem);
+    user-select: none;
 }
 
-p,
-span {
-    text-align: left;
-}
-
-// Button
-.button {
-    border-radius: 1rem;
-    padding: 0.8rem 1.4rem;
-    color: $secondary-color;
-    font-weight: 500;
-    font-size: 1.1rem;
-    background-color: $secondary-background;
-}
-
-
-// Utilities
-.title-bnb {
-    // mark title with primary color
-    color: $primary-color;
-    font-weight: 700;
+.customLink {
+    // Da usare per i link normali sottolineati
+    color: $color-one-dark;
+    font-size: 0.9rem;
+    transition: all 0.05s;
+    &:hover {
+        color: $color-one-light;
+    }
 }

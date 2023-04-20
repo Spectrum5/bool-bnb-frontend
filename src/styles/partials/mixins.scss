@@ -1,13 +1,56 @@
-// Per questo mixin sono stati inseriti degli argomenti che hanno dei valori di default (quelli originali delle 3 proprietà)
-@mixin flex-container($flex-direction: row, $justify-content: flex-start, $align-items: stretch) {
+@use '../partials/variables.scss' as *;
 
-    // La direttiva @debug ci consente di stampare nel terminale qualcosa durante la compilazione
-    @debug "Il valore scelto per flex-direction è:" + $flex-direction;
-    @debug "Il valore scelto per justify-content è:" + $justify-content;
-    @debug "Il valore scelto per align-items è:" + $align-items;
+@mixin flexSpaceBtwn ($gap: 0) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $gap;
+}
 
-    flex-direction: $flex-direction;
-    justify-content: $justify-content;
-    align-items: $align-items;
+@mixin flexRowCenter ($gap: 0) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: $gap;
+}
 
+@mixin largeContainer {
+    max-width: 1760px;
+    margin: 0 auto;
+}
+
+@mixin cardsContainer ($gap: 0) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: $gap;
+
+    >.card {
+        width: 260px;
+    }
+}
+
+@mixin absoluteCenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin customOutline {
+    outline-style: solid;
+    outline-color: $color-three-dark;
+    outline-offset: 2px;
+    outline-width: 0px;
+
+    transition: outline-width 0.05s, outline-color 0.03s;
+
+    &:hover,
+    &:focus-visible {
+        outline-width: 2px;
+    }
+
+    &:active {
+        outline-color: $color-three-light;
+    }
 }

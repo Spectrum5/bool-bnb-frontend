@@ -1,5 +1,29 @@
-$primary-color: lightcoral;
-$secondary-color: aquamarine;
-$secondary-background: rgba(212, 170, 81, 0.15);
-$lighter-color: #FFF;
-$darker-color: #000;
+// Colors
+
+$light-color-one: #f5f5f5;
+$light-color-two: #e4e4e4;
+
+$dark-color-one: #141414;
+$dark-color-two: #252525;
+
+$color-one-dark: #4294F2;
+$color-one-light: #7db7f8;
+
+$color-two-light: #8ffde5;
+$color-two-dark: #59DCC0;
+
+$color-three-dark: #f39237;
+$color-three-light: #faa95e;
+
+$success-color-light: #56db75;
+$success-color-dark: #28a745;
+
+$warning-color-light: #f5d679;
+$warning-color-dark: #e6b00a;
+
+$danger-color-light: #f56372;
+$danger-color-dark: #dc3545;
+
+// Border Radius
+$small-border-radius: 8px;
+$big-border-radius: 12px;
