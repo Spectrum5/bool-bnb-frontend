@@ -73,11 +73,15 @@ export default {
             </div>
         </div>
 
-        <div class="row-my-partm" v-for="apartment in apartments">
+        <div class="row-my-partm my-container" v-for="apartment in apartments">
             <div>
-                <p @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)"> {{ apartment.title }}</p>
+                <p> {{ apartment.title }}</p>
             </div>
             <div>
+                <button class="btn btn-show" @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)">
+                    <font-awesome-icon icon="fa-solid fa-eye" />
+                    Vedi dettagli
+                </button>
                 <button class="btn btn-edit" @click="$router.push(`/dashboard/apartments/${apartment.slug}/edit`)">
                     <font-awesome-icon icon="fa-solid fa-pencil" />
                     Modifica
@@ -106,6 +110,8 @@ export default {
 
 .my-container {
     @include flexSpaceBtwn ($gap: 0);
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.445);
 
     .lato-sx {
         height: 100vh;
@@ -132,6 +138,11 @@ export default {
     border-radius: 10px;
     margin-right: 5px;
     cursor: pointer;
+}
+
+.btn-show {
+    background-color: #f5f5f5;
+    border: 2px solid #141414;
 }
 
 .btn-create {
