@@ -40,7 +40,7 @@ export default {
                 lng: -103.6998280,
                 address: this.form.address,
                 image: 'img.1',
-                visibility: this.form.visibility,
+                visibility: !this.form.visibility,
                 price: this.form.price,
                 rooms_number: this.form.rooms_number,
                 bathrooms_number: this.form.bathrooms_number,
