@@ -3,6 +3,7 @@
 // Components
 import AppLogo from '../../components/AppLogo.vue';
 import AppFooter from '../../components/AppFooter.vue';
+import AppErrorForm from '../../components/AppErrorForm.vue';
 
 // Utilities
 import { store } from '../../store';
@@ -15,7 +16,8 @@ export default {
     name: 'AppLogin',
     components: {
         AppLogo,
-        AppFooter
+        AppFooter,
+        AppErrorForm
     },
     data() {
         return {
@@ -47,45 +49,45 @@ export default {
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             )) {
                 this.store.errors.push({
-                    message: 'la tua email contiene caratteri non permessi'
+                    message: 'La tua email contiene caratteri non permessi'
                 });
                 emailInput.classList.add('invalid');
             }
             // Email Lenght
             if (emailInput.value.length == 0) {
                 this.store.errors.push({
-                    message: 'il campo email deve essere compilato'
+                    message: 'Il campo email deve essere compilato'
                 });
                 emailInput.classList.add('invalid');
             }
             else if (emailInput.value.length < 10) {
                 this.store.errors.push({
-                    message: 'l\'email deve essere lunga almeno 10 caratteri'
+                    message: 'L\'email deve essere lunga almeno 10 caratteri'
                 });
                 emailInput.classList.add('invalid');
             }
             else if (emailInput.value.length > 64) {
                 this.store.errors.push({
-                    message: 'l\'email non deve superare i 64 caratteri'
+                    message: 'L\'email non deve superare i 64 caratteri'
                 });
                 emailInput.classList.add('invalid');
             }
             // Password Lenght
             if (passwordInput.value.length == 0) {
                 this.store.errors.push({
-                    message: 'il campo password deve essere compilato'
+                    message: 'Il campo password deve essere compilato'
                 });
                 passwordInput.classList.add('invalid');
             }
             else if (passwordInput.value.length < 10) {
                 this.store.errors.push({
-                    message: 'la password deve essere lunga almeno 10 caratteri'
+                    message: 'La password deve essere lunga almeno 10 caratteri'
                 });
                 passwordInput.classList.add('invalid');
             }
             else if (passwordInput.value.length > 64) {
                 this.store.errors.push({
-                    message: 'la password non deve superare i 64 caratteri'
+                    message: 'La password non deve superare i 64 caratteri'
                 });
                 passwordInput.classList.add('invalid');
             }
@@ -146,25 +148,31 @@ export default {
                 <form @submit.prevent="handleLogin()">
                     <div class="row">
                         <div class="group large">
-                            <label for="email">email</label>
+                            <label for="email">email *</label>
                             <input type="text" id="email" name="email" placeholder="test@example.com" v-model="form.email">
+                            <!-- type email
+                            minlength="10"
+                            maxlength="64" -->
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="group large">
-                            <label for="password">password</label>
+                            <label for="password">password *</label>
                             <input type="password" id="password" name="password" placeholder="Your password"
                                 v-model="form.password">
+                                <!-- minlength="10"
+                                maxlength="64" -->
                         </div>
                     </div>
 
                     <div class="row">
                         <button class="btn">login</button>
                     </div>
-
+                    <AppErrorForm/>
                 </form>
                 <router-link to="/register" class="customLink">Non hai un account? Creane uno.</router-link>
+                <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
             </div>
         </div>
     </main>
@@ -199,5 +207,10 @@ header {
 
 main {
     height: 100vh;
+}
+.campi-required{
+    font-size: 0.75rem;
+    margin-top: 1rem;
+    font-style: italic;
 }
 </style>

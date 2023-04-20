@@ -2,6 +2,7 @@
 
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppErrorForm from '../../../components/AppErrorForm.vue';
 
 // Utilities
 import axios from 'axios';
@@ -10,7 +11,8 @@ import { router } from '../../../router';
 export default {
     name: 'ApartmentCreate',
     components: {
-        AppDashboardLayoutVue
+        AppDashboardLayoutVue,
+        AppErrorForm
     },
     data() {
         return {
@@ -85,15 +87,23 @@ export default {
             <div class="row">
                 <div>
                     <label for="title">Inserisci nome appartamento:</label>
-                    <input v-model="form.title" type="text" name="title" id="title" required>
+                    <input
+                    v-model="form.title"
+                    type="text"
+                    name="title"
+                    id="title"
+                    max="255"
+                    required>
                 </div>
                 <div>
-                    <label for="price">Inserisci prezzo:</label>
+                    <label for="price">Inserisci prezzo a notte:</label>
                     <input v-model="form.price" type="number" name="price" id="price" required>
+                    <!-- max="1500" -->
                 </div>
                 <div>
                     <label for="address">Inserisci indirizzo:</label>
                     <input v-model="form.address" type="text" name="address" id="address" required>
+                    <!-- maxlength="512" -->
                 </div>
                 <!-- <div>
                     <label for="lat">Latitudine (**da inserire?** o da mettere in automatico?**)</label>
@@ -106,27 +116,37 @@ export default {
                 <div>
                     <label for="rooms_number">Numero di stanze</label>
                     <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number" required>
+                    <!-- min="1"
+                    max="8" -->
                 </div>
                 <div>
                     <label for="beds_number">Numero di post letto / letti</label>
                     <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number" required>
+                    <!-- min="1"
+                        max="16" -->
                 </div>
                 <div>
                     <label for="bathrooms_number">Numero di bagni</label>
                     <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
                         required>
+                        <!-- min="1"
+                        max="8" -->
                 </div>
                 <div>
                     <label for="description">Descrizione appartamento:</label>
                     <textarea v-model="form.description" name="description" id="description" rows="6" required></textarea>
+                    <!-- maxlength="4096"-->
                 </div>
                 <div>
                     <label for="size">MQ</label>
                     <input v-model="form.size" type="number" name="size" id="size" required>
+                    <!-- min="50"
+                        max="500" -->
                 </div>
                 <div>
                     <label for="user_id">user id prova</label>
                     <input v-model="form.user_id" type="number" name="user_id" id="user_id" required>
+                    <!-- da eliminare questo campo -->
                 </div>
                 <div class="services">
 
@@ -138,6 +158,7 @@ export default {
                 </div>
             </div>
             <button type="submit">Crea appartamento</button>
+            <AppErrorForm/>
         </form>
     </AppDashboardLayoutVue>
 </template>
