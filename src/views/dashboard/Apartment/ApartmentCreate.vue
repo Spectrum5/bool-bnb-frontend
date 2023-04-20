@@ -33,6 +33,7 @@ export default {
                 description: '',
                 size: null,
                 user_id: store.user.id,
+                visibility: false,
                 services: []
             },
             services: [],
@@ -62,7 +63,8 @@ export default {
                 description: this.form.description,
                 size: this.form.size,
                 user_id: this.form.user_id,
-                visibility: 1
+                visibility: !this.form.visibility,
+                services: this.form.services
             })
                 .then((response) => {
                     console.log('Appartamento nuovo', response);
@@ -88,7 +90,7 @@ export default {
         <form @submit.prevent="createApartment()" class="formContainer">
             <div class="row">
                 <div>
-                    <label for="title">Inserisci nome appartamento:</label>
+                    <label class="d-block" for="title">Inserisci nome appartamento: *</label>
                     <input
                     v-model="form.title"
                     type="text"
@@ -98,12 +100,12 @@ export default {
                     required>
                 </div>
                 <div>
-                    <label for="price">Inserisci prezzo a notte:</label>
+                    <label class="d-block" for="price">Inserisci prezzo a notte: *</label>
                     <input v-model="form.price" type="number" name="price" id="price" required>
                     <!-- max="1500" -->
                 </div>
                 <div>
-                    <label for="address">Inserisci indirizzo:</label>
+                    <label class="d-block" for="address">Inserisci indirizzo: *</label>
                     <input v-model="form.address" type="text" name="address" id="address" required>
                     <!-- maxlength="512" -->
                 </div>
@@ -116,42 +118,41 @@ export default {
                     <input v-model="form.lng" type="text" name="lng" id="lng" required>
                 </div> -->
                 <div>
-                    <label for="rooms_number">Numero di stanze</label>
+                    <label class="d-block" for="rooms_number">Numero di stanze: *</label>
                     <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number" required>
                     <!-- min="1"
                     max="8" -->
                 </div>
                 <div>
-                    <label for="beds_number">Numero di post letto / letti</label>
+                    <label class="d-block" for="beds_number">Numero di posti letto / letti: *</label>
                     <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number" required>
                     <!-- min="1"
                         max="16" -->
                 </div>
                 <div>
-                    <label for="bathrooms_number">Numero di bagni</label>
+                    <label class="d-block" for="bathrooms_number">Numero di bagni: *</label>
                     <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
                         required>
                         <!-- min="1"
                         max="8" -->
                 </div>
                 <div>
-                    <label for="description">Descrizione appartamento:</label>
-                    <textarea v-model="form.description" name="description" id="description" rows="6" required></textarea>
+                    <label class="d-block" for="description">Descrizione appartamento: *</label>
+                    <textarea v-model="form.description" name="description" id="description" rows="6" cols="8" required></textarea>
                     <!-- maxlength="4096"-->
                 </div>
                 <div>
-                    <label for="size">MQ</label>
+                    <label class="d-block" for="size">Inserisci i mq: *</label>
                     <input v-model="form.size" type="number" name="size" id="size" required>
                     <!-- min="50"
                         max="500" -->
                 </div>
                 <div>
-                    <label>Indica se il tuo appartamento non sarà subito disponibile</label>
-                    <input type="checkbox" name="visibility" id="visibility">
+                    <label class="d-block">Indica se il tuo appartamento non sarà subito disponibile</label>
+                    <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility">
                     <label for="visibility">Al momento non disponibile</label>
-                    </div>
+                </div>
                 <div class="services">
-
                     <span class="service" v-for="service in services">
                         <input v-model="form.services" type="checkbox" :name="service.name" :id="service.name"
                         :value="service.id">
@@ -160,6 +161,7 @@ export default {
                 </div>
             </div>
             <button type="submit">Crea appartamento</button>
+            <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
             <AppErrorForm/>
         </form>
     </AppDashboardLayoutVue>

@@ -56,6 +56,12 @@ export default {
             <h4>Indirizzo:</h4>
             <p>{{ apartment.address }}</p>
         </div>
+        <div v-if="apartment.services.length > 0">
+            <h4>Servizi:</h4>
+            <div v-for="service in apartment.services">
+                <p>{{ apartment.services.name }}</p>
+            </div>
+        </div>
     </div>
 </template>
 
