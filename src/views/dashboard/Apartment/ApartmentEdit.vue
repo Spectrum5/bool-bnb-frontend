@@ -31,8 +31,8 @@ export default {
         updateApartment() {
             axios.put(`http://localhost:8000/api/apartments/${this.form.id}`, {
                 title: this.form.title,
-                lat: this.form.lat,
-                lng: this.form.lng,
+                lat: 37.9312320,
+                lng: -103.6998280,
                 address: this.form.address,
                 image: 'img.1',
                 visibility: 1,
@@ -84,14 +84,14 @@ export default {
                 <label for="address">Inserisci indirizzo:</label>
                 <input v-model="form.address" type="text" name="address" id="address">
             </div>
-            <div>
+            <!-- <div>
                 <label for="lat">Latitudine (**da inserire?** o da mettere in automatico?**)</label>
                 <input v-model="form.lat" type="text" name="lat" id="lat">
             </div>
             <div>
                 <label for="lng">Longitudine (**da inserire?** o da mettere in automatico?**)</label>
                 <input v-model="form.lng" type="text" name="lng" id="lng">
-            </div>
+            </div> -->
             <div>
                 <label for="rooms_number">Numero di stanze</label>
                 <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number">
