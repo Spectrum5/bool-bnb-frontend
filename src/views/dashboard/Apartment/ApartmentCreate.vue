@@ -149,6 +149,21 @@ export default {
             }
         },
 
+        descriptionValidation() {
+            const descriptionInput = document.getElementById('description');
+            descriptionInput.classList.remove('invalid');
+
+            const descriptionValue = descriptionInput.value.trim();
+
+            if (descriptionValue.length < 10) {
+                this.addError('La descrizione deve essere di almeno 10 caratteri', 'description');
+                descriptionInput.classList.add('invalid');
+            } else if (descriptionValue.length > 4096) {
+                this.addError('La descrizione deve essere di massimo 4096 caratteri', 'description');
+                descriptionInput.classList.add('invalid');
+            }
+        },
+
         sizeValidation() {
             const sizeInput = document.getElementById('size');
             sizeInput.classList.remove('invalid');
@@ -205,7 +220,7 @@ export default {
             this.priceValidation();
             this.roomsNumberValidation();
             this.bathroomsNumberValidation();
-            // this.descriptionValidation();
+            this.descriptionValidation();
             this.sizeValidation();
             // this.servicesValidation();
 
@@ -314,7 +329,7 @@ export default {
                     </div>
                     <div class="group small">
                         <label class="mb-2 d-block" for="description">Descrizione appartamento: *</label>
-                        <textarea v-model="form.description" name="description" id="description" rows="6"></textarea>
+                        <textarea v-model="form.description" name="description" id="description" rows="6" v-on:blur="descriptionValidation()"></textarea>
                         <!-- maxlength="4096"-->
                     </div>
                     <div>
