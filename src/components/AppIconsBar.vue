@@ -37,11 +37,12 @@ export default {
     },
      methods: {
         getFilteredSearch() {
-            if (this.openFilter) {
-                this.openFilter = false;
-                } else {
-                this.openFilter = true;
-                }
+            // if (this.openFilter) {
+            //     this.openFilter = false;
+            //     } else {
+            //     this.openFilter = true;
+            //     }
+             this.store.filterModalOpen = true;
         },
   },
  

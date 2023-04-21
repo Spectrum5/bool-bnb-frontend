@@ -274,7 +274,7 @@ header {
                     box-shadow: 1px 2px 9px -1px #B8B8B8;
                     transition: box-shadow 0.5s ease-in-out;
                     cursor: pointer;
-                    margin-right: 200px;
+                    transform: translate(-150%, -0%);
 
 
                     &:hover {

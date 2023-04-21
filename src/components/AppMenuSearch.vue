@@ -49,7 +49,6 @@ export default {
 </script>
 
 <template>
-    <router-link to="/">
         <div class="mycontainer" v-if="isOpen == true">
            <div class="navigation">
               <ul>
@@ -66,8 +65,6 @@ export default {
                 <AppDestination :show="show" />
            </div>
         </div>
-       
-    </router-link>
 </template>
 
 <style lang="scss" scoped>
