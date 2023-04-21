@@ -90,7 +90,7 @@ export default {
             <form @submit.prevent="createApartment()">
                 <div class="my-row row">
                     <div class="group small">
-                        <label class="d-block" for="title">Inserisci nome appartamento: *</label>
+                        <label class="d-block mb-2" for="title">Inserisci nome appartamento: *</label>
                         <input
                         v-model="form.title"
                         type="text"
@@ -101,19 +101,19 @@ export default {
                     </div>
                     <div class="my-group">
                         <div class="group small d-inline-block">
-                            <label class="d-block" for="price">Inserisci prezzo a notte: *</label>
+                            <label class="d-block mb-2" for="price">Inserisci prezzo a notte: *</label>
                             <input v-model="form.price" type="number" name="price" id="price" required>
                             <!-- max="1500" -->
                         </div>
                         <div class="group small d-inline-block">
-                            <label for="size">Inserisci i mq: *</label>
+                            <label class="d-block mb-2" for="size">Inserisci i mq: *</label>
                             <input v-model="form.size" type="number" name="size" id="size" required>
                             <!-- min="50"
                                 max="500" -->
                         </div>
                     </div>
                     <div class="group small">
-                        <label class="d-block" for="address">Dove si trova il tuo alloggio? *</label>
+                        <label class="d-block mb-2" for="address">Dove si trova il tuo alloggio? *</label>
                         <input v-model="form.address" type="text" name="address" id="address" required>
                         <!-- maxlength="512" -->
                     </div>
