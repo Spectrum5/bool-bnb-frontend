@@ -133,6 +133,22 @@ export default {
             }
         },
 
+        bathroomsNumberValidation() {
+            const bathroomsNumberInput = document.getElementById('bathrooms_number');
+            bathroomsNumberInput.classList.remove('invalid');
+
+            if (bathroomsNumberInput.value.trim().length === 0) {
+                this.addError('Il campo numero di bagni deve essere compilato', 'bathrooms_number');
+                bathroomsNumberInput.classList.add('invalid');
+            } else if (isNaN(bathroomsNumberInput.value.trim())) {
+                this.addError('Il campo numero di bagni deve contenere solo numeri', 'bathrooms_number');
+                bathroomsNumberInput.classList.add('invalid');
+            } else if (bathroomsNumberInput.value.trim() <= 0 || bathroomsNumberInput.value.trim() > 8) {
+                this.addError('Il campo numero di bagni deve essere compreso tra 1 e 8', 'bathrooms_number');
+                bathroomsNumberInput.classList.add('invalid');
+            }
+        },
+
         sizeValidation() {
             const sizeInput = document.getElementById('size');
             sizeInput.classList.remove('invalid');
@@ -188,7 +204,7 @@ export default {
             // this.visibilityValidation();
             this.priceValidation();
             this.roomsNumberValidation();
-            // this.bathroomsNumberValidation();
+            this.bathroomsNumberValidation();
             // this.descriptionValidation();
             this.sizeValidation();
             // this.servicesValidation();
@@ -277,7 +293,8 @@ export default {
                     <div class="my-group-info-base">
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="rooms_number">Stanze: *</label>
-                            <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number" v-on:blur="roomsNumberValidation()">
+                            <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number"
+                                v-on:blur="roomsNumberValidation()">
                             <!-- min="1"
                             max="8" -->
                         </div>
@@ -290,7 +307,7 @@ export default {
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="bathrooms_number">Bagni: *</label>
                             <input v-model="form.bathrooms_number" type="number" name="bathrooms_number"
-                                id="bathrooms_number">
+                                id="bathrooms_number" v-on:blur="bathroomsNumberValidation()">
                             <!-- min="1"
                                 max="8" -->
                         </div>
