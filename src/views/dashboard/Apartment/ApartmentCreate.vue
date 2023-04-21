@@ -5,8 +5,10 @@ import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
 import AppErrorForm from '../../../components/AppErrorForm.vue';
 
 // Utilities
-import axios from 'axios';
+import { store } from '../../../store';
 import { router } from '../../../router';
+import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 export default {
     name: 'ApartmentCreate',
@@ -17,6 +19,7 @@ export default {
     data() {
         return {
             router,
+            store,
             form: {
                 title: '',
                 lat: null,
@@ -40,12 +43,49 @@ export default {
         getFormData() {
             axios.get('http://localhost:8000/api/apartments/create')
                 .then(response => {
-                    console.log(response.data.services);
+                    // console.log(response.data.services);
                     this.services = response.data.services;
                 })
         },
+        handleCreateApartment() {
+            this.validateData();
+        },
+        validateData() {
+            // Front End Validation
+            // console.log('Validating Create apartment data...');
+            let titleInput = document.getElementById('title');
 
-        createApartment() {
+            // Reset Form Validation
+            this.store.errors = [];
+            titleInput.classList.remove('invalid');
+
+            // Title Length
+            if (titleInput.value.length == 0) {
+                this.store.errors.push({
+                    message: 'Il campo deve essere compilato'
+                });
+                titleInput.classList.add('invalid');
+            }
+            else if (titleInput.value.length < 5) {
+                this.store.errors.push({
+                    message: 'Il campo nome deve essere almeno di 5 caratteri'
+                });
+                titleInput.classList.add('invalid');
+            }
+            else if (titleInput.value.length > 50) {
+                this.store.errors.push({
+                    message: 'Il campo nome non deve superare i 128 caratteri'
+                });
+                titleInput.classList.add('invalid');
+            }
+
+            // Controlla se validazione e' andata a buon fine
+            if (this.store.errors.length == 0) this.postData();
+            else {
+                // console.log('Apartment Creation Failed');
+            }
+        },
+        postData() {
             axios.post('http://localhost:8000/api/apartments', {
                 title: this.form.title,
                 lat: 37.9312320,
@@ -63,15 +103,16 @@ export default {
                 visibility: 1
             })
                 .then((response) => {
-                    console.log('Appartamento nuovo', response);
+                    console.log('Added Apartment', response.data);
                 })
                 .catch((response) => {
-                    console.log('Errore creazione', response.data);
+                    console.log('Error in adding apartment', response);  
                 })
         },
 
     },
-    created() {
+    mounted() {
+        document.title = 'Apartment | Create';
         this.getFormData();
     }
 }
@@ -87,13 +128,7 @@ export default {
             <div class="row">
                 <div>
                     <label for="title">Inserisci nome appartamento:</label>
-                    <input
-                    v-model="form.title"
-                    type="text"
-                    name="title"
-                    id="title"
-                    max="255"
-                    required>
+                    <input v-model="form.title" type="text" name="title" id="title" max="255" required>
                 </div>
                 <div>
                     <label for="price">Inserisci prezzo a notte:</label>
@@ -129,7 +164,7 @@ export default {
                     <label for="bathrooms_number">Numero di bagni</label>
                     <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
                         required>
-                        <!-- min="1"
+                    <!-- min="1"
                         max="8" -->
                 </div>
                 <div>
@@ -152,13 +187,13 @@ export default {
 
                     <span class="service" v-for="service in services">
                         <input v-model="form.services" type="checkbox" :name="service.name" :id="service.name"
-                        :value="service.id">
+                            :value="service.id">
                         <label :for="service.name">{{ service.name }}</label>
                     </span>
                 </div>
             </div>
             <button type="submit">Crea appartamento</button>
-            <AppErrorForm/>
+            <AppErrorForm />
         </form>
     </AppDashboardLayoutVue>
 </template>
