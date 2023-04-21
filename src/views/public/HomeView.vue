@@ -2,9 +2,11 @@
 
 // Components
 import AppLogo from '../../components/AppLogo.vue';
-import AppDestination from '../../components/AppDestination.vue';
+
 import AppCard from '../../components/AppCard.vue';
-import AppLoginModal from '../../components/AppLoginModal.vue'
+import AppLoginModal from '../../components/AppLoginModal.vue';
+import AppMenuSearch from '../../components/AppMenuSearch.vue';
+
 
 // Utilities
 import axios from 'axios';
@@ -15,24 +17,21 @@ export default {
     name: 'HomeView',
     components: {
         AppLogo,
-        AppDestination,
         AppCard,
-        AppLoginModal
+        AppLoginModal,
+        AppMenuSearch,
     },
     data() {
         return {
             isOpen: false,
             active: false,
-            show: false,
-            overlayPosition: { left: 0, top: 0 },
-            isActiveOverlay: false,
-            loginModal:false,
-
-
+            loginModal: false,
+       
             router,
             currentPage: 1,
             searchTitle: '',
             apartments: [],
+            
             menuItems: [
                 { label: 'Ovunque', link: '#' },
                 { label: '01 giu - 31 ago', link: '#' },
@@ -60,9 +59,6 @@ export default {
                 { label: 'Esperienze', link: '#' },
                 { label: 'Esperienze Online', link: '#' },
             ],
-
-
-
 
         }
     },
@@ -92,36 +88,26 @@ export default {
         toggleSearchbar() {
             this.isOpen = !this.isOpen;
         },
-        openAppDestination(index) {
-            this.show = true;
-            const currentItem = this.menuItem3[index];
-            this.menuItem3.forEach(item => item.active = false);
-            currentItem.active = index;
-            const itemPosition = currentItem.$el.getBoundingClientRect();
-            this.overlayPosition = { left: itemPosition.left, top: itemPosition.bottom };
-            this.isActiveOverlay = true;
-            setTimeout(() => {
-                this.isActiveOverlay = false;
-            }, 500);
-
-        },
+     
         getLogin() {
             if (this.loginModal) {
                 this.loginModal = false;
                 } else {
                 this.loginModal = true;
                 }
-            }
+        },
     },
 
     mounted() {
-        this.menuItem3[0].active = 0;
+      
         this.getApartments();
+
     }
 }
 </script>
 
 <template>
+   
     <header>
         <nav class="navbar">
             <div class="container-fluid">
@@ -153,29 +139,12 @@ export default {
                             </a>
                         </li>
                     </ul>
-
-                    <!-- Seconda searchbar -->
-                    <ul class="group-list" v-else>
-                        <div class="overlay" :class="{ active: isActiveOverlay }"
-                            :style="{ left: overlayPosition.left + 'px', top: overlayPosition.top + 'px' }"></div>
-                        <li class="item" v-for="(item, index) in menuItem3" :key="item.label"
-                            :class="{ active: item.active === index }" @click="openAppDestination(index)">
-                            <a :href="item.link">{{ item.label }}</a>
-                            <i class="line" :class="{ active: item.active === index }"></i>
-                        </li>
-
-                        <!-- ICONA SEARCH -->
-                        <li class="item big-search">
-                            <a href="#">
-                                <font-awesome-icon class="myicon" icon="fa-solid fa-magnifying-glass" />
-                            </a>
-                            <button class="button-search">Cerca</button>
-                        </li>
-                    </ul>
-
-                    <AppDestination :show="show" />
-
                 </div>
+                 
+                <AppMenuSearch :isOpen="isOpen"/>
+             
+             
+                   
 
                 <!-- MENU A DESTRA -->
                 <div class="right-menu">
@@ -198,20 +167,10 @@ export default {
                             <font-awesome-icon :icon="menuHamb[1].icon" class="user" />
                         </li>
                     </ul>
-                    
-                 
-
                 </div>
             </div>
-
-
         </nav>
     </header>
-
-    <!-- <div>
-        <router-link class="customLink" to="/login">login</router-link> <br>
-        <router-link to="/register">register</router-link>
-    </div> -->
 
     <div class="cardsContainer">
         <AppCard v-for="apartment in apartments" :apartment="apartment" />
@@ -239,13 +198,13 @@ export default {
 @import '../../styles/partials/mixins.scss';
 @import '../../styles/partials/variables.scss';
 
+
 .cardsContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1.5rem 1rem;
     flex-wrap: wrap;
-
     max-width: 1860px;
 }
 
@@ -256,17 +215,20 @@ header {
     border-bottom: 1px solid #e2dbdb;
     z-index: 1;
     position: relative;
+    position: sticky;
+    position: -webkit-sticky;
+    position: sticky;
+    top:0;
     .navbar {
         max-width: 100%;
         width: 100%;
         .container-fluid {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             .menu-hidden {
-                width: 100%;
-                text-align: center;
-                margin: 0 auto;
-              
+               margin-left: 100px;
+
                 .item {
                     font-size: 16px;
                     letter-spacing: 1.5px;
@@ -289,18 +251,11 @@ header {
                 }
             }
 
-            .first {
-                margin: 0 auto;
-                transform: translate(-30%, -0%);
-                width: 30%;
-             
-            }
 
             .searchbar,
             .open,
             .menu-hidden {
              
-   
                 .group-list,
                 .group-list:last-child {
                     border: 1px solid #B8B8B8;
@@ -311,6 +266,7 @@ header {
                     box-shadow: 1px 2px 9px -1px #B8B8B8;
                     transition: box-shadow 0.5s ease-in-out;
                     cursor: pointer;
+                    margin-right: 200px;
 
 
                     &:hover {
@@ -350,108 +306,7 @@ header {
                 }
             }
 
-            .searchbar.open {
-                padding: 50px 0px;
-                width: 80%;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-70%, 20%);
-
-
-                .overlay,
-                .active {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 30%;
-                    height: 100%;
-                    background-color: white;
-                    border: 1px solid white;
-                    z-index: 999;
-                    border-radius: 50px;
-                }
-
-                .group-list {
-                    position: absolute;
-                    top: 25%;
-                    left: 30%;
-                    width: 80%;
-                    display: flex;
-                    align-items: center;
-                    background-color: #d8d7d7;
-                    border: none;
-                    padding: 5px 10px;
-
-                    .active {
-                        position: relative;
-                        z-index: 9999;
-                        left: 30px;
-                    }
-
-                    .line.active {
-                        background-color: transparent;
-                    }
-                    .item {
-                        font-size: 16px;
-                        line-height: 10%;
-                        transition: transform 0.5s;
-                        &:hover {
-                            transform: scale(0.95);
-                        }
-                    }
-                    .item:nth-child(3) {
-                        margin-left: 40px;
-                    }
-                    .line {
-                        margin-left: 110px;
-                        vertical-align: top;
-                    }
-
-
-                    .big-search {
-                        background-image: linear-gradient(to right, $color-one-dark, $color-one-light);
-                        padding: 20px 45px;
-                        border-radius: 50px;
-                        transition: all 0.5s ease-in;
-        
-                        &:hover {
-                            padding: 15px 10px;
-                            padding-right: 50px;
-                            background-image: linear-gradient(to left, $color-one-light, $color-two-dark);
-                              
-                             .myicon {
-                                display: none;
-                             }
-                             .button-search {
-                                 display: block;
-                             }
-                        }
-
-                        
-
-                        .myicon {
-                            color: white;
-                            font-size: 20px;
-                            vertical-align: middle;
-                            
-                        }
-
-                            .button-search {
-                                border: none;
-                                background: none;
-                                width: 0px;
-                                color: white;
-                                display: none;
-                                font-size: 18px;
-                                padding: 10px 10px;
-
-                    }
-                    }
-                }
-            }
-
-            .right-menu {
+           .right-menu {
                 width: calc(100% / 4);
                 display: flex;
                 justify-content: center;
@@ -486,9 +341,6 @@ header {
                         }
                     }
                 }
-
-               
-
                 .group-list:last-child {
                     border: 1px solid #e0dcdc;
                     border-radius: 50px;
@@ -513,8 +365,6 @@ header {
                     }
                 }
             }
-
-
             .item {
                 display: inline-block;
                 margin-right: 10px;
