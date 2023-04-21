@@ -85,6 +85,22 @@ export default {
             }
         },
 
+        addressValidation() {
+            const addressInput = document.getElementById('address');
+            addressInput.classList.remove('invalid');
+
+            if (addressInput.value.trim().length === 0) {
+                this.addError('Il campo indirizzo deve essere compilato', 'address');
+                addressInput.classList.add('invalid');
+            } else if (addressInput.value.trim().length < 3) {
+                this.addError('Il campo indirizzo deve essere almeno di 3 caratteri', 'address');
+                addressInput.classList.add('invalid');
+            } else if (addressInput.value.trim().length > 255) {
+                this.addError('Il campo indirizzo non deve superare i 255 caratteri', 'address');
+                addressInput.classList.add('invalid');
+            }
+        },
+
         // latValidation() {
         //     // Latitude Validation
         //     const latInput = document.getElementById('lat');
@@ -107,21 +123,6 @@ export default {
         //     }
         // },
 
-        addressValidation() {
-            const addressInput = document.getElementById('address');
-            addressInput.classList.remove('invalid');
-
-            if (addressInput.value.trim().length === 0) {
-                this.addError('Il campo indirizzo deve essere compilato', 'address');
-                addressInput.classList.add('invalid');
-            } else if (addressInput.value.trim().length < 3) {
-                this.addError('Il campo indirizzo deve essere almeno di 3 caratteri', 'address');
-                addressInput.classList.add('invalid');
-            } else if (addressInput.value.trim().length > 255) {
-                this.addError('Il campo indirizzo non deve superare i 100 caratteri', 'address');
-                addressInput.classList.add('invalid');
-            }
-        },
 
         validateData() {
             // Front End Validation
@@ -129,17 +130,17 @@ export default {
             // Reset Form Validation
             this.store.errors = [];
             this.titleValidation();
-            this.latValidation();
-            this.lngValidation();
+            // this.latValidation();
+            // this.lngValidation();
             this.addressValidation();
-            this.imageValidation();
-            this.visibilityValidation();
-            this.priceValidation();
-            this.roomsNumberValidation();
-            this.bathroomsNumberValidation();
-            this.descriptionValidation();
-            this.sizeValidation();
-            this.servicesValidation();
+            // this.imageValidation();
+            // this.visibilityValidation();
+            // this.priceValidation();
+            // this.roomsNumberValidation();
+            // this.bathroomsNumberValidation();
+            // this.descriptionValidation();
+            // this.sizeValidation();
+            // this.servicesValidation();
 
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.postData();
@@ -190,8 +191,8 @@ export default {
                 <div class="my-row row">
                     <div class="group small">
                         <label class="d-block mb-2" for="title">Inserisci nome appartamento: *</label>
-                        <input v-model="form.title" v-on:blur="titleValidation()" type="text" name="title" id="title" max="255"
-                            >
+                        <input v-model="form.title" type="text" name="title" id="title" max="255"
+                            v-on:blur="titleValidation()">
                     </div>
                     <div class="my-group">
                         <div class="group small d-inline-block">
