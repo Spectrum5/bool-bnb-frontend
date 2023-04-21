@@ -93,7 +93,7 @@ export default {
                         <h6 class="mb-1">Camera da letto {{ i }}</h6>
                         <!-- Se il numero di camere e il numero di letti è pari, avrò un letto matrimoniale per ogni stanza -->
                         <div v-if="apartment.beds_number % 2 == 0 && apartment.rooms_number % 2 == 0">
-                            <span v-for="i in (apartment.beds_number / 2)">
+                            <span v-for="i in (apartment.beds_number / apartment.rooms_number)">
                                 <!-- <i class="fa-solid fa-bed"></i> -->
                                 <font-awesome-icon icon="fa-solid fa-bed" />
                             </span>
