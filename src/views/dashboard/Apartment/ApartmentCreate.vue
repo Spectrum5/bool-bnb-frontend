@@ -101,6 +101,20 @@ export default {
             }
         },
 
+        // imageValidation() {
+        //     const fileInput = document.getElementById('image');
+        //     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+        //     fileInput.classList.remove('invalid');
+
+        //     if (!fileInput.value) {
+        //         this.addError('Devi selezionare un\'immagine', 'image');
+        //         fileInput.classList.add('invalid');
+        //     } else if (!allowedExtensions.exec(fileInput.value)) {
+        //         this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'image');
+        //         fileInput.classList.add('invalid');
+        //     }
+        // },
+
         priceValidation() {
             const priceInput = document.getElementById('price');
             priceInput.classList.remove('invalid');
@@ -183,6 +197,16 @@ export default {
             }
         },
 
+        visibilityValidation() {
+            const visibilityInput = document.getElementById('visibility');
+            visibilityInput.classList.remove('invalid');
+
+            if (this.form.visibility !== true && this.form.visibility !== false) {
+                this.addError('Il campo visibilità non è valido', 'visibility');
+                visibilityInput.classList.add('invalid');
+            }
+        },
+
         // latValidation() {
         //     // Latitude Validation
         //     const latInput = document.getElementById('lat');
@@ -216,7 +240,7 @@ export default {
             // this.lngValidation();
             this.addressValidation();
             // this.imageValidation();
-            // this.visibilityValidation();
+            this.visibilityValidation();
             this.priceValidation();
             this.roomsNumberValidation();
             this.bathroomsNumberValidation();
@@ -329,7 +353,8 @@ export default {
                     </div>
                     <div class="group small">
                         <label class="mb-2 d-block" for="description">Descrizione appartamento: *</label>
-                        <textarea v-model="form.description" name="description" id="description" rows="6" v-on:blur="descriptionValidation()"></textarea>
+                        <textarea v-model="form.description" name="description" id="description" rows="6"
+                            v-on:blur="descriptionValidation()"></textarea>
                         <!-- maxlength="4096"-->
                     </div>
                     <div>
