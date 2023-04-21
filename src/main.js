@@ -71,8 +71,6 @@ library.add(faBars,
   faHouseFloodWater,
   faLayerGroup,
   faIgloo,
-
-,
   faEye,
   faPlus)
 
