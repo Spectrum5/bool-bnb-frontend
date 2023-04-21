@@ -6,16 +6,16 @@ import AppIconsBar from '../../components/AppIconsBar.vue';
 import AppCard from '../../components/AppCard.vue';
 import AppLoginModal from '../../components/AppLoginModal.vue';
 import AppMenuSearch from '../../components/AppMenuSearch.vue';
-
+import AppHeaderClosed from '../../components/AppHeaderClosed.vue';
 
 // Utilities
 import axios from 'axios';
 import { router } from '../../router';
 
-
 export default {
     name: 'HomeView',
     components: {
+        AppHeaderClosed,
         AppLogo,
         AppCard,
         AppLoginModal,
@@ -24,15 +24,19 @@ export default {
     },
     data() {
         return {
+            toggleSearchbar: false,
+            isMenuOpen: false,
+
+
             isOpen: false,
             active: false,
             loginModal: false,
-       
+
             router,
             currentPage: 1,
             searchTitle: '',
             apartments: [],
-            
+
             menuItems: [
                 { label: 'Ovunque', link: '#' },
                 { label: '01 giu - 31 ago', link: '#' },
@@ -86,21 +90,20 @@ export default {
         handleSearch() {
             this.$router.push(`/apartments/search/${this.searchTitle}`);
         },
-        toggleSearchbar() {
-            this.isOpen = !this.isOpen;
-        },
-     
+        // toggleSearchbar() {
+        //     this.isOpen = !this.isOpen;
+        // },
+
         getLogin() {
             if (this.loginModal) {
                 this.loginModal = false;
-                } else {
+            } else {
                 this.loginModal = true;
-                }
+            }
         },
     },
-
     mounted() {
-      
+
         this.getApartments();
 
     }
@@ -108,15 +111,14 @@ export default {
 </script>
 
 <template>
-   
+    <!-- <AppHeaderClosed /> -->
     <header>
-        <nav class="navbar">
-            <div class="container-fluid">
-                <!-- MENU LOGO -->
+        <div class="container-fluid">
+            <nav class="navbar">
+            
                 <AppLogo />
-
-                <!-- MENU HIDDEN 2°SEARCHBAR -->
-                <div class="menu-hidden" v-if="isOpen">
+        
+                <div class="menu-hidden" v-if="isMenuOpen == true">
                     <ul>
                         <li class="item" v-for="(item, index) in menuHidden" :key="index"
                             :class="{ active: item.active === index }">
@@ -125,16 +127,16 @@ export default {
                     </ul>
                 </div>
 
-
-                <!-- MENU CENTRALE-->
-                <div class="searchbar first" :class="{ open: isOpen }">
-                    <!-- Prima searchbar -->
-                    <ul class="group-list" v-if="!isOpen">
-                        <li class="item" v-for="(item, index) in menuItems" :key="index" @click="toggleSearchbar">
+         
+                <!-- menu piccolo al centro -->
+                <div class="searchbar first" :class="{ open: isMenuOpen }" @click="isMenuOpen = true" v-if="isMenuOpen == false">
+         
+                    <ul class="group-list">
+                        <li class="item" v-for="(item, index) in menuItems" :key="index">
                             <a :href="item.link">{{ item.label }}</a>
                             <i class="line"></i>
                         </li>
-                        <li class="item icon" @click="toggleSearchbar">
+                        <li class="item icon">
                             <a href="#">
                                 <font-awesome-icon class="myicon" icon="fa-solid fa-magnifying-glass" />
                             </a>
@@ -142,24 +144,24 @@ export default {
                     </ul>
                 </div>
 
-                 <!-- SEARCHBAR GRANDE NASCOSTA  -->
-                <AppMenuSearch :isOpen="isOpen"/>
+                <!-- menu grande con ricerca -->
+                <AppMenuSearch v-if="isMenuOpen == true" />
 
-                <!-- MENU A DESTRA -->
+     
                 <div class="right-menu">
                     <ul class="group-list">
                         <li class="item" v-for="item in menuItems2" :key="item.label">
                             <a :href="item.link">{{ item.label }}</a>
                         </li>
                         <li class="item">
-                            <font-awesome-icon :icon="menuItems2[1].icon" class="globe"  />
+                            <font-awesome-icon :icon="menuItems2[1].icon" class="globe" />
                         </li>
                     </ul>
-                           
-                    <!-- MENU DI LOGIN -->
+
+        
                     <ul class="group-list ">
                         <li class="item menu-bars d-inline-block">
-                            <font-awesome-icon :icon="menuHamb[0].icon" class="bars" @click="getLogin()"/>
+                            <font-awesome-icon :icon="menuHamb[0].icon" class="bars" @click="getLogin()" />
                         </li>
                         <AppLoginModal :loginModal="loginModal" />
                         <li class="item d-inline-block">
@@ -167,13 +169,17 @@ export default {
                         </li>
                     </ul>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
     </header>
 
     <div class="icon-bar">
         <AppIconsBar />
     </div>
+
+
+
+
 
     <div class="cardsContainer">
         <AppCard v-for="apartment in apartments" :apartment="apartment" />
@@ -217,25 +223,34 @@ export default {
 }
 
 header {
-    width: 100%;
     background-color: white;
     padding: 15px 20px;
     border-bottom: 1px solid #e2dbdb;
-    z-index: 1;
-    position: relative;
+    z-index: 10;
+    // position: relative;
     position: sticky;
     position: -webkit-sticky;
-    position: sticky;
-    top:0;
-    .navbar {
-        max-width: 100%;
-        width: 100%;
-        .container-fluid {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+    // position: sticky;
+    top: 0;
+    left: 0;
+    height: 90px;
+
+    &.menuOpen {
+        height: 200px;
+    }
+
+    .container-fluid {
+        // max-width: 100%;
+
+
+        .navbar {
+            // display: flex;
+            // align-items: center;
+            // justify-content: space-between;
+            @include flexSpaceBtwn;
+
             .menu-hidden {
-               margin-left: 100px;
+                // margin-left: 100px;
 
                 .item {
                     font-size: 16px;
@@ -244,7 +259,7 @@ header {
                     font-weight: lighter, bolder;
                     transition: all 0.4s ease-in;
                     cursor: pointer;
-                    
+
 
                     &:hover {
                         border-bottom: 1.5px solid #B8B8B8;
@@ -263,7 +278,7 @@ header {
             .searchbar,
             .open,
             .menu-hidden {
-             
+
                 .group-list,
                 .group-list:last-child {
                     border: 1px solid #B8B8B8;
@@ -272,9 +287,10 @@ header {
                     text-align: center;
                     -webkit-box-shadow: 1px 2px 9px -1px #B8B8B8;
                     box-shadow: 1px 2px 9px -1px #B8B8B8;
-                    transition: box-shadow 0.5s ease-in-out;
+                    transition: box-shadow 1s ease-in-out;
+                    transition: all 0.5s ease-in-out;
                     cursor: pointer;
-                    transform: translate(-150%, -0%);
+                    // transform: translate(-150%, -0%);
 
 
                     &:hover {
@@ -304,7 +320,7 @@ header {
                         border: 1px solid none;
                         padding: 6px 9px;
                         border-radius: 50px;
-                        background-color:$color-one-light;
+                        background-color: $color-one-light;
 
                         .myicon {
                             color: white;
@@ -314,15 +330,15 @@ header {
                 }
             }
 
-           .right-menu {
+            .right-menu {
                 width: calc(100% / 4);
                 display: flex;
                 justify-content: center;
                 align-items: baseline;
-                position: fixed;
-                top: 10px;
-                right: 10px;
-               
+                // position: fixed;
+                // top: 10px;
+                // right: 10px;
+
 
                 .globe {
                     color: white;
@@ -349,6 +365,7 @@ header {
                         }
                     }
                 }
+
                 .group-list:last-child {
                     border: 1px solid #e0dcdc;
                     border-radius: 50px;
@@ -373,6 +390,7 @@ header {
                     }
                 }
             }
+
             .item {
                 display: inline-block;
                 margin-right: 10px;
@@ -387,5 +405,4 @@ header {
             }
         }
     }
-}
-</style>
+}</style>

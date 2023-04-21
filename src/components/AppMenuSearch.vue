@@ -49,7 +49,7 @@ export default {
 </script>
 
 <template>
-        <div class="mycontainer" v-if="isOpen == true">
+        <div class="mycontainer">
            <div class="navigation">
               <ul>
                 <li class="list" v-for="(item, index) in menu" :key="index" @click="activeLink(index)" :class="{ 'active': activeIndex === index }">
