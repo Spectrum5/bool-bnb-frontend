@@ -35,6 +35,7 @@ import { faChartSimple } from '@fortawesome/free-solid-svg-icons'
 import { faShuttleSpace } from '@fortawesome/free-solid-svg-icons'
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons'
 import { faEye } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faBars,
   faCircleUser,
@@ -62,7 +63,8 @@ library.add(faBars,
   faChartSimple,
   faShuttleSpace,
   faLayerGroup,
-  faEye)
+  faEye,
+  faPlus)
 
 createApp(App)
   .use(router)
