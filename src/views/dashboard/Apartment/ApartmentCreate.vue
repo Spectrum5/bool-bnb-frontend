@@ -97,24 +97,24 @@ export default {
                         name="title"
                         id="title"
                         max="255"
-                        required>
+                    >
                     </div>
                     <div class="my-group">
                         <div class="group small d-inline-block">
                             <label class="d-block mb-2" for="price">Inserisci prezzo a notte: *</label>
-                            <input v-model="form.price" type="number" name="price" id="price" required>
+                            <input v-model="form.price" type="number" name="price" id="price">
                             <!-- max="1500" -->
                         </div>
                         <div class="group small d-inline-block">
                             <label class="d-block mb-2" for="size">Inserisci i mq: *</label>
-                            <input v-model="form.size" type="number" name="size" id="size" required>
+                            <input v-model="form.size" type="number" name="size" id="size">
                             <!-- min="50"
                                 max="500" -->
                         </div>
                     </div>
                     <div class="group small">
                         <label class="d-block mb-2" for="address">Dove si trova il tuo alloggio? *</label>
-                        <input v-model="form.address" type="text" name="address" id="address" required>
+                        <input v-model="form.address" type="text" name="address" id="address">
                         <!-- maxlength="512" -->
                     </div>
                     <!-- <div>
@@ -130,27 +130,26 @@ export default {
                     <div class="my-group-info-base">
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="rooms_number">Stanze: *</label>
-                            <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number" required>
+                            <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number">
                             <!-- min="1"
                             max="8" -->
                         </div>
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="beds_number">Posti letto: *</label>
-                            <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number" required>
+                            <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number">
                             <!-- min="1"
                                 max="16" -->
                         </div>
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="bathrooms_number">Bagni: *</label>
-                            <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
-                                required>
+                            <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number">
                                 <!-- min="1"
                                 max="8" -->
                         </div>
                     </div>
                     <div class="group small">
                         <label class="mb-2 d-block" for="description">Descrizione appartamento: *</label>
-                        <textarea v-model="form.description" name="description" id="description" rows="6" required></textarea>
+                        <textarea v-model="form.description" name="description" id="description" rows="6"></textarea>
                         <!-- maxlength="4096"-->
                     </div>
                     <div>
