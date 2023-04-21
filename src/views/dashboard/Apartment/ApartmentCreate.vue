@@ -95,9 +95,25 @@ export default {
             } else if (addressInput.value.trim().length < 3) {
                 this.addError('Il campo indirizzo deve essere almeno di 3 caratteri', 'address');
                 addressInput.classList.add('invalid');
-            } else if (addressInput.value.trim().length > 255) {
-                this.addError('Il campo indirizzo non deve superare i 255 caratteri', 'address');
+            } else if (addressInput.value.trim().length > 512) {
+                this.addError('Il campo indirizzo non deve superare i 512 caratteri', 'address');
                 addressInput.classList.add('invalid');
+            }
+        },
+
+        priceValidation() {
+            const priceInput = document.getElementById('price');
+            priceInput.classList.remove('invalid');
+
+            if (priceInput.value.trim().length === 0) {
+                this.addError('Il campo prezzo deve essere compilato', 'price');
+                priceInput.classList.add('invalid');
+            } else if (isNaN(priceInput.value.trim())) {
+                this.addError('Il campo prezzo deve contenere solo numeri', 'price');
+                priceInput.classList.add('invalid');
+            } else if (priceInput.value.trim() <= 99 || priceInput.value.trim() > 1500) {
+                this.addError('Il campo prezzo deve essere compreso tra 100 e 1500', 'price');
+                priceInput.classList.add('invalid');
             }
         },
 
@@ -154,7 +170,7 @@ export default {
             this.addressValidation();
             // this.imageValidation();
             // this.visibilityValidation();
-            // this.priceValidation();
+            this.priceValidation();
             // this.roomsNumberValidation();
             // this.bathroomsNumberValidation();
             // this.descriptionValidation();
@@ -216,7 +232,7 @@ export default {
                     <div class="my-group">
                         <div class="group small d-inline-block">
                             <label class="d-block mb-2" for="price">Inserisci prezzo a notte: *</label>
-                            <input v-model="form.price" type="number" name="price" id="price">
+                            <input v-model="form.price" type="number" name="price" id="price" v-on:blur="priceValidation()">
                             <!-- max="1500" -->
                         </div>
                         <div class="group small d-inline-block">
@@ -228,7 +244,8 @@ export default {
                     </div>
                     <div class="group small">
                         <label class="d-block mb-2" for="address">Dove si trova il tuo alloggio? *</label>
-                        <input v-model="form.address" type="text" name="address" id="address" v-on:blur="addressValidation()">
+                        <input v-model="form.address" type="text" name="address" id="address"
+                            v-on:blur="addressValidation()">
                         <!-- maxlength="512" -->
                     </div>
                     <!-- <div>
