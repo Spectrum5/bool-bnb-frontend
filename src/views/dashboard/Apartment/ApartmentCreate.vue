@@ -101,6 +101,25 @@ export default {
             }
         },
 
+        sizeValidation() {
+            const sizeInput = document.getElementById('size');
+            sizeInput.classList.remove('invalid');
+
+            if (sizeInput.value.trim().length === 0) {
+                this.addError('Il campo Inserisci i mq deve essere compilato', 'size');
+                sizeInput.classList.add('invalid');
+            } else if (isNaN(sizeInput.value.trim())) {
+                this.addError('Il campo Inserisci i mq deve essere un numero', 'size');
+                sizeInput.classList.add('invalid');
+            } else if (sizeInput.value.trim() < 50) {
+                this.addError('Il campo Inserisci i mq deve essere maggiore di 50', 'size');
+                sizeInput.classList.add('invalid');
+            } else if (sizeInput.value.trim() > 500) {
+                this.addError('Il campo Inserisci i mq non deve superare i 500 mq', 'size');
+                sizeInput.classList.add('invalid');
+            }
+        },
+
         // latValidation() {
         //     // Latitude Validation
         //     const latInput = document.getElementById('lat');
@@ -139,7 +158,7 @@ export default {
             // this.roomsNumberValidation();
             // this.bathroomsNumberValidation();
             // this.descriptionValidation();
-            // this.sizeValidation();
+            this.sizeValidation();
             // this.servicesValidation();
 
             // Controlla se validazione e' andata a buon fine
@@ -202,7 +221,7 @@ export default {
                         </div>
                         <div class="group small d-inline-block">
                             <label class="d-block mb-2" for="size">Inserisci i mq: *</label>
-                            <input v-model="form.size" type="number" name="size" id="size">
+                            <input v-model="form.size" type="number" name="size" id="size" v-on:blur="sizeValidation()">
                             <!-- min="50"
                                 max="500" -->
                         </div>
