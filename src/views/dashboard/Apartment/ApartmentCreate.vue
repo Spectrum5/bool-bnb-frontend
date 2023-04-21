@@ -117,6 +117,22 @@ export default {
             }
         },
 
+        roomsNumberValidation() {
+            const roomsNumberInput = document.getElementById('rooms_number');
+            roomsNumberInput.classList.remove('invalid');
+
+            if (roomsNumberInput.value.trim().length === 0) {
+                this.addError('Il campo stanze deve essere compilato', 'rooms_number');
+                roomsNumberInput.classList.add('invalid');
+            } else if (isNaN(roomsNumberInput.value.trim())) {
+                this.addError('Il campo stanze deve contenere solo numeri', 'rooms_number');
+                roomsNumberInput.classList.add('invalid');
+            } else if (roomsNumberInput.value.trim() <= 0 || roomsNumberInput.value.trim() > 8) {
+                this.addError('Il campo stanze deve essere compreso tra 1 e 8', 'rooms_number');
+                roomsNumberInput.classList.add('invalid');
+            }
+        },
+
         sizeValidation() {
             const sizeInput = document.getElementById('size');
             sizeInput.classList.remove('invalid');
@@ -171,7 +187,7 @@ export default {
             // this.imageValidation();
             // this.visibilityValidation();
             this.priceValidation();
-            // this.roomsNumberValidation();
+            this.roomsNumberValidation();
             // this.bathroomsNumberValidation();
             // this.descriptionValidation();
             this.sizeValidation();
@@ -261,7 +277,7 @@ export default {
                     <div class="my-group-info-base">
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="rooms_number">Stanze: *</label>
-                            <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number">
+                            <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number" v-on:blur="roomsNumberValidation()">
                             <!-- min="1"
                             max="8" -->
                         </div>
