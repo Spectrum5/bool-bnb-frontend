@@ -61,7 +61,7 @@ export default {
         :title="'i miei appartamenti'" 
         :button="
         {
-            label: 'Aggiungi',
+            label: 'Aggiungi nuovo appartamento',
             icon: 'plus',
             action: gotoCreate
         }">

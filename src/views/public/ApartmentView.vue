@@ -31,31 +31,31 @@ export default {
 </script>
 
 <template>
-    <div @click="$router.push('/')">torna alla home</div>
+    <button class="btn" @click="$router.push('/')">torna alla home</button>
 
     <!-- CONTAINER PRINCIPALE -->
     <div class="container">
         <!-- TITOLO E INDIRIZZO -->
-        <section>
-            <h3 class="mb-2">{{ apartment.title }}</h3>
-            <h6 class="mb-4">Dove si trova: 
+        <section id="title-address">
+            <h2 class="mb-2">{{ apartment.title }}</h2>
+            <h4 class="mb-4">Dove si trova: 
                 <strong>
                     <span class="text-decoration-underline">
                         <a class="text-dark" href="#maps">{{ apartment.address }}</a>
                     </span>
                 </strong>
-            </h6>
+            </h4>
         </section>
         <!-- SEZIONE IMMAGINI APARTMENT -->
         <div>
             <img src="https://thumbs.dreamstime.com/b/camera-classica-con-il-giardino-di-fiore-751996.jpg" alt="">
         </div>
         <!-- CONTAINER PER INFO APARTMENT + MESSAGGIO -->
-        <div class="my-secondary-container mt-4">
+        <div class="my-secondary-container my-4">
             <div>
                 <!-- INFO APARTMENT STANZE, LETTI, BAGNI -->
                 <section class="my-3">
-                    <h4 id="host-name" class="text-capitalize mb-1">Host: {{ apartment.user.first_name }} {{ apartment.user.last_name }}</h4>
+                    <h3 id="host-name" class="text-capitalize mb-1">Host: {{ apartment.user.first_name }} {{ apartment.user.last_name }}</h3>
                     <p class="amenities mb-3">
                         <span>{{ apartment.rooms_number }} camere da letto</span>
                         &#183;
@@ -64,21 +64,19 @@ export default {
                         <span>{{ apartment.bathrooms_number }} bagni</span>
                     </p>
                 </section>
-                <hr>
                 <!-- DESCRIZIONE APARTMENT -->
                 <section class="my-3">
                     <div class="description">
-                        <h4 class="mb-1">Descrizione</h4>
+                        <h3 class="mb-1">Descrizione</h3>
                         <p>
                             {{ apartment.description }}
                         </p>
                     </div>
                 </section>
-                <hr>
                 <!-- SERVIZI APARTMENT -->
                 <section class="my-3">
                     <div>
-                        <h4 class="mb-1">Cosa troverai</h4>
+                        <h3 class="mb-1">Cosa troverai</h3>
                         <div>
                             <div class="services" v-for="service in apartment.services">
                                 <span>
@@ -89,14 +87,13 @@ export default {
                         </div>
                     </div>
                 </section>
-                <hr>
                 <section class="my-3">
-                    <h4 class="mb-1">Dove dormirai</h4>
+                    <h3 class="mb-1">Dove dormirai</h3>
                     <div class="room-desc d-inline-block mb-1" v-for="i in apartment.rooms_number">
                         <h6 class="mb-1">Camera da letto {{ i }}</h6>
                         <!-- Se il numero di camere e il numero di letti è pari, avrò un letto matrimoniale per ogni stanza -->
                         <div v-if="apartment.beds_number % 2 == 0 && apartment.rooms_number % 2 == 0">
-                            <span v-for="i in (apartment.beds_number / 2)">
+                            <span v-for="i in (apartment.beds_number / apartment.rooms_number)">
                                 <!-- <i class="fa-solid fa-bed"></i> -->
                                 <font-awesome-icon icon="fa-solid fa-bed" />
                             </span>
@@ -116,10 +113,9 @@ export default {
                         </div>
                     </div>                
                 </section>
-                <hr>
                 <!-- SEZIONE MAPPA -->
                 <section class="my-3">
-                    <h4 class="mb-1">Dove ti troverai</h4>
+                    <h3 class="mb-1">Dove ti troverai</h3>
                     <div id="maps">
                         <h1>MAPPA</h1>
                     </div>
@@ -129,18 +125,17 @@ export default {
             <!-- SEZIONE CONTATTA L'HOST -->
             <div class="contact">
                 <h3 class="text-center mb-3">Contatta l'host</h3>
-                <h5 class="mb-3">
+                <h4 class="mb-3">
                     <strong>
                         € {{ apartment.price }}
                     </strong>
                      / per notte
-                </h5>
+                </h4>
                 <form>
                     <div class="mb-3">
                         <label for="email" class="form-label mb-1">Indirizzo email</label>
                         <input
                         type="email"
-                        class="form-control"
                         id="email"
                         name="email"
                         placeholder="Inserisci la tua mail">
@@ -148,7 +143,6 @@ export default {
                     <div class="mb-3">
                         <label for="message" class="form-label mb-1">Scrivi il tuo messaggio</label>
                         <textarea
-                        class="form-control"
                         name="message"
                         id="message" 
                         rows="6"
@@ -164,6 +158,18 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+
+.btn{
+    border: 1.5px solid #000;
+    border-radius: 10px;
+    padding: 7px;
+    margin: 5px;
+}
+
+section:not(#title-address, section:last-of-type){
+    border-bottom: 1px solid;
+    padding: 15px 0;    
+}
 
     a{
         color: black;
@@ -253,6 +259,7 @@ export default {
         border: 1px dashed;
     }
     .contact{
+        margin-top: 27px;
         min-width: 40%;
         margin-left: auto;
         border: 1px solid;
@@ -263,26 +270,29 @@ export default {
         top: 70px;
         z-index: 1;
 
-        input{
+        input, textarea{
+            width: 100%;
             border: 1px solid black;
             line-height: 30px;
             border-radius: 10px;
             padding: 3px 0 3px 7px;
         }
 
-        textarea{
-            border: 1px solid black;
-            border-radius: 10px;
-            padding: 3px 0 3px 7px;
-        }
+        // textarea{
+        //     width: 100%;
+        //     border: 1px solid black;
+        //     border-radius: 10px;
+        //     padding: 3px 0 3px 7px;
+        // }
         .my-btn{
             display: block;
             width: 100%;
             color: white;
             font-weight: 700;
-            padding: 7px 0px;
+            padding: 10px 0px;
             border-radius: 10px;
             background-color: #ff4a86;
+            border: #ff4a86 !important;
         }
 
         textarea::placeholder,
