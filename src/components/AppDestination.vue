@@ -9,16 +9,26 @@ export default {
         return {
             store,
             router,
+            searchTerm: "",
+            destinationsMenu: [ ],
+            filteredDestinationsMenu: [],
         
            destinationsMenu: [
                 { img: '/europa.jpg', label: 'Europa' },
                 { img: '/statiUniti.jpg', label: 'Stati Uniti' },
-                { img: '/europa.jpg', label: 'Europa' },
-                { img: '/europa.jpg', label: 'Europa' },
-                { img: '/europa.jpg', label: 'Europa' },
-                { img: '/europa.jpg', label: 'Europa' },
-                     
-            ]
+                { img: '/europa.jpg', label: 'Asia' },
+                { img: '/europa.jpg', label: 'Francia' },
+                { img: '/europa.jpg', label: 'Oceania' },
+                { img: '/europa.jpg', label: 'America del Nord' },      
+            ],
+            destinations: [
+                { name: "Europa" },
+                { name: "Asia" },
+                { name: "Asia" },
+                { name: "America del Sud" },
+                { name: "Asia" },
+                { name: "Oceania" }
+        ],
         }
     },  
     props: {
@@ -27,10 +37,19 @@ export default {
            default: false,
           },
     },
+     methods: {
+        filterDestinations() {
+        const filteredDestinations = this.destinations.filter(destination => {
+            return destination.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+        });
+  
+            this.filteredDestinationsMenu = filteredDestinations;
+            }
+  },
  
      
     mounted() {
-        
+         this.filteredDestinationsMenu = this.destinationsMenu;
     }
 }
 </script>
@@ -40,15 +59,39 @@ export default {
         <ul class="destinations" v-if="show == true">
             <li class="title">
                 <h6>Cerca per regione</h6>
+             </li>
+             <li>
+                <router-link to="/search">Ricerca avanzata</router-link>
             </li>
-            <li class="item-maps" v-for="item in destinationsMenu" :key="item.id">
+            <li class="search">
+               <input type="text" v-model="searchTerm" placeholder="Cerca destinazione" @input="filterDestinations" />
+            </li>
+           <li class="item-maps" v-for="item in filteredDestinationsMenu" :key="item.id">
                 <a :href="`#${item.label}`">
                     <img :src="`../../../../${item.img}`">
                 </a>
             </li>
         </ul>
+     
+          <!-- <div class="container">
+                <label for="searchTitle">Titolo</label>
+                <input type="text" v-model="searchTitle" id="searchTitle" name="searchTitle" placeholder="Inserisci il titolo...">
+                <button @click="handleSearch()">Cerca</button>
+            </div>
+
+            <div class="container">
+                <div class="card" v-for="apartment in apartments" @click="$router.push(`/apartments/${apartment.slug}`)">
+                    <h2>Titolo: {{ apartment.title }}</h2>
+                    <p>Descrizione: {{ apartment.description }}</p>
+                </div>
+
+            </div> -->
     </router-link>
 </template>
+
+   
+          
+    
 
 <style lang="scss" scoped>
 @import '../styles/partials/mixins.scss';
@@ -56,13 +99,13 @@ export default {
 
     .destinations {
         position: absolute;
-        left: 30%;
-        top: 87%;
-        width: 50%;
+        left: 0%;
+        top: 100%;
+        width: 70%;
         background-color: white;
         margin-top: 15px;
-        padding: 20px 20px;
-        border-radius: 25px;
+        padding: 0px 10px;
+        border-radius: 20px;
         border: 1px solid #B8B8B8;
         z-index: 3;
      

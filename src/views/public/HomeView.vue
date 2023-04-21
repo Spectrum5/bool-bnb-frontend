@@ -2,7 +2,7 @@
 
 // Components
 import AppLogo from '../../components/AppLogo.vue';
-
+import AppIconsBar from '../../components/AppIconsBar.vue';
 import AppCard from '../../components/AppCard.vue';
 import AppLoginModal from '../../components/AppLoginModal.vue';
 import AppMenuSearch from '../../components/AppMenuSearch.vue';
@@ -20,6 +20,7 @@ export default {
         AppCard,
         AppLoginModal,
         AppMenuSearch,
+        AppIconsBar,
     },
     data() {
         return {
@@ -140,11 +141,9 @@ export default {
                         </li>
                     </ul>
                 </div>
-                 
+
+                 <!-- SEARCHBAR GRANDE NASCOSTA  -->
                 <AppMenuSearch :isOpen="isOpen"/>
-             
-             
-                   
 
                 <!-- MENU A DESTRA -->
                 <div class="right-menu">
@@ -171,6 +170,10 @@ export default {
             </div>
         </nav>
     </header>
+
+    <div class="icon-bar">
+        <AppIconsBar />
+    </div>
 
     <div class="cardsContainer">
         <AppCard v-for="apartment in apartments" :apartment="apartment" />
@@ -206,6 +209,11 @@ export default {
     gap: 1.5rem 1rem;
     flex-wrap: wrap;
     max-width: 1860px;
+}
+
+.icon-bar {
+    width: 100%;
+    padding: 50px 50px;
 }
 
 header {
