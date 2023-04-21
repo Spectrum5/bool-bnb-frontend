@@ -5,19 +5,21 @@ import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
 import AppErrorForm from '../../../components/AppErrorForm.vue';
 
 // Utilities
-import axios from 'axios';
-import { router } from '../../../router';
 import { store } from '../../../store';
+import { router } from '../../../router';
+import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 export default {
     name: 'ApartmentCreate',
     components: {
         AppDashboardLayoutVue,
-        AppErrorForm
+        AppErrorForm,
     },
     data() {
         return {
             router,
+            store,
             store,
             form: {
                 title: '',
@@ -37,18 +39,107 @@ export default {
                 services: []
             },
             services: [],
-        }
+        };
     },
     methods: {
         getFormData() {
             axios.get('http://localhost:8000/api/apartments/create')
                 .then(response => {
-                    console.log(response.data.services);
+                    // console.log(response.data.services);
                     this.services = response.data.services;
                 })
         },
+        handleCreateApartment() {
+            this.validateData();
+        },
+        addError(message, field) {
+            // Check if there are already errors in store.errors with the same field, and if not, add the error
+            if (this.store.errors.length === 0) {
+                this.store.errors.push({
+                    message: message,
+                    field: field,
+                });
+            } 
+            else {
+                if (!this.store.errors.some((error) => error.field === field)) {
+                    this.store.errors.push({
+                        message: message,
+                        field: field,
+                    });
+                }
+            }
+        },
 
-        createApartment() {
+        titleValidation() {
+            // Title Length
+            const titleInput = document.getElementById('title');
+            titleInput.classList.remove('invalid');
+
+            if (titleInput.value.trim().length === 0) {
+                this.addError('Il campo nome deve essere compilato', 'title');
+                titleInput.classList.add('invalid');
+            } else if (titleInput.value.trim().length < 3) {
+                this.addError('Il campo nome deve essere almeno di 3 caratteri', 'first_name');
+                titleInput.classList.add('invalid');
+            } else if (titleInput.value.trim().length > 50) {
+                this.addError('Il campo nome non deve superare i 128 caratteri', 'first_name');
+                titleInput.classList.add('invalid');
+            }
+        },
+
+        // latValidation() {
+        //     // Latitude Validation
+        //     const latInput = document.getElementById('lat');
+        //     latInput.classList.remove('invalid');
+
+        //     if (latInput.value.trim().length === 0) {
+        //         this.addError('Il campo latitudine deve essere compilato', 'lat');
+        //         latInput.classList.add('invalid');
+        //     } else if (isNaN(latInput.value)) {
+        //         this.addError('Il campo latitudine deve essere un numero valido', 'lat');
+        //         latInput.classList.add('invalid');
+        //     } else if (latInput.value < -90 || latInput.value > 90) {
+        //         this.addError('Il campo latitudine deve essere compreso tra -90 e 90', 'lat');
+        //         latInput.classList.add('invalid');
+        //     }
+        // },
+
+        // lngValidation() {
+        //     // Longitude Validation
+        //     const lngInput = document.getElementById('lng');
+        //     lngInput.classList.remove('invalid');
+
+        //     if (lngInput.value.trim().length === 0) {
+        //         this.addError('Il campo longitudine deve essere compilato', 'lng');
+        //         lngInput.classList.add('invalid');
+        //     }
+        // },
+
+        validateData() {
+            // Front End Validation
+            // console.log('Validating Create apartment data...');
+            // Reset Form Validation
+            this.store.errors = [];
+            this.titleValidation();
+            // this.latValidation();
+            // this.lngValidation();
+            // this.addressValidation();
+            // this.imageValidation();
+            // this.visibilityValidation();
+            // this.priceValidation();
+            // this.roomsNumberValidation();
+            // this.bathroomsNumberValidation();
+            // this.descriptionValidation();
+            // this.sizeValidation();
+            // this.servicesValidation();
+
+            // Controlla se validazione e' andata a buon fine
+            if (this.store.errors.length == 0) this.postData();
+            else {
+                console.log('Hai inserito dati non corretti. Riprova!');
+            }
+        },
+        postData() {
             axios.post('http://localhost:8000/api/apartments', {
                 title: this.form.title,
                 lat: 37.9312320,
@@ -67,15 +158,16 @@ export default {
                 services: this.form.services
             })
                 .then((response) => {
-                    console.log('Appartamento nuovo', response);
+                    console.log('Added Apartment', response.data);
                 })
                 .catch((response) => {
-                    console.log('Errore creazione', response.data);
+                    this.addError('Errore del server. Riprovare piú tardi', 'server_error');
+                    console.log('Errore Invio dati Register:', response.response);
                 })
         },
-
     },
-    created() {
+    mounted() {
+        document.title = 'Apartment | Create';
         this.getFormData();
     }
 }
@@ -87,7 +179,7 @@ export default {
         <div class="my-container">
 
             <!-- FORM PER CREATE -->
-            <form @submit.prevent="createApartment()">
+            <form @submit.prevent="handleCreateApartment()">
                 <div class="my-row row">
                     <div class="group small">
                         <label class="d-block mb-2" for="title">Inserisci nome appartamento: *</label>
