@@ -1,5 +1,4 @@
 <script>
-
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
 import AppErrorForm from '../../../components/AppErrorForm.vue';
@@ -19,7 +18,6 @@ export default {
     data() {
         return {
             router,
-            store,
             store,
             form: {
                 title: '',
@@ -59,7 +57,7 @@ export default {
                     message: message,
                     field: field,
                 });
-            } 
+            }
             else {
                 if (!this.store.errors.some((error) => error.field === field)) {
                     this.store.errors.push({
@@ -79,10 +77,10 @@ export default {
                 this.addError('Il campo nome deve essere compilato', 'title');
                 titleInput.classList.add('invalid');
             } else if (titleInput.value.trim().length < 3) {
-                this.addError('Il campo nome deve essere almeno di 3 caratteri', 'first_name');
+                this.addError('Il campo nome deve essere almeno di 3 caratteri', 'title');
                 titleInput.classList.add('invalid');
             } else if (titleInput.value.trim().length > 50) {
-                this.addError('Il campo nome non deve superare i 128 caratteri', 'first_name');
+                this.addError('Il campo nome non deve superare i 128 caratteri', 'title');
                 titleInput.classList.add('invalid');
             }
         },
@@ -92,14 +90,8 @@ export default {
         //     const latInput = document.getElementById('lat');
         //     latInput.classList.remove('invalid');
 
-        //     if (latInput.value.trim().length === 0) {
-        //         this.addError('Il campo latitudine deve essere compilato', 'lat');
-        //         latInput.classList.add('invalid');
-        //     } else if (isNaN(latInput.value)) {
-        //         this.addError('Il campo latitudine deve essere un numero valido', 'lat');
-        //         latInput.classList.add('invalid');
-        //     } else if (latInput.value < -90 || latInput.value > 90) {
-        //         this.addError('Il campo latitudine deve essere compreso tra -90 e 90', 'lat');
+        //     if (isNaN(latInput.value) || latInput.value < -90 || latInput.value > 90) {
+        //         this.addError('Inserisci una latitudine valida', 'lat');
         //         latInput.classList.add('invalid');
         //     }
         // },
@@ -109,11 +101,27 @@ export default {
         //     const lngInput = document.getElementById('lng');
         //     lngInput.classList.remove('invalid');
 
-        //     if (lngInput.value.trim().length === 0) {
-        //         this.addError('Il campo longitudine deve essere compilato', 'lng');
+        //     if (isNaN(lngInput.value) || lngInput.value < -180 || lngInput.value > 180) {
+        //         this.addError('Inserisci una longitudine valida', 'lng');
         //         lngInput.classList.add('invalid');
         //     }
         // },
+
+        addressValidation() {
+            const addressInput = document.getElementById('address');
+            addressInput.classList.remove('invalid');
+
+            if (addressInput.value.trim().length === 0) {
+                this.addError('Il campo indirizzo deve essere compilato', 'address');
+                addressInput.classList.add('invalid');
+            } else if (addressInput.value.trim().length < 3) {
+                this.addError('Il campo indirizzo deve essere almeno di 3 caratteri', 'address');
+                addressInput.classList.add('invalid');
+            } else if (addressInput.value.trim().length > 255) {
+                this.addError('Il campo indirizzo non deve superare i 100 caratteri', 'address');
+                addressInput.classList.add('invalid');
+            }
+        },
 
         validateData() {
             // Front End Validation
@@ -121,17 +129,17 @@ export default {
             // Reset Form Validation
             this.store.errors = [];
             this.titleValidation();
-            // this.latValidation();
-            // this.lngValidation();
-            // this.addressValidation();
-            // this.imageValidation();
-            // this.visibilityValidation();
-            // this.priceValidation();
-            // this.roomsNumberValidation();
-            // this.bathroomsNumberValidation();
-            // this.descriptionValidation();
-            // this.sizeValidation();
-            // this.servicesValidation();
+            this.latValidation();
+            this.lngValidation();
+            this.addressValidation();
+            this.imageValidation();
+            this.visibilityValidation();
+            this.priceValidation();
+            this.roomsNumberValidation();
+            this.bathroomsNumberValidation();
+            this.descriptionValidation();
+            this.sizeValidation();
+            this.servicesValidation();
 
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.postData();
@@ -174,8 +182,7 @@ export default {
 </script>
 
 <template>
-    <AppDashboardLayoutVue
-        :title= "'Aggiungi il tuo appartmento'">
+    <AppDashboardLayoutVue :title="'Aggiungi il tuo appartmento'">
         <div class="my-container">
 
             <!-- FORM PER CREATE -->
@@ -183,13 +190,8 @@ export default {
                 <div class="my-row row">
                     <div class="group small">
                         <label class="d-block mb-2" for="title">Inserisci nome appartamento: *</label>
-                        <input
-                        v-model="form.title"
-                        type="text"
-                        name="title"
-                        id="title"
-                        max="255"
-                    >
+                        <input v-model="form.title" v-on:blur="titleValidation()" type="text" name="title" id="title" max="255"
+                            >
                     </div>
                     <div class="my-group">
                         <div class="group small d-inline-block">
@@ -206,7 +208,7 @@ export default {
                     </div>
                     <div class="group small">
                         <label class="d-block mb-2" for="address">Dove si trova il tuo alloggio? *</label>
-                        <input v-model="form.address" type="text" name="address" id="address">
+                        <input v-model="form.address" type="text" name="address" id="address" v-on:blur="addressValidation()">
                         <!-- maxlength="512" -->
                     </div>
                     <!-- <div>
@@ -234,8 +236,9 @@ export default {
                         </div>
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="bathrooms_number">Bagni: *</label>
-                            <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number">
-                                <!-- min="1"
+                            <input v-model="form.bathrooms_number" type="number" name="bathrooms_number"
+                                id="bathrooms_number">
+                            <!-- min="1"
                                 max="8" -->
                         </div>
                     </div>
@@ -253,12 +256,8 @@ export default {
                         <label class="mb-2 d-block">Fai conoscere agli utenti tutti i servizi del tuo alloggio</label>
                         <div class="services">
                             <span class="service" v-for="service in services">
-                                <input
-                                v-model="form.services"
-                                type="checkbox"
-                                :name="service.name"
-                                :id="service.name"
-                                :value="service.id">
+                                <input v-model="form.services" type="checkbox" :name="service.name" :id="service.name"
+                                    :value="service.id">
                                 <label :for="service.name" class="text-capitalize">{{ service.name }}</label>
                             </span>
                         </div>
@@ -266,7 +265,7 @@ export default {
                 </div>
                 <button type="submit" class="btn my-btn">Crea appartamento</button>
                 <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
-                <AppErrorForm/>
+                <AppErrorForm />
             </form>
         </div>
 
@@ -279,8 +278,7 @@ export default {
 @use '../../../styles/partials/variables.scss' as *;
 @use '../../../styles/partials/formcreateedit.scss' as *;
 
-label{
+label {
     text-transform: none !important;
 }
-
 </style>
