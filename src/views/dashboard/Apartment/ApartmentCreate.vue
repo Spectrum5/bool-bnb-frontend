@@ -14,7 +14,7 @@ export default {
     name: 'ApartmentCreate',
     components: {
         AppDashboardLayoutVue,
-        AppErrorForm
+        AppErrorForm,
     },
     data() {
         return {
@@ -34,10 +34,10 @@ export default {
                 description: '',
                 size: null,
                 user_id: 1,
-                services: []
+                services: [],
             },
             services: [],
-        }
+        };
     },
     methods: {
         getFormData() {
@@ -50,39 +50,91 @@ export default {
         handleCreateApartment() {
             this.validateData();
         },
+        addError(message, field) {
+            // Check if there are already errors in store.errors with the same field, and if not, add the error
+            if (this.store.errors.length === 0) {
+                this.store.errors.push({
+                    message: message,
+                    field: field,
+                });
+            } 
+            else {
+                if (!this.store.errors.some((error) => error.field === field)) {
+                    this.store.errors.push({
+                        message: message,
+                        field: field,
+                    });
+                }
+            }
+        },
+
+        titleValidation() {
+            // Title Length
+            const titleInput = document.getElementById('title');
+            titleInput.classList.remove('invalid');
+
+            if (titleInput.value.trim().length === 0) {
+                this.addError('Il campo nome deve essere compilato', 'title');
+                titleInput.classList.add('invalid');
+            } else if (titleInput.value.trim().length < 3) {
+                this.addError('Il campo nome deve essere almeno di 3 caratteri', 'first_name');
+                titleInput.classList.add('invalid');
+            } else if (titleInput.value.trim().length > 50) {
+                this.addError('Il campo nome non deve superare i 128 caratteri', 'first_name');
+                titleInput.classList.add('invalid');
+            }
+        },
+
+        // latValidation() {
+        //     // Latitude Validation
+        //     const latInput = document.getElementById('lat');
+        //     latInput.classList.remove('invalid');
+
+        //     if (latInput.value.trim().length === 0) {
+        //         this.addError('Il campo latitudine deve essere compilato', 'lat');
+        //         latInput.classList.add('invalid');
+        //     } else if (isNaN(latInput.value)) {
+        //         this.addError('Il campo latitudine deve essere un numero valido', 'lat');
+        //         latInput.classList.add('invalid');
+        //     } else if (latInput.value < -90 || latInput.value > 90) {
+        //         this.addError('Il campo latitudine deve essere compreso tra -90 e 90', 'lat');
+        //         latInput.classList.add('invalid');
+        //     }
+        // },
+
+        // lngValidation() {
+        //     // Longitude Validation
+        //     const lngInput = document.getElementById('lng');
+        //     lngInput.classList.remove('invalid');
+
+        //     if (lngInput.value.trim().length === 0) {
+        //         this.addError('Il campo longitudine deve essere compilato', 'lng');
+        //         lngInput.classList.add('invalid');
+        //     }
+        // },
+
         validateData() {
             // Front End Validation
             // console.log('Validating Create apartment data...');
-            let titleInput = document.getElementById('title');
-
             // Reset Form Validation
             this.store.errors = [];
-            titleInput.classList.remove('invalid');
-
-            // Title Length
-            if (titleInput.value.length == 0) {
-                this.store.errors.push({
-                    message: 'Il campo deve essere compilato'
-                });
-                titleInput.classList.add('invalid');
-            }
-            else if (titleInput.value.length < 5) {
-                this.store.errors.push({
-                    message: 'Il campo nome deve essere almeno di 5 caratteri'
-                });
-                titleInput.classList.add('invalid');
-            }
-            else if (titleInput.value.length > 50) {
-                this.store.errors.push({
-                    message: 'Il campo nome non deve superare i 128 caratteri'
-                });
-                titleInput.classList.add('invalid');
-            }
+            this.titleValidation();
+            // this.latValidation();
+            // this.lngValidation();
+            // this.addressValidation();
+            // this.imageValidation();
+            // this.visibilityValidation();
+            // this.priceValidation();
+            // this.roomsNumberValidation();
+            // this.bathroomsNumberValidation();
+            // this.descriptionValidation();
+            // this.sizeValidation();
+            // this.servicesValidation();
 
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.postData();
             else {
-                // console.log('Apartment Creation Failed');
+                console.log('Hai inserito dati non corretti. Riprova!');
             }
         },
         postData() {
@@ -100,16 +152,17 @@ export default {
                 description: this.form.description,
                 size: this.form.size,
                 user_id: this.form.user_id,
-                visibility: 1
+                visibility: 1,
+                services: this.form.services
             })
                 .then((response) => {
                     console.log('Added Apartment', response.data);
                 })
                 .catch((response) => {
-                    console.log('Error in adding apartment', response);  
+                    this.addError('Errore del server. Riprovare piú tardi', 'server_error');
+                    console.log('Errore Invio dati Register:', response.response);
                 })
         },
-
     },
     mounted() {
         document.title = 'Apartment | Create';
@@ -124,11 +177,12 @@ export default {
 
         <!-- FORM PER CREATE -->
 
-        <form @submit.prevent="createApartment()" class="formContainer">
+        <form @submit.prevent="handleCreateApartment()" class="formContainer">
             <div class="row">
                 <div>
                     <label for="title">Inserisci nome appartamento:</label>
-                    <input v-model="form.title" type="text" name="title" id="title" max="255" required>
+                    <input v-model="form.title" type="text" name="title" id="title" max="255"
+                        required v-on:blur="titleValidation()">
                 </div>
                 <div>
                     <label for="price">Inserisci prezzo a notte:</label>
