@@ -150,7 +150,7 @@ export default {
                     </div>
                     <div class="group small">
                         <label class="mb-2 d-block" for="description">Descrizione appartamento: *</label>
-                        <textarea v-model="form.description" name="description" id="description" rows="6" cols="8" required></textarea>
+                        <textarea v-model="form.description" name="description" id="description" rows="6" required></textarea>
                         <!-- maxlength="4096"-->
                     </div>
                     <div>
@@ -163,13 +163,12 @@ export default {
                         <div class="services">
                             <span class="service" v-for="service in services">
                                 <input
-                                class="text-capitalize"
                                 v-model="form.services"
                                 type="checkbox"
                                 :name="service.name"
                                 :id="service.name"
                                 :value="service.id">
-                                <label :for="service.name">{{ service.name }}</label>
+                                <label :for="service.name" class="text-capitalize">{{ service.name }}</label>
                             </span>
                         </div>
                     </div>
@@ -187,74 +186,10 @@ export default {
 @use '../../../styles/partials/mixins.scss' as *;
 @use '../../../styles/partials/form.scss' as *;
 @use '../../../styles/partials/variables.scss' as *;
+@use '../../../styles/partials/formcreateedit.scss' as *;
 
-
-.my-container {
-    padding: 10px;
-    overflow-y: scroll;
-    max-width: 80%;
-    margin: 40px auto;
-    // margin-inline: auto;
-
-    .my-group{
-        @include flexSpaceBtwn($gap: 100px);
-        div{
-            flex-grow: 1 !important;
-        }
-    }
-    .my-group-info-base{
-        @include flexSpaceBtwn($gap: 50px);
-        div{
-            flex-grow: 1!important;
-        }
-    }
-}
-.services {
-    display: flex;
-    // justify-content: center;
-    align-items: center;
-    gap: 10px;
-    max-width: 80vw;
-    flex-wrap: wrap;
-
-    .service {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 5px;
-    }
+label{
+    text-transform: none !important;
 }
 
-.my-row {
-    div {
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        // border-bottom: 1px solid;
-
-    }
-    input, textarea {
-        line-height: 20px;
-        border: 1px solid black !important;
-    }
-    label.mb-2{
-        font-weight: 600;
-    }
-}
-
-.btn{
-    border: 1.5px solid #000;
-    border-radius: 10px;
-    // padding: 7px;
-    margin: 5px;
-}
-.my-btn{
-    display: block;
-    width: 50%;
-    color: white;
-    font-weight: 700;
-    padding: 10px 0px;
-    border-radius: 10px;
-    background-color: #ff4a86;
-    border: #ff4a86 !important;
-}
 </style>
