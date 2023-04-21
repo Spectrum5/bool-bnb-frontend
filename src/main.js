@@ -33,9 +33,14 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { faChartSimple } from '@fortawesome/free-solid-svg-icons'
 import { faShuttleSpace } from '@fortawesome/free-solid-svg-icons'
+import { faHouseFloodWater } from '@fortawesome/free-solid-svg-icons'
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons'
 import { faEye } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faIgloo } from '@fortawesome/free-solid-svg-icons'
+
+
+
 
 library.add(faBars,
   faCircleUser,
@@ -44,6 +49,7 @@ library.add(faBars,
   faWaterLadder,
   faWifi,
   faCarSide,
+  faCheck,
   faUtensils,
   faTv,
   faSnowflake,
@@ -62,7 +68,11 @@ library.add(faBars,
   faTrashCan,
   faChartSimple,
   faShuttleSpace,
+  faHouseFloodWater,
   faLayerGroup,
+  faIgloo,
+
+,
   faEye,
   faPlus)
 

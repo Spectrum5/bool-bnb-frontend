@@ -31,6 +31,13 @@ const router = createRouter({
             name: 'apartment',
             component: ApartmentView
         },
+           {
+            path: '/search',
+            name: 'search',
+            component: HomeSearch
+        },
+
+
         // Authentication Pages
         {
             path: '/login',
