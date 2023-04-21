@@ -36,7 +36,7 @@ export default {
     <!-- CONTAINER PRINCIPALE -->
     <div class="container">
         <!-- TITOLO E INDIRIZZO -->
-        <section>
+        <section id="title-address">
             <h2 class="mb-2">{{ apartment.title }}</h2>
             <h4 class="mb-4">Dove si trova: 
                 <strong>
@@ -64,7 +64,6 @@ export default {
                         <span>{{ apartment.bathrooms_number }} bagni</span>
                     </p>
                 </section>
-                <hr>
                 <!-- DESCRIZIONE APARTMENT -->
                 <section class="my-3">
                     <div class="description">
@@ -74,7 +73,6 @@ export default {
                         </p>
                     </div>
                 </section>
-                <hr>
                 <!-- SERVIZI APARTMENT -->
                 <section class="my-3">
                     <div>
@@ -89,7 +87,6 @@ export default {
                         </div>
                     </div>
                 </section>
-                <hr>
                 <section class="my-3">
                     <h3 class="mb-1">Dove dormirai</h3>
                     <div class="room-desc d-inline-block mb-1" v-for="i in apartment.rooms_number">
@@ -116,7 +113,6 @@ export default {
                         </div>
                     </div>                
                 </section>
-                <hr>
                 <!-- SEZIONE MAPPA -->
                 <section class="my-3">
                     <h3 class="mb-1">Dove ti troverai</h3>
@@ -168,6 +164,11 @@ export default {
     border-radius: 10px;
     padding: 7px;
     margin: 5px;
+}
+
+section:not(#title-address, section:last-of-type){
+    border-bottom: 1px solid;
+    padding: 15px 0;    
 }
 
     a{
@@ -258,6 +259,7 @@ export default {
         border: 1px dashed;
     }
     .contact{
+        margin-top: 27px;
         min-width: 40%;
         margin-left: auto;
         border: 1px solid;
@@ -287,7 +289,7 @@ export default {
             width: 100%;
             color: white;
             font-weight: 700;
-            padding: 7px 0px;
+            padding: 10px 0px;
             border-radius: 10px;
             background-color: #ff4a86;
             border: #ff4a86 !important;
