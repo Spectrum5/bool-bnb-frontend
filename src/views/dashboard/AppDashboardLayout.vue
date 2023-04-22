@@ -2,6 +2,7 @@
 
 // Components
 import AppLogo from '../../components/AppLogo.vue';
+import AppButton from '../../components/AppButton.vue';
 
 // Utilities
 import { store } from '../../store';
@@ -11,7 +12,8 @@ import axios from 'axios';
 export default {
     name: 'AppDashboardLayout',
     components: {
-        AppLogo
+        AppLogo,
+        AppButton
     },
     data() {
         return {
@@ -38,7 +40,10 @@ export default {
     },
     props: {
         title: String,
-        button: Object
+        button: {
+            type: Object,
+            default: null
+        }
     },
     methods: {
         handleLogout() {
@@ -85,12 +90,13 @@ export default {
                 <header>
                     <h2 class="mainTitle">{{ this.title }}</h2>
 
-                    <div class="create" @click="this.button.action" v-if="this.button">
+                    <!-- <div class="create" @click="this.button.action" v-if="this.button">
                         <button class="btn btn-create">
                             <font-awesome-icon :icon="`fa-solid fa-${this.button.icon}`" />
                             {{ this.button.label }}
                         </button>
-                    </div>
+                    </div> -->
+                    <AppButton v-if="button" :to="button.link ?? null" :action="button.action ?? null" :label="button.label" :icon="button.icon ?? null" :type="'solid'" :palette="'primary'"/>
                 </header>
 
                 <slot></slot>

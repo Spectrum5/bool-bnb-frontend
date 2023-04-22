@@ -2,6 +2,7 @@
 
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppButton from '../../../components/AppButton.vue';
 
 // Utilities
 import axios from 'axios';
@@ -11,7 +12,8 @@ import { store } from '../../../store';
 export default {
     name: 'ApartmentIndex',
     components: {
-        AppDashboardLayoutVue
+        AppDashboardLayoutVue,
+        AppButton
     },
     data() {
         return {
@@ -44,6 +46,9 @@ export default {
                     this.getApartments();
                 })
         },
+        testFunction() {
+            console.log('TEST FUNCTION');
+        },
         gotoCreate() {
             console.log('GO TO');
             this.$router.push('/dashboard/apartments/create');
@@ -61,9 +66,9 @@ export default {
         :title="'i miei appartamenti'" 
         :button="
         {
-            label: 'Aggiungi nuovo appartamento',
+            label: 'Aggiungi',
             icon: 'plus',
-            action: gotoCreate
+            link: '/dashboard/apartments/create'
         }">
 
             <main>
@@ -80,6 +85,7 @@ export default {
                             <font-awesome-icon icon="fa-solid fa-pencil" />
                             Modifica
                         </button>
+                        <!-- <AppButton :label="'elimina'" :icon="'trash-can'" :type="'solid'" :palette="'danger'" :action="testFunction"/> -->
                         <button class="btn btn-delete" @click="deleteApartment(apartment.id)">
                             <font-awesome-icon icon="fa-solid fa-trash-can" />
                             Elimina
