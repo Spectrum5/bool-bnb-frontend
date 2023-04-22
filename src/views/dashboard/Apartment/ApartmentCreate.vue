@@ -1,5 +1,4 @@
 <script>
-
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
 import AppErrorForm from '../../../components/AppErrorForm.vue';
@@ -19,7 +18,6 @@ export default {
     data() {
         return {
             router,
-            store,
             store,
             form: {
                 title: '',
@@ -59,7 +57,7 @@ export default {
                     message: message,
                     field: field,
                 });
-            } 
+            }
             else {
                 if (!this.store.errors.some((error) => error.field === field)) {
                     this.store.errors.push({
@@ -79,11 +77,133 @@ export default {
                 this.addError('Il campo nome deve essere compilato', 'title');
                 titleInput.classList.add('invalid');
             } else if (titleInput.value.trim().length < 3) {
-                this.addError('Il campo nome deve essere almeno di 3 caratteri', 'first_name');
+                this.addError('Il campo nome deve essere almeno di 3 caratteri', 'title');
                 titleInput.classList.add('invalid');
             } else if (titleInput.value.trim().length > 50) {
-                this.addError('Il campo nome non deve superare i 128 caratteri', 'first_name');
+                this.addError('Il campo nome non deve superare i 128 caratteri', 'title');
                 titleInput.classList.add('invalid');
+            }
+        },
+
+        addressValidation() {
+            const addressInput = document.getElementById('address');
+            addressInput.classList.remove('invalid');
+
+            if (addressInput.value.trim().length === 0) {
+                this.addError('Il campo indirizzo deve essere compilato', 'address');
+                addressInput.classList.add('invalid');
+            } else if (addressInput.value.trim().length < 3) {
+                this.addError('Il campo indirizzo deve essere almeno di 3 caratteri', 'address');
+                addressInput.classList.add('invalid');
+            } else if (addressInput.value.trim().length > 512) {
+                this.addError('Il campo indirizzo non deve superare i 512 caratteri', 'address');
+                addressInput.classList.add('invalid');
+            }
+        },
+
+        // imageValidation() {
+        //     const fileInput = document.getElementById('image');
+        //     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+        //     fileInput.classList.remove('invalid');
+
+        //     if (!fileInput.value) {
+        //         this.addError('Devi selezionare un\'immagine', 'image');
+        //         fileInput.classList.add('invalid');
+        //     } else if (!allowedExtensions.exec(fileInput.value)) {
+        //         this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'image');
+        //         fileInput.classList.add('invalid');
+        //     }
+        // },
+
+        priceValidation() {
+            const priceInput = document.getElementById('price');
+            priceInput.classList.remove('invalid');
+
+            if (priceInput.value.trim().length === 0) {
+                this.addError('Il campo prezzo deve essere compilato', 'price');
+                priceInput.classList.add('invalid');
+            } else if (isNaN(priceInput.value.trim())) {
+                this.addError('Il campo prezzo deve contenere solo numeri', 'price');
+                priceInput.classList.add('invalid');
+            } else if (priceInput.value.trim() <= 99 || priceInput.value.trim() > 1500) {
+                this.addError('Il campo prezzo deve essere compreso tra 100 e 1500', 'price');
+                priceInput.classList.add('invalid');
+            }
+        },
+
+        roomsNumberValidation() {
+            const roomsNumberInput = document.getElementById('rooms_number');
+            roomsNumberInput.classList.remove('invalid');
+
+            if (roomsNumberInput.value.trim().length === 0) {
+                this.addError('Il campo stanze deve essere compilato', 'rooms_number');
+                roomsNumberInput.classList.add('invalid');
+            } else if (isNaN(roomsNumberInput.value.trim())) {
+                this.addError('Il campo stanze deve contenere solo numeri', 'rooms_number');
+                roomsNumberInput.classList.add('invalid');
+            } else if (roomsNumberInput.value.trim() <= 0 || roomsNumberInput.value.trim() > 8) {
+                this.addError('Il campo stanze deve essere compreso tra 1 e 8', 'rooms_number');
+                roomsNumberInput.classList.add('invalid');
+            }
+        },
+
+        bathroomsNumberValidation() {
+            const bathroomsNumberInput = document.getElementById('bathrooms_number');
+            bathroomsNumberInput.classList.remove('invalid');
+
+            if (bathroomsNumberInput.value.trim().length === 0) {
+                this.addError('Il campo numero di bagni deve essere compilato', 'bathrooms_number');
+                bathroomsNumberInput.classList.add('invalid');
+            } else if (isNaN(bathroomsNumberInput.value.trim())) {
+                this.addError('Il campo numero di bagni deve contenere solo numeri', 'bathrooms_number');
+                bathroomsNumberInput.classList.add('invalid');
+            } else if (bathroomsNumberInput.value.trim() <= 0 || bathroomsNumberInput.value.trim() > 8) {
+                this.addError('Il campo numero di bagni deve essere compreso tra 1 e 8', 'bathrooms_number');
+                bathroomsNumberInput.classList.add('invalid');
+            }
+        },
+
+        descriptionValidation() {
+            const descriptionInput = document.getElementById('description');
+            descriptionInput.classList.remove('invalid');
+
+            const descriptionValue = descriptionInput.value.trim();
+
+            if (descriptionValue.length < 10) {
+                this.addError('La descrizione deve essere di almeno 10 caratteri', 'description');
+                descriptionInput.classList.add('invalid');
+            } else if (descriptionValue.length > 4096) {
+                this.addError('La descrizione deve essere di massimo 4096 caratteri', 'description');
+                descriptionInput.classList.add('invalid');
+            }
+        },
+
+        sizeValidation() {
+            const sizeInput = document.getElementById('size');
+            sizeInput.classList.remove('invalid');
+
+            if (sizeInput.value.trim().length === 0) {
+                this.addError('Il campo Inserisci i mq deve essere compilato', 'size');
+                sizeInput.classList.add('invalid');
+            } else if (isNaN(sizeInput.value.trim())) {
+                this.addError('Il campo Inserisci i mq deve essere un numero', 'size');
+                sizeInput.classList.add('invalid');
+            } else if (sizeInput.value.trim() < 50) {
+                this.addError('Il campo Inserisci i mq deve essere maggiore di 50', 'size');
+                sizeInput.classList.add('invalid');
+            } else if (sizeInput.value.trim() > 500) {
+                this.addError('Il campo Inserisci i mq non deve superare i 500 mq', 'size');
+                sizeInput.classList.add('invalid');
+            }
+        },
+
+        visibilityValidation() {
+            const visibilityInput = document.getElementById('visibility');
+            visibilityInput.classList.remove('invalid');
+
+            if (this.form.visibility !== true && this.form.visibility !== false) {
+                this.addError('Il campo visibilità non è valido', 'visibility');
+                visibilityInput.classList.add('invalid');
             }
         },
 
@@ -92,14 +212,8 @@ export default {
         //     const latInput = document.getElementById('lat');
         //     latInput.classList.remove('invalid');
 
-        //     if (latInput.value.trim().length === 0) {
-        //         this.addError('Il campo latitudine deve essere compilato', 'lat');
-        //         latInput.classList.add('invalid');
-        //     } else if (isNaN(latInput.value)) {
-        //         this.addError('Il campo latitudine deve essere un numero valido', 'lat');
-        //         latInput.classList.add('invalid');
-        //     } else if (latInput.value < -90 || latInput.value > 90) {
-        //         this.addError('Il campo latitudine deve essere compreso tra -90 e 90', 'lat');
+        //     if (isNaN(latInput.value) || latInput.value < -90 || latInput.value > 90) {
+        //         this.addError('Inserisci una latitudine valida', 'lat');
         //         latInput.classList.add('invalid');
         //     }
         // },
@@ -109,11 +223,12 @@ export default {
         //     const lngInput = document.getElementById('lng');
         //     lngInput.classList.remove('invalid');
 
-        //     if (lngInput.value.trim().length === 0) {
-        //         this.addError('Il campo longitudine deve essere compilato', 'lng');
+        //     if (isNaN(lngInput.value) || lngInput.value < -180 || lngInput.value > 180) {
+        //         this.addError('Inserisci una longitudine valida', 'lng');
         //         lngInput.classList.add('invalid');
         //     }
         // },
+
 
         validateData() {
             // Front End Validation
@@ -123,14 +238,14 @@ export default {
             this.titleValidation();
             // this.latValidation();
             // this.lngValidation();
-            // this.addressValidation();
+            this.addressValidation();
             // this.imageValidation();
-            // this.visibilityValidation();
-            // this.priceValidation();
-            // this.roomsNumberValidation();
-            // this.bathroomsNumberValidation();
-            // this.descriptionValidation();
-            // this.sizeValidation();
+            this.visibilityValidation();
+            this.priceValidation();
+            this.roomsNumberValidation();
+            this.bathroomsNumberValidation();
+            this.descriptionValidation();
+            this.sizeValidation();
             // this.servicesValidation();
 
             // Controlla se validazione e' andata a buon fine
@@ -174,8 +289,7 @@ export default {
 </script>
 
 <template>
-    <AppDashboardLayoutVue
-        :title= "'Aggiungi il tuo appartmento'">
+    <AppDashboardLayoutVue :title="'Aggiungi il tuo appartmento'">
         <div class="my-container">
 
             <!-- FORM PER CREATE -->
@@ -183,30 +297,26 @@ export default {
                 <div class="my-row row">
                     <div class="group small">
                         <label class="d-block mb-2" for="title">Inserisci nome appartamento: *</label>
-                        <input
-                        v-model="form.title"
-                        type="text"
-                        name="title"
-                        id="title"
-                        max="255"
-                    >
+                        <input v-model="form.title" type="text" name="title" id="title" max="255"
+                            v-on:blur="titleValidation()">
                     </div>
                     <div class="my-group">
                         <div class="group small d-inline-block">
                             <label class="d-block mb-2" for="price">Inserisci prezzo a notte: *</label>
-                            <input v-model="form.price" type="number" name="price" id="price">
+                            <input v-model="form.price" type="number" name="price" id="price" v-on:blur="priceValidation()">
                             <!-- max="1500" -->
                         </div>
                         <div class="group small d-inline-block">
                             <label class="d-block mb-2" for="size">Inserisci i mq: *</label>
-                            <input v-model="form.size" type="number" name="size" id="size">
+                            <input v-model="form.size" type="number" name="size" id="size" v-on:blur="sizeValidation()">
                             <!-- min="50"
                                 max="500" -->
                         </div>
                     </div>
                     <div class="group small">
                         <label class="d-block mb-2" for="address">Dove si trova il tuo alloggio? *</label>
-                        <input v-model="form.address" type="text" name="address" id="address">
+                        <input v-model="form.address" type="text" name="address" id="address"
+                            v-on:blur="addressValidation()">
                         <!-- maxlength="512" -->
                     </div>
                     <!-- <div>
@@ -222,7 +332,8 @@ export default {
                     <div class="my-group-info-base">
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="rooms_number">Stanze: *</label>
-                            <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number">
+                            <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number"
+                                v-on:blur="roomsNumberValidation()">
                             <!-- min="1"
                             max="8" -->
                         </div>
@@ -234,14 +345,16 @@ export default {
                         </div>
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="bathrooms_number">Bagni: *</label>
-                            <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number">
-                                <!-- min="1"
+                            <input v-model="form.bathrooms_number" type="number" name="bathrooms_number"
+                                id="bathrooms_number" v-on:blur="bathroomsNumberValidation()">
+                            <!-- min="1"
                                 max="8" -->
                         </div>
                     </div>
                     <div class="group small">
                         <label class="mb-2 d-block" for="description">Descrizione appartamento: *</label>
-                        <textarea v-model="form.description" name="description" id="description" rows="6"></textarea>
+                        <textarea v-model="form.description" name="description" id="description" rows="6"
+                            v-on:blur="descriptionValidation()"></textarea>
                         <!-- maxlength="4096"-->
                     </div>
                     <div>
@@ -253,12 +366,8 @@ export default {
                         <label class="mb-2 d-block">Fai conoscere agli utenti tutti i servizi del tuo alloggio</label>
                         <div class="services">
                             <span class="service" v-for="service in services">
-                                <input
-                                v-model="form.services"
-                                type="checkbox"
-                                :name="service.name"
-                                :id="service.name"
-                                :value="service.id">
+                                <input v-model="form.services" type="checkbox" :name="service.name" :id="service.name"
+                                    :value="service.id">
                                 <label :for="service.name" class="text-capitalize">{{ service.name }}</label>
                             </span>
                         </div>
@@ -266,7 +375,7 @@ export default {
                 </div>
                 <button type="submit" class="btn my-btn">Crea appartamento</button>
                 <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
-                <AppErrorForm/>
+                <AppErrorForm />
             </form>
         </div>
 
@@ -279,8 +388,7 @@ export default {
 @use '../../../styles/partials/variables.scss' as *;
 @use '../../../styles/partials/formcreateedit.scss' as *;
 
-label{
+label {
     text-transform: none !important;
 }
-
 </style>
