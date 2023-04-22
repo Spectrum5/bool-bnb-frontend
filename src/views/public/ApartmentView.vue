@@ -88,11 +88,9 @@ export default {
             console.log('Invio messaggio...');
 
             axios.post('http://localhost:8000/api/messages', {
-                first_name: this.store.user.first_name,
-                last_name: this.store.user.last_name,
                 email: this.message.contactEmail,
                 message: this.message.text,
-                apartment_id: this.apartment.id,
+                apartment_id: this.apartment.id
             })
                 .then((response) => {
                     console.log('Messaggio Inviato', response);
