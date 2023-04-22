@@ -5,7 +5,6 @@ import { store } from './store';
 import HomeView from './views/public/HomeView.vue';
 import ApartmentView from './views/public/ApartmentView.vue';
 import HomeSearch from './views/public/HomeSearch.vue';
-import Sponsor from './views/public/Sponsor.vue';
 
 // Authentication Pages
 import AppLogin from './views/auth/AppLogin.vue';
@@ -16,6 +15,12 @@ import ApartmentIndex from './views/dashboard/Apartment/ApartmentIndex.vue';
 import ApartmentCreate from './views/dashboard/Apartment/ApartmentCreate.vue';
 import ApartmentEdit from './views/dashboard/Apartment/ApartmentEdit.vue';
 import ApartmentShow from './views/dashboard/Apartment/ApartmentShow.vue';
+
+// Dashboard - Messages
+import MessageIndex from './views/dashboard/Message/MessageIndex.vue';
+
+// Dashboard - Sponsors
+import SponsorIndex from './views/dashboard/Sponsor/SponsorIndex.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -88,22 +93,34 @@ const router = createRouter({
                 if (store.user == null) return { name: 'login' }
             },
         },
-
-
-
+        // Dashboard - Message
+        {
+            path: '/dashboard/messages',
+            name: 'message-index',
+            component: MessageIndex,
+            beforeEnter: (to, from) => {
+                if (store.user == null) return { name: 'login' }
+            },
+        },
+        // Dashboard - Sponsor
+        {
+            path: '/dashboard/sponsors',
+            name: 'sponsor-index',
+            component: SponsorIndex,
+            beforeEnter: (to, from) => {
+                if (store.user == null) return { name: 'login' }
+            },
+        },
         
+
+
+
 
 
         {
             path: '/apartments/search/:title',
             name: 'apartment-search',
             component: HomeSearch
-        },
-
-        {
-            path: '/dashboard/sponsors',
-            name: 'sponsor',
-            component: Sponsor
         },
 
         

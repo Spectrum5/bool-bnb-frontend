@@ -41,6 +41,7 @@ import { faIgloo } from '@fortawesome/free-solid-svg-icons'
 
 
 
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faBars,
   faCircleUser,
@@ -72,7 +73,8 @@ library.add(faBars,
   faLayerGroup,
   faIgloo,
   faEye,
-  faPlus)
+  faPlus,
+  faEnvelope)
 
 createApp(App)
   .use(router)

@@ -67,7 +67,7 @@ export default {
         }">
 
             <main>
-                <div class="row-my-partm my-container" v-for="apartment in apartments">
+                <div class="row-my-partm my-container" v-for="apartment in apartments" v-if="apartments != null">
                     <div>
                         <p> {{ apartment.title }}</p>
                     </div>

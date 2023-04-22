@@ -24,6 +24,11 @@ export default {
                     link: '/dashboard/apartments'
                 },
                 {
+                    label: 'messages',
+                    icon: 'envelope',
+                    link: '/dashboard/messages'
+                },
+                {
                     label: 'sponsors',
                     icon: 'layer-group',
                     link: '/dashboard/sponsors'
