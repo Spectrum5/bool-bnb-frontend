@@ -1,15 +1,23 @@
 <script>
 
+// Components
+import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+
 // Utilities
 import axios from 'axios';
 
 export default {
+    name: 'SponsorIndex',
+    components: {
+        AppDashboardLayoutVue
+    },
     data() {
         return {
             sponsorData: [],
         };
     },
     async created() {
+        document.title = 'Dashboard | Sponsor Plans';
         try {
             const response = await axios.get('http://localhost:8000/api/sponsor');
             this.sponsorData = response.data;
@@ -21,50 +29,68 @@ export default {
 </script>
 
 <template>
-    <div @click="$router.push('/')">torna alla home</div>
 
-    <div class="container">
-        <div class="cards">
-            <div class="card shadow">
-                <ul>
-                    <li class="pack">standard</li>
-                    <li id="standard" class="price bottom-bar">&euro;2.99</li>
-                    <li class="bottom-bar">Time: 24 ore</li>
-                    <li class="bottom-bar">2 case</li>
-                    <li class="bottom-bar">no support</li>
-                    <li><button class="btn">Attiva</button></li>
-                </ul>
+    <AppDashboardLayoutVue :title="'Piani di Sponsor'">
+        <main>
+
+            <div class="container">
+                <div class="cards">
+                    <div class="card shadow">
+                        <ul>
+                            <li class="pack">standard</li>
+                            <li id="standard" class="price bottom-bar">&euro;2.99</li>
+                            <li class="bottom-bar">Time: 24 ore</li>
+                            <li class="bottom-bar">2 case</li>
+                            <li class="bottom-bar">no support</li>
+                            <li><button class="btn">Attiva</button></li>
+                        </ul>
+                    </div>
+                    <div class="card active">
+                        <ul>
+                            <li class="pack">premium</li>
+                            <li id="plus" class="price bottom-bar">&euro;9.99</li>
+                            <li class="bottom-bar">Time: 72 ore</li>
+                            <li class="bottom-bar">case infinite</li>
+                            <li class="bottom-bar">Support 24/7 (non è vero)</li>
+                            <li><button class="btn active-btn">Attiva</button></li>
+                        </ul>
+                    </div>
+                    <div class="card shadow">
+                        <ul>
+                            <li class="pack">plus</li>
+                            <li id="premium" class="price bottom-bar">&euro;5.99</li>
+                            <li class="bottom-bar">Time: 48 ore</li>
+                            <li class="bottom-bar">case non infinite</li>
+                            <li class="bottom-bar">support 9-12</li>
+                            <li><button class="btn">Attiva</button></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="card active">
-                <ul>
-                    <li class="pack">premium</li>
-                    <li id="plus" class="price bottom-bar">&euro;9.99</li>
-                    <li class="bottom-bar">Time: 72 ore</li>
-                    <li class="bottom-bar">case infinite</li>
-                    <li class="bottom-bar">Support 24/7 (non è vero)</li>
-                    <li><button class="btn active-btn">Attiva</button></li>
-                </ul>
-            </div>
-            <div class="card shadow">
-                <ul>
-                    <li class="pack">plus</li>
-                    <li id="premium" class="price bottom-bar">&euro;5.99</li>
-                    <li class="bottom-bar">Time: 48 ore</li>
-                    <li class="bottom-bar">case non infinite</li>
-                    <li class="bottom-bar">support 9-12</li>
-                    <li><button class="btn">Attiva</button></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+        </main>
+
+    </AppDashboardLayoutVue>
 </template>
 
 <style lang="scss" scoped>
-.container {
+
+main {
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    overflow: auto;
+    padding: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+}
+.container {
+    // display: flex;
+    // justify-content: flex-start;
+    // align-items: center;
+    // min-height: 100vh;
+    // margin-top: 5rem;
+    // background-color: red;
 
     .cards {
         display: flex;

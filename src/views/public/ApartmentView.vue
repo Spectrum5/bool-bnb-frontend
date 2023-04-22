@@ -1,18 +1,24 @@
 <script>
 
+// Utilities
 import axios from 'axios';
 import { router } from '../../router';
+import { store } from '../../store';
 
 export default {
     name: 'ApartmentView',
     data() {
         return {
             router,
+            store,
             apartment: null,
+            url_api_tomtom: 'https://api.tomtom.com/map',
             api_key_tomtom: 'Vru3uP06eapOxpYMujwrRlVLMB5Vkqch',
-            lat: 41.89021,
-            lng: 12.492231,
-            url: null
+            mapUrl: null,
+            message: {
+                contactEmail: null,
+                text: ''
+            }
         }
     },
     methods: {
@@ -23,29 +29,77 @@ export default {
                     console.log('Appartamento', response.data.apartment);
                     this.apartment = response.data.apartment;
                     document.title = `Boolbnb | ${this.apartment.title}`;
-                    this.calcAddress();
+
+                    // Richiede la mappa solo dopo aver ricevuto le coordinate dell'appartamento
+                    this.getMap();
                 })
                 .catch((response) => {
-                    console.log('Errore Ottenimento Appartamento', response.data);
+                    console.log('Errore Richiesta Appartamento', response.data);
                 })
         },
-        async calcAddress() {
-            // const address = await fetch(`https://api.tomtom.com/search/2/search/${this.lat},${this.lng}.json?key=${this.api_key_tomtom}&radius=150`);
-            // const addressResponse = await address.json();
-            // console.log('TomTom Address', addressResponse);
-
-            // https://{baseURL}/map/{versionNumber}/tile/{layer}/{style}/{zoom}/{X}/{Y}.{format}?key={Your_API_Key}&tileSize={tileSize}&view={geopoliticalView}&language={language}
-            const map = await fetch(`https://api.tomtom.com/map/1/staticimage?key=${this.api_key_tomtom}&center=${this.lat},${this.lng}&zoom=1&format=png&layer=basic&style=main&view=Unified`);
-            // const mapResponse = await map.json();
-            // console.log('TomTom Map', map.json());
-
-            // this.url = URL.createObjectURL(map.blob());
-
-            // const res = await fetch(url);
+        async getMap() {
+            // const map = await fetch(`${this.url_api_tomtom}/1/staticimage?`, {
+            //     key: this.api_key_tomtom,
+            //     zoom: 15,
+            //     center: `${this.apartment.lng},${this.apartment.lat}`,
+            //     format: 'png',
+            //     layer: 'basic',
+            //     style: 'main',
+            //     width: 1305,
+            //     height: 748,
+            //     view: 'Unified',
+            //     language: 'it-IT'
+            // });
+            const map = await fetch(`${this.url_api_tomtom}/1/staticimage?key=${this.api_key_tomtom}&zoom=15&center=${this.apartment.lng},${this.apartment.lat}&format=png&layer=basic&style=main&width=1305&height=748&view=Unified&language=it-IT`);
             const data = await map.blob();
-            this.url = URL.createObjectURL(data);
+            this.mapUrl = URL.createObjectURL(data);
+        },
+        setContactEmail() {
+            if (store.user != null) {
+                this.message.contactEmail = this.store.user.email;
+                return true;
+            }
+        },
+        emailValidation() {
+            let emailInput = document.getElementById('email');
+            emailInput.classList.remove('invalid');
 
-            // this.url = map;
+            // Email Validation
+            if (emailInput.value.trim().length == 0) {
+                this.addError('Il campo email deve essere compilato', 'email');
+                emailInput.classList.add('invalid');
+            }
+            else if (emailInput.value.trim().length < 10) {
+                this.addError('L\'email deve essere lunga almeno 10 caratteri', 'email');
+                emailInput.classList.add('invalid');
+            }
+            else if (emailInput.value.trim().length > 64) {
+                this.addError('L\'email non deve superare i 64 caratteri', 'email');
+                emailInput.classList.add('invalid');
+            }
+            else if (!emailInput.value.toLowerCase().match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            )) {
+                this.addError('La tua email contiene caratteri non permessi', 'email');
+                emailInput.classList.add('invalid');
+            }
+        },
+        sendMessage() {
+            console.log('Invio messaggio...');
+
+            axios.post('http://localhost:8000/api/messages', {
+                first_name: this.store.user.first_name,
+                last_name: this.store.user.last_name,
+                email: this.message.contactEmail,
+                message: this.message.text,
+                apartment_id: this.apartment.id,
+            })
+                .then((response) => {
+                    console.log('Messaggio Inviato', response);
+                })
+                .catch((response) => {
+                    console.log('Errore Messaggio', response.data);
+                })
         }
     },
     mounted() {
@@ -57,8 +111,6 @@ export default {
 
 <template>
     <div @click="$router.push('/')">torna alla home</div>
-
-    <img :src="this.url" alt="" v-if="this.url">
 
     <!-- CONTAINER PRINCIPALE -->
     <div class="container" v-if="this.apartment">
@@ -150,7 +202,7 @@ export default {
                 <section class="my-3">
                     <h4 class="mb-1">Dove ti troverai</h4>
                     <div id="maps">
-                        <h1>MAPPA</h1>
+                        <img :src="this.mapUrl" alt="" v-if="this.mapUrl">
                     </div>
                 </section>
             </div>
@@ -164,16 +216,20 @@ export default {
                     </strong>
                     / per notte
                 </h5>
-                <form>
-                    <div class="mb-3">
-                        <label for="email" class="form-label mb-1">Indirizzo email</label>
-                        <input type="email" class="form-control" id="email" name="email"
-                            placeholder="Inserisci la tua mail">
+                <form @submit.prevent="sendMessage()">
+                    <div class="row">
+                        <div class="group large">
+                            <label for="email">Indirizzo email</label>
+                            <input type="email" id="email" name="email" placeholder="Inserisci la tua mail"
+                                v-model="message.contactEmail" :disabled="setContactEmail()">
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="message" class="form-label mb-1">Scrivi il tuo messaggio</label>
-                        <textarea class="form-control" name="message" id="message" rows="6"
-                            placeholder="Scrivi il tuo messaggio"></textarea>
+                    <div class="row">
+                        <div class="group large">
+                            <label for="message" class="form-label mb-1">Scrivi il tuo messaggio</label>
+                            <textarea class="form-control" name="message" id="message" rows="6"
+                                placeholder="Scrivi il tuo messaggio" v-model="message.text"></textarea>
+                        </div>
                     </div>
                     <button type="submit" class="btn my-btn">Invia richiesta</button>
                 </form>
@@ -184,6 +240,8 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+@use '../../styles/partials/form.scss' as *;
+
 a {
     color: black;
 }
@@ -274,6 +332,12 @@ h4 {
     width: 600px;
     background-color: bisque;
     border: 1px dashed;
+
+    >img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 }
 
 .contact {
@@ -287,18 +351,18 @@ h4 {
     top: 70px;
     z-index: 1;
 
-    input {
-        border: 1px solid black;
-        line-height: 30px;
-        border-radius: 10px;
-        padding: 3px 0 3px 7px;
-    }
+    // input {
+    //     border: 1px solid black;
+    //     line-height: 30px;
+    //     border-radius: 10px;
+    //     padding: 3px 0 3px 7px;
+    // }
 
-    textarea {
-        border: 1px solid black;
-        border-radius: 10px;
-        padding: 3px 0 3px 7px;
-    }
+    // textarea {
+    //     border: 1px solid black;
+    //     border-radius: 10px;
+    //     padding: 3px 0 3px 7px;
+    // }
 
     .my-btn {
         display: block;
@@ -310,10 +374,10 @@ h4 {
         background-color: #ff4a86;
     }
 
-    textarea::placeholder,
-    input::placeholder {
-        font-size: 0.8rem;
-    }
+    // textarea::placeholder,
+    // input::placeholder {
+    //     font-size: 0.8rem;
+    // }
 }
 </style>
 

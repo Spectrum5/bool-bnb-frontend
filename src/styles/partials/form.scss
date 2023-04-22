@@ -56,7 +56,7 @@ form .row {
             @include customOutline;
             border: 1px solid transparent;
 
-            // background: $light-color-three;
+            background: $light-color-two;
 
             &.invalid {
                 border: 1px solid $danger-color-dark;
