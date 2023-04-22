@@ -54,3 +54,65 @@
         outline-color: $color-three-light;
     }
 }
+
+@mixin customButton ($palette: primary, $colorA: $light-color-one, $colorB: $color-one-dark, $colorC: $color-one-light) {
+    @include customOutline;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    text-decoration: none;
+    line-height: 1rem;
+
+    display: inline-block;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.05s;
+
+    @if $palette == primary {
+        $colorB: $color-one-dark;
+        $colorC: $color-two-dark;
+    }
+
+    @else if $palette == success {
+        $colorB: $success-color-dark;
+        $colorC: $success-color-light;
+    }
+    
+    @else if $palette == warning {
+        $colorB: $warning-color-dark;
+        $colorC: $warning-color-light;
+    }
+    
+    @else if $palette == danger {
+        $colorB: $danger-color-dark;
+        $colorC: $danger-color-light;
+    }
+
+    &.solid {
+        color: $colorA;
+        background: linear-gradient(45deg, $colorB, $colorC);
+
+        &:hover {
+            background: linear-gradient(60deg, $colorB 40%, $colorC);
+        }
+    }
+
+    &.line {
+        color: $colorB;
+        box-shadow: inset 0px 0px 0px 2px $colorB;
+
+        &:hover {
+            background: linear-gradient(45deg, $colorB, $colorC);
+            color: $colorA;
+        }
+    }
+
+    .icon {
+        margin-right: 0.5rem;
+    }
+}
