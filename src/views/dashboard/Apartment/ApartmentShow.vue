@@ -39,6 +39,9 @@ export default {
         }
     
     },
+    computed() {
+        return this.apartment.title;
+    },
     created() {
         this.getApartment();
     }
@@ -47,7 +50,7 @@ export default {
 
 <template>
      <AppDashboardLayoutVue 
-            :title=" apartment.title "
+            :title=" getApartmentTitle "
             :button="
                 {
                     label: 'Torna alla dashboard',
@@ -85,13 +88,14 @@ export default {
     <!-- SPONSOR -->
     <div class="mb">
         <h2>Sponsorizzazioni</h2>
-        <div class="mb" v-if="apartment.sponsors.length > 0">
+        <!-- <div class="mb" v-if="apartment.sponsors.length > 0">
             <h4>Servizi:</h4>
             <div class="sponsors" v-for="sponsor in apartment.sponsors">
                 <p>{{ sponsor.title }}</p>
             </div>
         </div>
-        <div v-else>
+        <div v-else> -->
+        <div>
             <p>Al momento non hai nessuna sponsorizzazione! Vuoi sponsorizzare il tuo appartamento? Clicca sul bottone in basso</p>
             <button class="btn btn-sponsor">
                 <font-awesome-icon style="transform: rotate(-120deg);" icon="fa-solid fa-shuttle-space" />
@@ -105,14 +109,15 @@ export default {
     <!-- message, email, first_name, last_name -->
     <div class="mb">
         <h2>I tuoi messaggi</h2>
-        <div class="mb" v-if="apartment.messages.length > 0">
+        <!-- <div class="mb" v-if="apartment.messages.length > 0">
             <span>Hai {{ apartment.messages.length }} messaggi ricevuti</span>
             <div class="row" v-for="message in apartment.messages">
                 <p>Mittente: {{ message.first_name }} {{ message.last_name }}</p>
                 <p>{{ message.title }}</p>
             </div>
         </div>
-        <div v-else>
+        <div v-else> -->
+        <div>
             <p>Al momento non hai nessun messaggio!</p>
             <p>Sponsorizza il tuo appartamento per avere maggiore visibilità! Clicca il bottone in basso</p>
             <button class="btn btn-sponsor">
