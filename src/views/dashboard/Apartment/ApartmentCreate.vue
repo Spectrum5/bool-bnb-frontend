@@ -279,6 +279,7 @@ export default {
                     this.addError('Errore del server. Riprovare piú tardi', 'server_error');
                     console.log('Errore Invio dati Register:', response.response);
                 })
+                router.push('/dashboard/apartments');
         },
     },
     mounted() {
