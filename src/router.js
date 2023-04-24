@@ -111,12 +111,6 @@ const router = createRouter({
                 if (store.user == null) return { name: 'login' }
             },
         },
-        
-
-
-
-
-
         {
             path: '/apartments/search/:title',
             name: 'apartment-search',
