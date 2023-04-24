@@ -19,7 +19,8 @@ export default {
             router,
             form: {},
             allServices: [],
-            selectedServices: []
+            selectedServices: [],
+            editedApartment: false,
         }
     },
     methods: {
@@ -59,6 +60,10 @@ export default {
                 .catch((response) => {
                     console.log('Errore aggiornamento', response.data);
                 })
+                this.editedApartment = true;
+                setInterval(() => {
+                    router.push('/dashboard/apartments');
+                }, 1000);
         },
         setCheckboxes() {
             this.allServices.forEach(service => {
@@ -174,7 +179,10 @@ export default {
                    </div>
                 </div>
             </div>
-            <button type="submit" class="btn my-btn">Aggiorna appartamento</button>
+            <button v-if="!this.editedApartment" type="submit" class="btn my-btn">Aggiorna appartamento</button>
+            <button v-if="this.editedApartment" class="btn my-btn-created">Appartamento aggiornato 
+                <font-awesome-icon icon="fa-solid fa-check" />
+            </button>
             <AppErrorForm/>
         </form>
         </div>
