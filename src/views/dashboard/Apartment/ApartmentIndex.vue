@@ -67,7 +67,8 @@ export default {
 
     },
     mounted() {
-        document.title = 'Dashboard | My Apartments'
+        this.store.editedApartment = false;
+        document.title = 'Dashboard | My Apartments';
         this.getApartments();
     },
     created(){}
@@ -112,8 +113,8 @@ export default {
                             <font-awesome-icon icon="fa-solid fa-chart-simple" />
                             Vedi Statistiche
                         </button>
-                        <button class="btn btn-sponsor">
-                            <font-awesome-icon style="transform: rotate(-120deg);" icon="fa-solid fa-shuttle-space" />
+                        <button class="btn btn-sponsor hover-effect">
+                            <font-awesome-icon icon="fa-solid fa-rocket" />
                             Sponsorizza
                         </button>
                     </div>
@@ -191,5 +192,17 @@ main {
 .btn-sponsor {
     background-color: #59DCC0;
     border: 2px solid #59DCC0;
+}
+
+.hover-effect {
+    background-size: 200% 100%;
+    transition: background-position 0.5s ease;
+}
+
+.hover-effect:hover {
+    background: linear-gradient(45deg, #4294F2, #59DCC0);
+    background-size: 200% 100%;
+    transition: background-position 0.5s ease;
+    background-position: -100% 0;
 }
 </style>

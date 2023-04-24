@@ -281,7 +281,8 @@ export default {
                     console.log('Errore Invio dati Register:', response.response);
                 })
                 this.ApartmentCreated = true;
-                setInterval(() => {
+                setTimeout(() => {
+                    this.ApartmentCreated = false;
                     router.push('/dashboard/apartments');
                 }, 1000);
         },

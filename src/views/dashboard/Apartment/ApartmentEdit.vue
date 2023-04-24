@@ -3,6 +3,7 @@
 // Utilities
 import axios from 'axios';
 import { router } from '../../../router';
+import {store} from '../../../store';
 
 // Components
 import AppErrorForm from '../../../components/AppErrorForm.vue';
@@ -20,7 +21,7 @@ export default {
             form: {},
             allServices: [],
             selectedServices: [],
-            editedApartment: false,
+            store,
         }
     },
     methods: {
@@ -60,10 +61,15 @@ export default {
                 .catch((response) => {
                     console.log('Errore aggiornamento', response.data);
                 })
-                this.editedApartment = true;
-                setInterval(() => {
-                    router.push('/dashboard/apartments');
-                }, 1000);
+                this.store.editedApartment = true;
+                
+                // redirect
+                if (this.store.editedApartment) {
+                    setTimeout(() => {
+                        this.editedApartment = false;
+                        router.push('/dashboard/apartments');
+                    }, 1000);
+                }
         },
         setCheckboxes() {
             this.allServices.forEach(service => {
@@ -179,8 +185,8 @@ export default {
                    </div>
                 </div>
             </div>
-            <button v-if="!this.editedApartment" type="submit" class="btn my-btn">Aggiorna appartamento</button>
-            <button v-if="this.editedApartment" class="btn my-btn-created">Appartamento aggiornato 
+            <button v-if="!this.store.editedApartment" type="submit" class="btn my-btn">Aggiorna appartamento</button>
+            <button v-if="this.store.editedApartment" class="btn my-btn-created">Appartamento aggiornato 
                 <font-awesome-icon icon="fa-solid fa-check" />
             </button>
             <AppErrorForm/>

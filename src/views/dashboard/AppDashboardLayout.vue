@@ -178,7 +178,7 @@ aside {
 
             box-shadow: 0 4px 4px -2px white;
             isolation: isolate;
-            z-index: 5;
+            z-index: 1;
             padding: 0.25rem 1rem;
         }
     }

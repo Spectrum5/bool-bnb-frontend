@@ -32,14 +32,13 @@ import { faHouseChimney } from '@fortawesome/free-solid-svg-icons'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { faChartSimple } from '@fortawesome/free-solid-svg-icons'
-import { faShuttleSpace } from '@fortawesome/free-solid-svg-icons'
+import { faRocket } from '@fortawesome/free-solid-svg-icons'
 import { faHouseFloodWater } from '@fortawesome/free-solid-svg-icons'
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons'
 import { faEye } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faIgloo } from '@fortawesome/free-solid-svg-icons'
-
-
+import { faMugSaucer } from '@fortawesome/free-solid-svg-icons'
 
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
@@ -68,13 +67,14 @@ library.add(faBars,
   faPencil,
   faTrashCan,
   faChartSimple,
-  faShuttleSpace,
+  faRocket,
   faHouseFloodWater,
   faLayerGroup,
   faIgloo,
   faEye,
   faPlus,
-  faEnvelope)
+  faEnvelope,
+  faMugSaucer)
 
 createApp(App)
   .use(router)

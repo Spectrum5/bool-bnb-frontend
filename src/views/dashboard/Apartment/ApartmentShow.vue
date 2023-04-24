@@ -98,7 +98,7 @@ export default {
         <div>
             <p>Al momento non hai nessuna sponsorizzazione! Vuoi sponsorizzare il tuo appartamento? Clicca sul bottone in basso</p>
             <button class="btn btn-sponsor">
-                <font-awesome-icon style="transform: rotate(-120deg);" icon="fa-solid fa-shuttle-space" />
+                <font-awesome-icon icon="fa-solid fa-rocket" />
                 Sponsorizza
             </button>
         </div>
@@ -121,7 +121,7 @@ export default {
             <p>Al momento non hai nessun messaggio!</p>
             <p>Sponsorizza il tuo appartamento per avere maggiore visibilità! Clicca il bottone in basso</p>
             <button class="btn btn-sponsor">
-                <font-awesome-icon style="transform: rotate(-120deg);" icon="fa-solid fa-shuttle-space" />
+                <font-awesome-icon icon="fa-solid fa-rocket" />
                 Sponsorizza
             </button>
         </div>
