@@ -59,7 +59,7 @@ form .row {
             background: $light-color-two;
 
             &.invalid {
-                border: 1px solid $danger-color-dark;
+                border: 1px solid $danger-color-dark !important;
             }
         }
 

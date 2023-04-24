@@ -391,4 +391,7 @@ export default {
 label {
     text-transform: none !important;
 }
+.invalid {
+    border: 1px solid $danger-color-dark !important;
+}
 </style>
