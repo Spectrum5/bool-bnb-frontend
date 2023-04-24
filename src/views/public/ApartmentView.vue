@@ -217,7 +217,6 @@ export default {
                             <input type="email" id="email" name="email" placeholder="Inserisci la tua mail"
                                 v-model="message.contactEmail" :disabled="setContactEmail()">
                         </div>
-                        / per notte
                         <div class="row">
                             <div class="group large">
                                 <label for="message" class="form-label mb-1">Scrivi il tuo messaggio</label>
