@@ -50,13 +50,14 @@ export default {
 
 <template>
      <AppDashboardLayoutVue 
-            :title=" getApartmentTitle "
+            :title=" apartment.title "
             :button="
                 {
                     label: 'Torna alla dashboard',
                     // icon: 'plus',
                     action: goBackToDashboard
                         }">
+
 <div class="my-container">
     <div v-if="apartment">
         <div class="img-container">
@@ -195,4 +196,5 @@ export default {
     background-color: #59DCC0;
     border: 2px solid #59DCC0;
 }
+
 </style>
