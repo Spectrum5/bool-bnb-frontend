@@ -2,8 +2,8 @@
 Ricerca per Filtri (Localita', Stanze, Letti, Servizi, Raggio entro la localita')
 Ordine Risultati per Distanza dalla localita'
 Autocompletamento Indirizzo Localita'
-Messaggi di Conferma Eliminazione
-Redirect
+Messaggi di Conferma Eliminazione // GIADA OK
+Redirect // GIADA OK PER CREATE E EDIT
 
 Loader Iniziale con Logo
 LOADER IMMAGINI CARDS
