@@ -64,6 +64,7 @@ export default {
                 this.loginModal = true;
             }
         },
+        
     },
 }
 </script>
@@ -150,7 +151,6 @@ export default {
 
             </div>
         -->
-    <button @click="loadMore()">LOAD MORE</button>
 </template>
 
 <style lang="scss" scoped>

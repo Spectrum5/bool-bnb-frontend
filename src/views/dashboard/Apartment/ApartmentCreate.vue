@@ -36,6 +36,8 @@ export default {
                 visibility: false,
                 services: []
             },
+            url_api_tomtom: 'https://api.tomtom.com/search/2/geocode/',
+            api_key_tomtom: 'Vru3uP06eapOxpYMujwrRlVLMB5Vkqch',
             services: [],
             ApartmentCreated: false,
         };
@@ -249,17 +251,48 @@ export default {
             this.sizeValidation();
             // this.servicesValidation();
 
+            // https://api.tomtom.com/search/2/geocode/Piazza del Colosseo, 1, 00184 Roma RM.json?key=Vru3uP06eapOxpYMujwrRlVLMB5Vkqch&typeahead=true&limit=1&radius=500
             // Controlla se validazione e' andata a buon fine
-            if (this.store.errors.length == 0) this.postData();
+            if (this.store.errors.length == 0) {
+                // async getMap() {
+                // }
+                this.getCoordinates();
+
+                // axios.get(`https://api.tomtom.com/search/2/geocode/${'Piazza del Colosseo, 1, 00184 Roma RM'}.json`, {
+                //     key: 'Vru3uP06eapOxpYMujwrRlVLMB5Vkqch',
+                //     // address: 'Piazza del Colosseo, 1, 00184 Roma RM',
+                //     // ext: 'json',
+                //     typeahead: true,
+                //     limit: 1,
+                //     radius: 500
+                // })
+                // .then((response) => {
+                //     // this.postData();
+                //     console.log('Risposta TOMTOM', response);
+                // })
+                // .catch((response) => {
+                //     console.log('Calcolo coordinate fallito', response);
+                //     this.store.errors = response;
+                // })
+            }
             else {
                 console.log('Hai inserito dati non corretti. Riprova!');
             }
         },
-        postData() {
+        async getCoordinates() {
+            const coordinates = await fetch(`${this.url_api_tomtom}Piazza del Colosseo, 1, 00184 Roma RM.json?key=${this.api_key_tomtom}&typeahead=true&limit=1&radius=500`);
+            // const data = await coordinates.blob();
+            let json = await coordinates.json();
+            console.log('COORDINATE', json.results[0].position);
+            this.form.lat = json.results[0].position.lat;
+            this.form.lng = json.results[0].position.lon;
+            this.postData();
+        },
+        async postData() {
             axios.post('http://localhost:8000/api/apartments', {
                 title: this.form.title,
-                lat: 37.9312320,
-                lng: -103.6998280,
+                lat: this.form.lat,
+                lng: this.form.lng,
                 address: this.form.address,
                 image: this.form.image,
                 visibility: this.form.visibility,

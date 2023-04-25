@@ -1,9 +1,7 @@
 ## PRIORITA'
-Ricerca per Filtri (Localita', Stanze, Letti, Servizi, Raggio entro la localita')
+Ricerca per Filtri (Localita', Stanze, Letti, Servizi, Raggio entro la localita') manca frontend
 Ordine Risultati per Distanza dalla localita'
 Autocompletamento Indirizzo Localita'
-Messaggi di Conferma Eliminazione // GIADA OK
-Redirect // GIADA OK PER CREATE E EDIT
 
 Loader Iniziale con Logo
 LOADER IMMAGINI CARDS
@@ -11,8 +9,6 @@ EFFETTO HOVER CARDS
 GESTIRE VISUALIZZAZIONI
 MOSTRARE VISUALIZZAZIONI NELLE CARDS
 VALIDAZIONI messaggio (compreso tra 10 e 4096 caratteri)
-Calcolo Coordinate per Apartment Store
-Modale Conferma Apartment Delete
 Aggiunta immagini Apartments
 Statistiche (Visualizzazioni)
 Inserimento di Sponsorizzazione

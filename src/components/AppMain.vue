@@ -7,8 +7,8 @@ export default {
     name: 'AppMain',
     data() {
         return {
-        
-                router,
+
+            router,
             currentPage: 1,
             searchTitle: '',
             apartments: [],
@@ -50,11 +50,12 @@ export default {
 </script>
 
 <template>
-   <main>
-      <div class="cardsContainer">
-        <AppCard v-for="apartment in apartments" :apartment="apartment" />
-      </div>
-     </main>
+    <main>
+        <div class="cardsContainer">
+            <AppCard v-for="apartment in apartments" :apartment="apartment" />
+        </div>
+        <button @click="loadMore()">LOAD MORE</button>
+    </main>
 </template>
 
 <style scoped lang="scss">
@@ -69,20 +70,18 @@ main {
 
 
 
-.cardsContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem 1rem;
-    flex-wrap: wrap;
- 
-  
-  
-  
-}
+    .cardsContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1.5rem 1rem;
+        flex-wrap: wrap;
+
+
+
+
+    }
 
 
 }
-
-
 </style>
