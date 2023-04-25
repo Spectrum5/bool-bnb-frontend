@@ -60,6 +60,10 @@ form .row {
 
             &.invalid {
                 border: 1px solid $danger-color-dark;
+
+                &.shake {
+                    animation: horizontalShake 0.2s forwards;
+                }
             }
         }
 
@@ -86,5 +90,23 @@ form .row {
     button {
         // @include customButton;
         width: 100%;
+    }
+}
+
+@keyframes horizontalShake {
+    0%{
+        transform: translateX(-5px);
+    }
+    25%{
+        transform: translateX(5px);
+    }
+    50%{
+        transform: translateX(-5px);
+    }
+    75%{
+        transform: translateX(5px);
+    }
+    100%{
+        transform: translateX(0px);
     }
 }

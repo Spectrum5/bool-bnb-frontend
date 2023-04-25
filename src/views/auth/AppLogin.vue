@@ -92,6 +92,29 @@ export default {
                 passwordInput.classList.add('invalid');
             }
         },
+        shakeInputs() {
+            // V1
+            // const emailInput = document.querySelector('#email');
+            // const passwordInput = document.querySelector('#password');
+
+            // if (emailInput.classList.contains('invalid')) emailInput.classList.add('shake');
+            // if (passwordInput.classList.contains('invalid')) passwordInput.classList.add('shake');
+
+            // setTimeout(() => {
+            //     emailInput.classList.remove('shake');
+            //     passwordInput.classList.remove('shake');
+            // }, 200)
+
+            // V2
+            if (this.store.errors.length > 0) {
+                this.store.errors.forEach(error => {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                });
+            }
+        },
         validateData() {
             // Front End Validation
             console.log('Validazione dati login...');
@@ -99,6 +122,8 @@ export default {
 
             this.emailValidation();
             this.passwordValidation();
+
+            this.shakeInputs();
 
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.getCookie();
@@ -164,7 +189,7 @@ export default {
                     <div class="row">
                         <div class="group large">
                             <label for="password">password *</label>
-                            <input type="password" id="password" name="password" placeholder="Your password"
+                            <input type="password" id="password" name="password" placeholder="La tua password"
                                 v-model="form.password" v-on:blur="passwordValidation()">
                         </div>
                     </div>

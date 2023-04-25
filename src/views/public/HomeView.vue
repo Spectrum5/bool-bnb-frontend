@@ -27,12 +27,12 @@ export default {
             isOpen: false,
             active: false,
             loginModal: false,
-       
+
             router,
             currentPage: 1,
             searchTitle: '',
             apartments: [],
-            
+
             menuItems: [
                 { label: 'Ovunque', link: '#' },
                 { label: '01 giu - 31 ago', link: '#' },
@@ -89,18 +89,18 @@ export default {
         toggleSearchbar() {
             this.isOpen = !this.isOpen;
         },
-     
+
         getLogin() {
             if (this.loginModal) {
                 this.loginModal = false;
-                } else {
+            } else {
                 this.loginModal = true;
-                }
+            }
         },
     },
 
     mounted() {
-      
+
         this.getApartments();
 
     }
@@ -108,7 +108,6 @@ export default {
 </script>
 
 <template>
-   
     <header>
         <nav class="navbar">
             <div class="container-fluid">
@@ -142,8 +141,8 @@ export default {
                     </ul>
                 </div>
 
-                 <!-- SEARCHBAR GRANDE NASCOSTA  -->
-                <AppMenuSearch :isOpen="isOpen"/>
+                <!-- SEARCHBAR GRANDE NASCOSTA  -->
+                <AppMenuSearch :isOpen="isOpen" />
 
                 <!-- MENU A DESTRA -->
                 <div class="right-menu">
@@ -152,14 +151,14 @@ export default {
                             <a :href="item.link">{{ item.label }}</a>
                         </li>
                         <li class="item">
-                            <font-awesome-icon :icon="menuItems2[1].icon" class="globe"  />
+                            <font-awesome-icon :icon="menuItems2[1].icon" class="globe" />
                         </li>
                     </ul>
-                           
+
                     <!-- MENU DI LOGIN -->
                     <ul class="group-list ">
                         <li class="item menu-bars d-inline-block">
-                            <font-awesome-icon :icon="menuHamb[0].icon" class="bars" @click="getLogin()"/>
+                            <font-awesome-icon :icon="menuHamb[0].icon" class="bars" @click="getLogin()" />
                         </li>
                         <AppLoginModal :loginModal="loginModal" />
                         <li class="item d-inline-block">
@@ -226,16 +225,19 @@ header {
     position: sticky;
     position: -webkit-sticky;
     position: sticky;
-    top:0;
+    top: 0;
+
     .navbar {
         max-width: 100%;
         width: 100%;
+
         .container-fluid {
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             .menu-hidden {
-               margin-left: 100px;
+                margin-left: 100px;
 
                 .item {
                     font-size: 16px;
@@ -244,7 +246,7 @@ header {
                     font-weight: lighter, bolder;
                     transition: all 0.4s ease-in;
                     cursor: pointer;
-                    
+
 
                     &:hover {
                         border-bottom: 1.5px solid #B8B8B8;
@@ -263,7 +265,7 @@ header {
             .searchbar,
             .open,
             .menu-hidden {
-             
+
                 .group-list,
                 .group-list:last-child {
                     border: 1px solid #B8B8B8;
@@ -304,7 +306,7 @@ header {
                         border: 1px solid none;
                         padding: 6px 9px;
                         border-radius: 50px;
-                        background-color:$color-one-light;
+                        background-color: $color-one-light;
 
                         .myicon {
                             color: white;
@@ -314,7 +316,7 @@ header {
                 }
             }
 
-           .right-menu {
+            .right-menu {
                 width: calc(100% / 4);
                 display: flex;
                 justify-content: center;
@@ -322,7 +324,7 @@ header {
                 position: fixed;
                 top: 10px;
                 right: 10px;
-               
+
 
                 .globe {
                     color: white;
@@ -349,6 +351,7 @@ header {
                         }
                     }
                 }
+
                 .group-list:last-child {
                     border: 1px solid #e0dcdc;
                     border-radius: 50px;
@@ -373,6 +376,7 @@ header {
                     }
                 }
             }
+
             .item {
                 display: inline-block;
                 margin-right: 10px;
