@@ -42,7 +42,6 @@ export default {
         const filteredDestinations = this.destinations.filter(destination => {
             return destination.name.toLowerCase().includes(this.searchTerm.toLowerCase());
         });
-  
             this.filteredDestinationsMenu = filteredDestinations;
             }
   },
@@ -55,7 +54,6 @@ export default {
 </script>
 
 <template>
-    <router-link to="/">
         <ul class="destinations" v-if="show == true">
             <li class="title">
                 <h6>Cerca per regione</h6>
@@ -86,7 +84,7 @@ export default {
                 </div>
 
             </div> -->
-    </router-link>
+  
 </template>
 
    
@@ -101,13 +99,15 @@ export default {
         position: absolute;
         left: 0%;
         top: 100%;
-        width: 70%;
+        width: 60%;
         background-color: white;
         margin-top: 15px;
-        padding: 0px 10px;
+        padding: 30px 10px;
         border-radius: 20px;
         border: 1px solid #B8B8B8;
-        z-index: 3;
+        z-index: 10;
+       
+       
      
 
           .title {
@@ -127,7 +127,8 @@ export default {
                height: 130px;
                list-style: none;
                margin: 20px 10px ;
-               display: inline-block;
+              display: inline-block;
+         
              
               
             
