@@ -39,6 +39,7 @@ import { faEye } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faIgloo } from '@fortawesome/free-solid-svg-icons'
 import { faMugSaucer } from '@fortawesome/free-solid-svg-icons'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
@@ -74,7 +75,8 @@ library.add(faBars,
   faEye,
   faPlus,
   faEnvelope,
-  faMugSaucer)
+  faMugSaucer,
+  faXmark)
 
 createApp(App)
   .use(router)
