@@ -84,7 +84,7 @@ export default {
 </template>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 // @use '../styles/partials/variables.scss' as *;
 
 $cardWidth: 260px;
@@ -143,14 +143,14 @@ button {
 
         flex-grow: 1;
         flex-shrink: 0;
-        font-weight: 500;
         font-size: 0.8rem;
         margin-bottom: 2px;
-
+        
         h3 {
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
+            font-weight: 500;
         }
     }
 
@@ -166,6 +166,7 @@ button {
 
     .cardPrice {
         font-weight: 400;
+        font-size: 0.9rem;
 
         span {
             font-weight: 600;

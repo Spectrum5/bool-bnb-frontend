@@ -1,0 +1,81 @@
+@use '../partials/variables.scss' as *;
+@use '../partials/mixins.scss' as *;
+@use '../partials/form.scss' as *;
+
+.my-container {
+    padding: 10px;
+    overflow-y: scroll;
+    max-width: 80%;
+    margin: 40px auto;
+    // margin-inline: auto;
+
+    .my-group {
+        @include flexSpaceBtwn($gap: 100px);
+
+        div {
+            flex-grow: 1 !important;
+        }
+    }
+
+    .my-group-info-base {
+        @include flexSpaceBtwn($gap: 50px);
+
+        div {
+            flex-grow: 1 !important;
+        }
+    }
+}
+
+.services {
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+    gap: 10px;
+    max-width: 80vw;
+    flex-wrap: wrap;
+
+    .service {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+    }
+}
+
+.my-row {
+    div {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        // border-bottom: 1px solid;
+
+    }
+
+    input,
+    textarea {
+        line-height: 20px;
+        border: 1px solid black !important;
+    }
+
+    label.mb-2 {
+        font-weight: 600;
+    }
+}
+
+.btn {
+    border: 1.5px solid #000;
+    border-radius: 10px;
+    // padding: 7px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.my-btn {
+    display: block;
+    width: 50%;
+    color: white;
+    font-weight: 700;
+    padding: 10px 0px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(125, 183, 248, 1) 25%, rgba(66, 148, 242, 1) 75%);;
+    border: rgb(125, 183, 248) !important;
+}

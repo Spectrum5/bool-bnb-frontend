@@ -2,6 +2,7 @@
 
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppButton from '../../../components/AppButton.vue';
 
 // Utilities
 import axios from 'axios';
@@ -11,7 +12,8 @@ import { store } from '../../../store';
 export default {
     name: 'ApartmentIndex',
     components: {
-        AppDashboardLayoutVue
+        AppDashboardLayoutVue,
+        AppButton
     },
     data() {
         return {
@@ -44,68 +46,80 @@ export default {
                     this.getApartments();
                 })
         },
+        testFunction() {
+            console.log('TEST FUNCTION');
+        },
+        gotoCreate() {
+            console.log('GO TO');
+            this.$router.push('/dashboard/apartments/create');
+        }
     },
-    created() {
+    mounted() {
+        document.title = 'Dashboard | My Apartments'
         this.getApartments();
     }
 }
 </script>
 
 <template>
-    <AppDashboardLayoutVue>
+    <AppDashboardLayoutVue 
+        :title="'i miei appartamenti'" 
+        :button="
+        {
+            label: 'Aggiungi',
+            icon: 'plus',
+            link: '/dashboard/apartments/create'
+        }">
 
-        <!-- <h1>prova</h1> -->
-        <!-- <div class="my-container"> -->
-        <!-- LATO SX DASHBOARD / ASIDE -->
-        <!-- <section class="lato-sx">
-                
-                        </section> -->
+            <main>
+                <div class="row-my-partm my-container" v-for="apartment in apartments" v-if="apartments != null">
+                    <div>
+                        <p> {{ apartment.title }}</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-show" @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)">
+                            <font-awesome-icon icon="fa-solid fa-eye" />
+                            Vedi dettagli
+                        </button>
+                        <button class="btn btn-edit" @click="$router.push(`/dashboard/apartments/${apartment.slug}/edit`)">
+                            <font-awesome-icon icon="fa-solid fa-pencil" />
+                            Modifica
+                        </button>
+                        <!-- <AppButton :label="'elimina'" :icon="'trash-can'" :type="'solid'" :palette="'danger'" :action="testFunction"/> -->
+                        <button class="btn btn-delete" @click="deleteApartment(apartment.id)">
+                            <font-awesome-icon icon="fa-solid fa-trash-can" />
+                            Elimina
+                        </button>
+                        <button class="btn btn-stats">
+                            <font-awesome-icon icon="fa-solid fa-chart-simple" />
+                            Vedi Statistiche
+                        </button>
+                        <button class="btn btn-sponsor">
+                            <font-awesome-icon style="transform: rotate(-120deg);" icon="fa-solid fa-shuttle-space" />
+                            Sponsorizza
+                        </button>
+                    </div>
+                </div>
+            </main>
 
-        <!-- LATO DESTRO A TUTTA PAGINA 
-                        <section class="lato-dx" v-if="myApartment">-->
-        <div>
-            <h2>I miei Appartamenti</h2>
-            <div class="create" @click="$router.push('/dashboard/apartments/create')">
-                <button class="btn btn-create">
-                    <font-awesome-icon icon="fa-solid fa-house-chimney" />
-                    Aggiungi un nuovo appartmento
-                </button>
-            </div>
-        </div>
-
-        <div class="row-my-partm" v-for="apartment in apartments">
-            <div>
-                <p @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)"> {{ apartment.title }}</p>
-            </div>
-            <div>
-                <button class="btn btn-edit" @click="$router.push(`/dashboard/apartments/${apartment.slug}/edit`)">
-                    <font-awesome-icon icon="fa-solid fa-pencil" />
-                    Modifica
-                </button>
-                <button class="btn btn-delete" @click="deleteApartment(apartment.id)">
-                    <font-awesome-icon icon="fa-solid fa-trash-can" />
-                    Elimina
-                </button>
-                <button class="btn btn-stats">
-                    <font-awesome-icon icon="fa-solid fa-chart-simple" />
-                    Vedi Statistiche
-                </button>
-                <button class="btn btn-sponsor">
-                    <font-awesome-icon style="transform: rotate(-120deg);" icon="fa-solid fa-shuttle-space" />
-                    Sponsorizza
-                </button>
-            </div>
-        </div>
-        <!-- </section>
-                    </div>  -->
     </AppDashboardLayoutVue>
 </template>
 
 <style scoped lang="scss">
 @use '../../../styles/partials/mixins.scss' as *;
 
+
+main {
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    overflow: auto;
+    padding: 1rem;
+}
 .my-container {
     @include flexSpaceBtwn ($gap: 0);
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.445);
 
     .lato-sx {
         height: 100vh;
@@ -123,7 +137,6 @@ export default {
             @include flexSpaceBtwn ($gap: 0);
             margin-bottom: 40px;
         }
-
     }
 }
 
@@ -132,6 +145,11 @@ export default {
     border-radius: 10px;
     margin-right: 5px;
     cursor: pointer;
+}
+
+.btn-show {
+    background-color: #f5f5f5;
+    border: 2px solid #141414;
 }
 
 .btn-create {

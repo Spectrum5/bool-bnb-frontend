@@ -4,8 +4,16 @@
 import axios from 'axios';
 import { router } from '../../../router';
 
+// Components
+import AppErrorForm from '../../../components/AppErrorForm.vue';
+import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+
 export default {
     name: 'ApartmentEdit',
+    components: { 
+        AppErrorForm,
+        AppDashboardLayoutVue
+    },
     data() {
         return {
             router,
@@ -23,6 +31,7 @@ export default {
                     this.form = response.data.apartment;
                     this.allServices = response.data.services;
                     this.setCheckboxes();
+                    this.setVisibility();
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti', response.data);
@@ -35,14 +44,14 @@ export default {
                 lng: -103.6998280,
                 address: this.form.address,
                 image: 'img.1',
-                visibility: 1,
+                visibility: !this.form.visibility,
                 price: this.form.price,
                 rooms_number: this.form.rooms_number,
                 bathrooms_number: this.form.bathrooms_number,
                 beds_number: this.form.beds_number,
                 description: this.form.description,
                 size: this.form.size,
-                user_id: 1
+                user_id: this.form.user_id
             })
                 .then((response) => {
                     console.log('Appartamento aggiornato', response);
@@ -57,6 +66,14 @@ export default {
                     this.selectedServices.push(service.id);
                 }
             });
+        },
+        setVisibility(){
+            if (this.form.visibility == 0) {
+                return this.form.visibility = true;
+            }
+            else{
+                return this.form.visibility = false;
+            }
         }
     },
     created() {
@@ -66,81 +83,112 @@ export default {
 </script>
 
 <template>
-    <h2>Modifica il tuo appartmento</h2>
+    <AppDashboardLayoutVue
+        :title= "'Aggiorna il tuo appartmento'">
 
-    <!-- FORM PER CREATE -->
+        <div class="my-container">
+             <!-- FORM PER EDIT -->
 
-    <form @submit.prevent="updateApartment()" class="formContainer">
-        <div class="row">
-            <div>
-                <label for="title">Inserisci nome appartamento:</label>
-                <input v-model="form.title" type="text" name="title" id="title">
+        <form @submit.prevent="updateApartment()">
+            <div class="my-row row">
+                <div class="group small">
+                    <label class="d-block mb-2" for="title">Inserisci nome appartamento: *</label>
+                    <input
+                    v-model="form.title"
+                    type="text"
+                    name="title"
+                    id="title"
+                    max="255">
+                </div>
+                <div class="my-group">
+                    <div class="group small d-inline-block">
+                        <label class="d-block mb-2" for="price">Inserisci prezzo a notte: *</label>
+                        <input v-model="form.price" type="number" name="price" id="price">
+                        <!-- max="1500" -->
+                    </div>
+                    <div class="group small d-inline-block">
+                        <label class="d-block mb-2" for="size">Inserisci i mq: *</label>
+                        <input v-model="form.size" type="number" name="size" id="size">
+                        <!-- min="50"
+                            max="500" -->
+                    </div>
+                </div>
+                <div class="group small">
+                    <label class="d-block mb-2" for="address">Dove si trova il tuo alloggio? *</label>
+                    <input v-model="form.address" type="text" name="address" id="address">
+                    <!-- maxlength="512" -->
+                </div>
+                <!-- <div>
+                    <label for="lat">Latitudine (**da inserire?** o da mettere in automatico?**)</label>
+                    <input v-model="form.lat" type="text" name="lat" id="lat">
+                </div>
+                <div>
+                    <label for="lng">Longitudine (**da inserire?** o da mettere in automatico?**)</label>
+                    <input v-model="form.lng" type="text" name="lng" id="lng">
+                </div> -->
+                <!-- INFORMAZIONI DI BASE -->
+                <div class="my-group-info-base">
+                    <div class="group small d-inline-block">
+                        <label class="mb-2 d-block" for="rooms_number">Stanze: *</label>
+                        <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number" required>
+                        <!-- min="1"
+                        max="8" -->
+                    </div>
+                    <div class="group small d-inline-block">
+                        <label class="mb-2 d-block" for="beds_number">Posti letto: *</label>
+                        <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number" required>
+                        <!-- min="1"
+                            max="16" -->
+                    </div>
+                    <div class="group small d-inline-block">
+                        <label class="mb-2 d-block" for="bathrooms_number">Bagni: *</label>
+                        <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
+                        >
+                            <!-- min="1"
+                            max="8" -->
+                    </div>
+                </div>
+                <div class="group small">
+                    <label class="mb-2 d-block" for="description">Descrizione appartamento: *</label>
+                    <textarea v-model="form.description" name="description" id="description" rows="6"></textarea>
+                    <!-- maxlength="4096"-->
+                </div>
+                <div>
+                    <label class="mb-2 d-block">Indica se il tuo appartamento non sarà subito disponibile</label>
+                    <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility" >
+                    <label for="visibility">Al momento non disponibile</label>
+                </div>
+
+                <div>
+                    <label class="mb-2 d-block">Fai conoscere agli utenti tutti i servizi del tuo alloggio</label>
+                    <div class="services">
+                     <span class="service" v-for="service in allServices">
+                        <input
+                        v-model="selectedServices"
+                        type="checkbox"
+                        :name="service.name"
+                        :id="service.name"
+                        :value="service.id">
+                        <label :for="service.name">{{ service.name }}</label>
+                    </span>
+                   </div>
+                </div>
             </div>
-            <div>
-                <label for="price">Inserisci prezzo:</label>
-                <input v-model="form.price" type="number" name="price" id="price">
-            </div>
-            <div>
-                <label for="address">Inserisci indirizzo:</label>
-                <input v-model="form.address" type="text" name="address" id="address">
-            </div>
-            <!-- <div>
-                <label for="lat">Latitudine (**da inserire?** o da mettere in automatico?**)</label>
-                <input v-model="form.lat" type="text" name="lat" id="lat">
-            </div>
-            <div>
-                <label for="lng">Longitudine (**da inserire?** o da mettere in automatico?**)</label>
-                <input v-model="form.lng" type="text" name="lng" id="lng">
-            </div> -->
-            <div>
-                <label for="rooms_number">Numero di stanze</label>
-                <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number">
-            </div>
-            <div>
-                <label for="beds_number">Numero di post letto / letti</label>
-                <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number">
-            </div>
-            <div>
-                <label for="bathrooms_number">Numero di bagni</label>
-                <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number">
-            </div>
-            <div>
-                <label for="description">Descrizione appartamento:</label>
-                <textarea v-model="form.description" name="description" id="description" rows="6"></textarea>
-            </div>
-            <div>
-                <label for="size">MQ</label>
-                <input v-model="form.size" type="number" name="size" id="size">
-            </div>
-            <div>
-                <label for="user_id">user id prova</label>
-                <input v-model="form.user_id" type="number" name="user_id" id="user_id">
-            </div>
-            <div v-for="(service, index) in allServices">
-                <label :for="service.name">{{ service.name }}</label>
-                <input v-model="selectedServices" type="checkbox" :name="service.name" :id="service.name"
-                    :value="service.id">
-            </div>
+            <button type="submit" class="btn my-btn">Aggiorna appartamento</button>
+            <AppErrorForm/>
+        </form>
         </div>
-        <button>Aggiorna appartamento</button>
-    </form>
+    </AppDashboardLayoutVue>
 </template>
 
 <style scoped lang="scss">
 @use '../../../styles/partials/mixins.scss' as *;
 @use '../../../styles/partials/form.scss' as *;
 @use '../../../styles/partials/variables.scss' as *;
+@use '../../../styles/partials/formcreateedit.scss' as *;
 
-.row {
-    div {
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid;
-
-        input {
-            line-height: 20px;
-            margin-left: 7px;
-        }
-    }
+label{
+    text-transform: none !important;
 }
+
 </style>
