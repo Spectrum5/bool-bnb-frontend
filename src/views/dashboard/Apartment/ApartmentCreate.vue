@@ -37,6 +37,7 @@ export default {
                 services: []
             },
             services: [],
+            ApartmentCreated: false,
         };
     },
     methods: {
@@ -279,6 +280,11 @@ export default {
                     this.addError('Errore del server. Riprovare piú tardi', 'server_error');
                     console.log('Errore Invio dati Register:', response.response);
                 })
+                this.ApartmentCreated = true;
+                setTimeout(() => {
+                    this.ApartmentCreated = false;
+                    router.push('/dashboard/apartments');
+                }, 1000);
         },
     },
     mounted() {
@@ -373,7 +379,10 @@ export default {
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn my-btn">Crea appartamento</button>
+                <button v-if="!this.ApartmentCreated" type="submit" class="btn my-btn">Crea appartamento</button>
+                <button v-if="this.ApartmentCreated" class="btn my-btn-created">Appartamento creato 
+                    <font-awesome-icon icon="fa-solid fa-check" />
+                </button>
                 <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
                 <AppErrorForm />
             </form>
@@ -390,5 +399,8 @@ export default {
 
 label {
     text-transform: none !important;
+}
+.invalid {
+    border: 1px solid $danger-color-dark !important;
 }
 </style>

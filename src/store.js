@@ -24,4 +24,7 @@ export const store = reactive({
             img: '',
         }
     ],
+    // modale giada
+    showModal: false,
+    editedApartment: false,
 })

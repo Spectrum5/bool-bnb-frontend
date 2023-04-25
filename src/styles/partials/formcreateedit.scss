@@ -67,15 +67,20 @@
     // padding: 7px;
     margin: 5px;
     cursor: pointer;
-}
-
-.my-btn {
     display: block;
     width: 50%;
     color: white;
     font-weight: 700;
     padding: 10px 0px;
     border-radius: 10px;
-    background: linear-gradient(90deg, rgba(125, 183, 248, 1) 25%, rgba(66, 148, 242, 1) 75%);;
+}
+
+.my-btn {
+    background: linear-gradient(90deg, rgba(125, 183, 248, 1) 25%, rgba(66, 148, 242, 1) 75%);
     border: rgb(125, 183, 248) !important;
+}
+
+.my-btn-created{
+    background: linear-gradient(90deg, rgba(86, 219, 117, 1) 25%, rgba(40, 167, 69, 1) 75%);
+    border: rgb(40, 167, 69)!important;
 }

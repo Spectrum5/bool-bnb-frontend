@@ -3,6 +3,7 @@
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
 import AppButton from '../../../components/AppButton.vue';
+import AppModaleDelete from '../../../components/AppModaleDelete.vue';
 
 // Utilities
 import axios from 'axios';
@@ -13,16 +14,24 @@ export default {
     name: 'ApartmentIndex',
     components: {
         AppDashboardLayoutVue,
-        AppButton
+        AppButton,
+        AppModaleDelete
     },
     data() {
         return {
             router,
             store,
-            apartments: null
+            apartments: null,
+            // functionDelete: false,
+            selectedApartmentId: null
         }
     },
     methods: {
+        testFunction() {
+            // FUNZIONE PROVA
+            console.log('TEST FUNCTION');
+        },
+
         getApartments() {
             console.log('USER ID', store.user.id);
             axios.get('http://localhost:8000/api/apartments',
@@ -39,25 +48,30 @@ export default {
                     console.log('Errore Index Appartamenti', response.data);
                 })
         },
-        deleteApartment(id) {
-            axios.delete(`http://localhost:8000/api/apartments/${id}`)
-                .then((response) => {
-                    console.log('Project Deleted');
-                    this.getApartments();
-                })
+
+        showDeleteModal(id) {
+            store.showModal = true;
+            // this.functionDelete = true;
+            this.selectedApartmentId = id;
+            console.log('Appartamento selezionato da eliminare: ', this.selectedApartmentId);
         },
-        testFunction() {
-            console.log('TEST FUNCTION');
+
+        deleteApartment() {
+                axios.delete(`http://localhost:8000/api/apartments/${this.selectedApartmentId}`)
+                    .then((response) => {
+                        console.log('Apartment Deleted con id', this.selectedApartmentId);
+                        this.getApartments();
+                    });
+            this.store.showModal = false;
         },
-        gotoCreate() {
-            console.log('GO TO');
-            this.$router.push('/dashboard/apartments/create');
-        }
+
     },
     mounted() {
-        document.title = 'Dashboard | My Apartments'
+        this.store.editedApartment = false;
+        document.title = 'Dashboard | My Apartments';
         this.getApartments();
-    }
+    },
+    created(){}
 }
 </script>
 
@@ -72,7 +86,11 @@ export default {
         }">
 
             <main>
-                <div class="row-my-partm my-container" v-for="apartment in apartments" v-if="apartments != null">
+                <div class="row-my-partm my-container" v-for="apartment in apartments " :key="apartment.id" v-if="apartments != null">
+                    <AppModaleDelete
+                    :action="deleteApartment"
+                    :id="selectedApartmentId">
+                    </AppModaleDelete>
                     <div>
                         <p> {{ apartment.title }}</p>
                     </div>
@@ -86,7 +104,8 @@ export default {
                             Modifica
                         </button>
                         <!-- <AppButton :label="'elimina'" :icon="'trash-can'" :type="'solid'" :palette="'danger'" :action="testFunction"/> -->
-                        <button class="btn btn-delete" @click="deleteApartment(apartment.id)">
+                        <!-- @click="deleteApartment(apartment.id)" -->
+                        <button id="myBtn" class="btn btn-delete" @click="showDeleteModal(apartment.id)">
                             <font-awesome-icon icon="fa-solid fa-trash-can" />
                             Elimina
                         </button>
@@ -94,8 +113,8 @@ export default {
                             <font-awesome-icon icon="fa-solid fa-chart-simple" />
                             Vedi Statistiche
                         </button>
-                        <button class="btn btn-sponsor">
-                            <font-awesome-icon style="transform: rotate(-120deg);" icon="fa-solid fa-shuttle-space" />
+                        <button class="btn btn-sponsor hover-effect">
+                            <font-awesome-icon icon="fa-solid fa-rocket" />
                             Sponsorizza
                         </button>
                     </div>
@@ -173,5 +192,17 @@ main {
 .btn-sponsor {
     background-color: #59DCC0;
     border: 2px solid #59DCC0;
+}
+
+.hover-effect {
+    background-size: 200% 100%;
+    transition: background-position 0.5s ease;
+}
+
+.hover-effect:hover {
+    background: linear-gradient(45deg, #4294F2, #59DCC0);
+    background-size: 200% 100%;
+    transition: background-position 0.5s ease;
+    background-position: -100% 0;
 }
 </style>

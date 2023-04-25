@@ -3,6 +3,7 @@
 // Utilities
 import axios from 'axios';
 import { router } from '../../../router';
+import {store} from '../../../store';
 
 // Components
 import AppErrorForm from '../../../components/AppErrorForm.vue';
@@ -19,7 +20,8 @@ export default {
             router,
             form: {},
             allServices: [],
-            selectedServices: []
+            selectedServices: [],
+            store,
         }
     },
     methods: {
@@ -59,6 +61,15 @@ export default {
                 .catch((response) => {
                     console.log('Errore aggiornamento', response.data);
                 })
+                this.store.editedApartment = true;
+                
+                // redirect
+                if (this.store.editedApartment) {
+                    setTimeout(() => {
+                        this.editedApartment = false;
+                        router.push('/dashboard/apartments');
+                    }, 1000);
+                }
         },
         setCheckboxes() {
             this.allServices.forEach(service => {
@@ -174,7 +185,10 @@ export default {
                    </div>
                 </div>
             </div>
-            <button type="submit" class="btn my-btn">Aggiorna appartamento</button>
+            <button v-if="!this.store.editedApartment" type="submit" class="btn my-btn">Aggiorna appartamento</button>
+            <button v-if="this.store.editedApartment" class="btn my-btn-created">Appartamento aggiornato 
+                <font-awesome-icon icon="fa-solid fa-check" />
+            </button>
             <AppErrorForm/>
         </form>
         </div>
