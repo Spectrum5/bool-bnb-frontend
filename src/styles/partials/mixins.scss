@@ -14,6 +14,14 @@
     gap: $gap;
 }
 
+@mixin flexStart ($gap: 0) {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: $gap;
+}
+
+
 @mixin largeContainer {
     max-width: 1760px;
     margin: 0 auto;
@@ -52,5 +60,42 @@
 
     &:active {
         outline-color: $color-three-light;
+    }
+}
+
+// MEDIA QUERY
+
+$layout-breakpoint-x-small: 576px;
+$layout-breakpoint-small: 576px;
+$layout-breakpoint-medium: 768px;
+
+@mixin for-phone {
+    @media (max-width: 599px) {
+        @content;
+    }
+}
+
+@mixin for-tablet-up {
+    @media (max-width: 600px) {
+        @content;
+    }
+}
+
+@mixin for-tablet-landscape-up {
+    @media (min-width: 900px) {
+        @content;
+    }
+}
+
+@mixin for-desktop-up {
+    @media (min-width: 900px) {
+        @content;
+    }
+}
+
+
+@mixin for-big-desktop {
+    @media (min-width: 1800px) {
+        @content;
     }
 }

@@ -25,8 +25,8 @@ export default {
 </template>
 
 <style lang="scss">
-@import '../styles/main.scss';
-@import '../styles/partials/variables.scss';
+@use '../styles/partials/variables.scss' as *;
+@use '../styles/partials/mixins.scss' as *;
 
 .logoContainer {
     width: 150px;
@@ -38,6 +38,10 @@ export default {
         object-fit: contain;
         display: block;
     }
+
+   
+
+    
 }
 
 </style>

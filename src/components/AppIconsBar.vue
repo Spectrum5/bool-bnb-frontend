@@ -54,7 +54,6 @@ export default {
 </script>
 
 <template>
-    <router-link to="/">
        <div class="container">
           <ul class="list-icons-bar">
             <li class="item-icons" v-for="(item, index) in icons" :key="index">
@@ -75,11 +74,9 @@ export default {
           </ul>
        </div>
            <!-- MODALE DI RICERCA AVANZATA -->
-           <div class="container">
-              <AppModale :openFilter='openFilter'/>
+           <div class="container-modale">
+              <AppModale :openFilter='openFilter' />
            </div>
-         
-    </router-link>
 </template>
 
    
@@ -89,15 +86,21 @@ export default {
 <style lang="scss" scoped>
 @import '../styles/partials/mixins.scss';
 @import '../styles/partials/variables.scss';
-
- .list-icons-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  
+ .container {
+     
+        
+         .list-icons-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          
+            
 
     .item-icons {
         list-style: none;
+             @include for-tablet-up {
+               margin-right: 50px;
+                   }
 
         a {
             display: block;
@@ -121,21 +124,19 @@ export default {
 
             .text {
                 font-size: 13px;
+                    @include for-tablet-up {
+                        font-size: 10px
+                   }
             }
             }
            
         }
     }
  }
-
- .container {
-    	line-height: 1.5;
-        min-height: 100vh;
-        font-family: "Outfit", sans-serif;
-        color: #2d232e;
-        background-color: transparent;
-        position: relative;
-        z-index: 999;
  }
+
+
+
+
 
 </style>

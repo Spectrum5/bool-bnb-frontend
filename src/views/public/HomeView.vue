@@ -2,25 +2,19 @@
 
 // Components
 import AppLogo from '../../components/AppLogo.vue';
-import AppIconsBar from '../../components/AppIconsBar.vue';
-import AppCard from '../../components/AppCard.vue';
+import AppAside from '../../components/AppAside.vue'
 import AppLoginModal from '../../components/AppLoginModal.vue';
 import AppMenuSearch from '../../components/AppMenuSearch.vue';
-
-
-// Utilities
-import axios from 'axios';
-import { router } from '../../router';
-
+import AppMain from '../../components/AppMain.vue'
 
 export default {
     name: 'HomeView',
     components: {
         AppLogo,
-        AppCard,
         AppLoginModal,
         AppMenuSearch,
-        AppIconsBar,
+        AppAside,
+        AppMain
     },
     data() {
         return {
@@ -28,11 +22,6 @@ export default {
             active: false,
             loginModal: false,
        
-            router,
-            currentPage: 1,
-            searchTitle: '',
-            apartments: [],
-            
             menuItems: [
                 { label: 'Ovunque', link: '#' },
                 { label: '01 giu - 31 ago', link: '#' },
@@ -64,28 +53,6 @@ export default {
         }
     },
     methods: {
-        getApartments() {
-            console.log('GET APARTMENTS');
-            axios.get('http://localhost:8000/api/apartments', {
-                params: {
-                    page: this.currentPage
-                }
-            })
-                .then((response) => {
-                    console.log('Index Appartamenti', response.data);
-                    this.apartments = this.apartments.concat(response.data.apartments.data);
-                })
-                .catch((response) => {
-                    console.log('Errore Index Appartamenti', response.data);
-                })
-        },
-        loadMore() {
-            this.currentPage++;
-            this.getApartments();
-        },
-        handleSearch() {
-            this.$router.push(`/apartments/search/${this.searchTitle}`);
-        },
         toggleSearchbar() {
             this.isOpen = !this.isOpen;
         },
@@ -98,12 +65,6 @@ export default {
                 }
         },
     },
-
-    mounted() {
-      
-        this.getApartments();
-
-    }
 }
 </script>
 
@@ -171,13 +132,9 @@ export default {
         </nav>
     </header>
 
-    <div class="icon-bar">
-        <AppIconsBar />
-    </div>
-
-    <div class="cardsContainer">
-        <AppCard v-for="apartment in apartments" :apartment="apartment" />
-    </div>
+     <AppAside/>
+     <AppMain/>
+  
 
     <!-- 
             <div class="container">
@@ -202,31 +159,20 @@ export default {
 @import '../../styles/partials/variables.scss';
 
 
-.cardsContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem 1rem;
-    flex-wrap: wrap;
-    max-width: 1860px;
-}
-
-.icon-bar {
-    width: 100%;
-    padding: 50px 50px;
-}
 
 header {
     width: 100%;
     background-color: white;
     padding: 15px 20px;
     border-bottom: 1px solid #e2dbdb;
-    z-index: 1;
+    z-index: 2;
     position: relative;
     position: sticky;
-    position: -webkit-sticky;
-    position: sticky;
     top:0;
+    left: 0;
+       @include for-tablet-up {
+                    padding: 0px 0px;
+                 }
     .navbar {
         max-width: 100%;
         width: 100%;
@@ -234,9 +180,11 @@ header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+        
             .menu-hidden {
-               margin-left: 100px;
-
+                @include for-tablet-up {
+                    display: none;
+              }
                 .item {
                     font-size: 16px;
                     letter-spacing: 1.5px;
@@ -244,26 +192,38 @@ header {
                     font-weight: lighter, bolder;
                     transition: all 0.4s ease-in;
                     cursor: pointer;
-                    
-
                     &:hover {
                         border-bottom: 1.5px solid #B8B8B8;
                         padding: 8px 0px;
                         font-weight: lighter;
                     }
-                }
-
+                 }
                 .active {
                     border-bottom: 1.5px solid black;
                     padding: 8px 0px;
                 }
             }
 
+            .first {
+               margin-top: 35px;
+                 @include for-tablet-up {
+                  width: 80%;
+                  margin-top: 28px;   
+            }
+    
+            }
+
 
             .searchbar,
             .open,
+              
             .menu-hidden {
+                position: absolute;
+                top: 15%;
+                left: 50%;
+                transform: translate(-50%, -50%);
              
+       
                 .group-list,
                 .group-list:last-child {
                     border: 1px solid #B8B8B8;
@@ -274,20 +234,32 @@ header {
                     box-shadow: 1px 2px 9px -1px #B8B8B8;
                     transition: box-shadow 0.5s ease-in-out;
                     cursor: pointer;
-                    transform: translate(-150%, -0%);
-
+                    
 
                     &:hover {
                         -webkit-box-shadow: 1px 1px 6px 1px #B8B8B8;
                         box-shadow: 1px 1px 6px 1px #B8B8B8;
                     }
-
                     .item {
                         margin-right: 2px;
 
                         a {
                             text-decoration: none;
                         }
+                    }
+
+                    .item:nth-child(3), .item:nth-child(2) {
+                          @include for-tablet-up {
+                                   display: none;
+                                    
+                                }
+                    }
+
+                    .item:nth-child(1) {
+                         @include for-tablet-up {
+                                   margin-right: 150px;
+                                    
+                                }
                     }
 
                     .line {
@@ -319,9 +291,10 @@ header {
                 display: flex;
                 justify-content: center;
                 align-items: baseline;
-                position: fixed;
-                top: 10px;
-                right: 10px;
+                   @include for-tablet-up {
+                         width: 30%;
+                   }
+               
                
 
                 .globe {
@@ -333,6 +306,10 @@ header {
                 }
 
                 .group-list:first-child {
+                           @include for-tablet-up {
+                           display: none;
+                   }
+               
                     .item {
                         transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out;
 
@@ -388,4 +365,9 @@ header {
         }
     }
 }
+
+
+
+
+
 </style>

@@ -33,6 +33,7 @@ export default {
     height: 100%;
     --swiper-navigation-color: #f39237;
     --swiper-pagination-color: #ffffff;
+   
 }
 
 .slide {

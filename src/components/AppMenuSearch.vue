@@ -51,13 +51,13 @@ export default {
 <template>
         <div class="mycontainer" v-if="isOpen == true">
            <div class="navigation">
-              <ul>
+              <ul class="list-group-icon">
                 <li class="list" v-for="(item, index) in menu" :key="index" @click="activeLink(index)" :class="{ 'active': activeIndex === index }">
                    <a href="#">
                      <span class="icon"  @click="show">
                          <font-awesome-icon :icon="item.icon" class="myicon" />
+                         <span class="text">{{ item.label }}</span>
                      </span>
-                     <span class="text">{{ item.label }}</span>
                    </a>
                  </li>
                  <div class="indicator"></div>
@@ -73,82 +73,93 @@ export default {
 
 
 .mycontainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 50px 0px;
     width: 50%;
-    position: absolute;
+    position: sticky;
     top: 0%;
     left: 50%;
     transform: translate(-55%, 30%);
     z-index: 2;
+        
 .navigation {
     position: relative;
     width: 800px;
-    height: 90px;
+    height: 80px;
     background-color: #d8d7d7;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
     border-radius: 50px;
     border-color:$color-one-light ;
     -webkit-box-shadow: -1px 2px 21px -2px $color-one-light; 
     box-shadow: -1px 2px 21px -2px $color-one-light;
-    
-
-     ul {
+    display: flex;
+    justify-content: center;
+       @include for-tablet-up {
+                display: none;
+              }
+     .list-group-icon {
+        width: 100%;
         display: flex;
-        width: 350px;
-           
+        justify-content: center;
+        align-items: center;
+
+            @include for-tablet-up {
+                  width: 100%;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  margin-left: 50px;
+              }
         li {
+            display: inline-block;
             list-style: none;
             position: relative;
-            width: 70px;
-            height: 60px;
-            margin-right: 50px;
+            margin-right: 70px;
             z-index: 2;
 
+               @include for-tablet-up {
+                 margin-right: 0px;
+              }
+               
             a {
-                position: relative;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-                width: 100%;
-                text-align: center;
-                font-size: 15px;
-
-              
-
+                color: white;
+                text-align: start;
                 .icon {
                     position: relative;
                     display: block;
-                    line-height:80px;
                     font-size: 1.5em;
                     transition: 0.5s;
-                 
-                }
-
-                .text {
+                        @include for-tablet-up {
+                            font-size: 0.5em;
+                            bottom: 10px;
+                        }
+                  .text {
+                    width: 100px;
                     position: absolute;
+                    top:50px;
+                    left: 45px;
                     color:$color-one-dark;
-                    font-size: 1em;
-                    letter-spacing: 0.5em;
+                    font-size: 18px;
                     transition: 0.5s;
                     opacity: 0;
                     transform: translate(15px);
+                        @include for-tablet-up {
+                            font-size: 1.6em;
+                            bottom: -43px;
+                            left: 5px;
+
+                        
+                        }
+               
                 }
+                }
+             
             }
         }
-                
-                        .myicon {
+                         .myicon {
                             color: white;
                             font-size: 30px;
-                            padding: 15px 10px;
+                            padding: 15px 5px;
                             padding-right: 50px;
-                            background-image: linear-gradient(to left, $color-one-light, $color-two-dark);
-                            border-radius: 50px;
+                           
                             
 
 
@@ -183,22 +194,37 @@ export default {
 
     li:nth-child(1).active ~ .indicator {
             transform: translateX(calc(130px * 0));
+                    @include for-tablet-up {
+                        transform: translateX(calc(100px * 0));
+                   }
         }
 
         li:nth-child(2).active ~ .indicator {
             transform: translateX(calc(130px * 1));
+              @include for-tablet-up {
+                        transform: translateX(calc(55px * 1));
+                   }
         }
 
         li:nth-child(3).active ~ .indicator {
             transform: translateX(calc(130px * 2));
+              @include for-tablet-up {
+                        transform: translateX(calc(68px * 2));
+                   }
         }
 
         li:nth-child(4).active ~ .indicator {
             transform: translateX(calc(130px * 3));
+              @include for-tablet-up {
+                        transform: translateX(calc(70px * 3));
+                   }
         }
 
         li:nth-child(5).active ~ .indicator {
             transform: translateX(calc(130px * 4));
+              @include for-tablet-up {
+                        transform: translateX(calc(70px * 4));
+                   }
         }
 
 
@@ -206,7 +232,7 @@ export default {
             position: absolute;
             top: -38%;
             left: 5%;
-            width: 100px;
+            width: 110px;
             height: 70px;
             background-color: #d8d7d7;
             border-radius: 50%;
