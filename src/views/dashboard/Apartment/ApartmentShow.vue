@@ -81,7 +81,7 @@ export default {
                 <span>
                     <font-awesome-icon :icon="`fa-solid fa-${service.icon}`" />
                 </span>
-                {{ service.name }} {{ price.products_count }}
+                <!-- {{ service.name }} {{ price.products_count }} -->
             </div>
         </div>
     </div>
