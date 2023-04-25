@@ -2,6 +2,7 @@
 Ricerca per Filtri (Localita', Stanze, Letti, Servizi, Raggio entro la localita') manca frontend
 Ordine Risultati per Distanza dalla localita'
 Autocompletamento Indirizzo Localita'
+Immagini in Show ed Edit Apartment
 
 Loader Iniziale con Logo
 LOADER IMMAGINI CARDS

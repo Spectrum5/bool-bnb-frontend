@@ -24,7 +24,7 @@ export default {
                 lat: null,
                 lng: null,
                 address: '',
-                image: '3.jpg',
+                images: [],
                 visibility: null,
                 price: null,
                 rooms_number: null,
@@ -36,6 +36,7 @@ export default {
                 visibility: false,
                 services: []
             },
+            previewUrls: [],
             url_api_tomtom: 'https://api.tomtom.com/search/2/geocode/',
             api_key_tomtom: 'Vru3uP06eapOxpYMujwrRlVLMB5Vkqch',
             services: [],
@@ -232,7 +233,6 @@ export default {
         //     }
         // },
 
-
         validateData() {
             // Front End Validation
             // console.log('Validating Create apartment data...');
@@ -294,7 +294,6 @@ export default {
                 lat: this.form.lat,
                 lng: this.form.lng,
                 address: this.form.address,
-                image: this.form.image,
                 visibility: this.form.visibility,
                 price: this.form.price,
                 rooms_number: this.form.rooms_number,
@@ -308,17 +307,49 @@ export default {
             })
                 .then((response) => {
                     console.log('Added Apartment', response.data);
+                    this.postImages(response.data.apartment_id);
                 })
                 .catch((response) => {
                     this.addError('Errore del server. Riprovare piú tardi', 'server_error');
                     console.log('Errore Invio dati Register:', response.response);
                 })
-                this.ApartmentCreated = true;
-                setTimeout(() => {
-                    this.ApartmentCreated = false;
-                    router.push('/dashboard/apartments');
-                }, 1000);
+            this.ApartmentCreated = true;
+            setTimeout(() => {
+                this.ApartmentCreated = false;
+                router.push('/dashboard/apartments');
+            }, 1000);
         },
+        addFiles(fieldName, fileList) {
+            this.form.images = fileList;
+            for (let i = 0; i < fileList.length; i++) {
+                this.previewUrls.push(URL.createObjectURL(fileList[i]));
+            }
+            // console.log('Files Aggiunti');
+            // console.log('URL creati', this.previewUrls);
+        },
+        postImages(id) {
+            // console.log('Images', this.form.images);
+            const images = this.form.images;
+            let config = {
+                header: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+            const formData = new FormData();
+            formData.append('apartment_id', id);
+            // console.log('FormData', formData);
+            for (let i = 0; i < images.length; i++) {
+                // console.log('Appending', images[i]);
+                formData.append(`image-${i}`, images[i]);
+            }
+            axios.post('http://localhost:8000/api/images', formData, config)
+                .then((response) => {
+                    // console.log("Images sent correctly");
+                })
+        },
+        deleteImage(index) {
+            this.previewUrls.splice(index, 1);
+        }
     },
     mounted() {
         document.title = 'Apartment | Create';
@@ -411,9 +442,32 @@ export default {
                             </span>
                         </div>
                     </div>
+
+                    <div class="group small">
+                        <label for="images">images</label>
+                        <div class="container">
+                            <label for="images" class="fakeInput" :class="previewUrls.length >= 3 ? 'disabled' : ''">
+                                <font-awesome-icon icon="fa-solid fa-plus" class="icon" />
+                                add images
+                            </label>
+                            <input name="images" id="images" type="file" accept="image/*" multiple
+                                @change="addFiles($event.target.name, $event.target.files)"
+                                :disabled="previewUrls.length >= 3">
+                            <!-- <transition name="fade"> -->
+                            <div class="previews" v-if="previewUrls.length > 0">
+                                <div class="preview" v-for="url, index in previewUrls">
+                                    <img :src="url" alt="Preview">
+                                    <button @click.prevent="deleteImage(index)">
+                                        <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- </transition> -->
+                        </div>
+                    </div>
                 </div>
                 <button v-if="!this.ApartmentCreated" type="submit" class="btn my-btn">Crea appartamento</button>
-                <button v-if="this.ApartmentCreated" class="btn my-btn-created">Appartamento creato 
+                <button v-if="this.ApartmentCreated" class="btn my-btn-created">Appartamento creato
                     <font-awesome-icon icon="fa-solid fa-check" />
                 </button>
                 <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
@@ -433,7 +487,59 @@ export default {
 label {
     text-transform: none !important;
 }
+
 .invalid {
     border: 1px solid $danger-color-dark !important;
+}
+
+#images {
+    display: none;
+}
+
+.previews {
+    @include flexRowCenter(5px);
+    width: fit-content;
+    padding: 5px;
+    border-radius: $small-border-radius;
+    background-color: $light-color-three;
+    transition: all 0.1s;
+    .preview {
+        width: 36px;
+        height: 36px;
+        border-radius: 4px;
+        border: 1px solid $dark-color-one;
+        position: relative;
+        padding: 0;
+        >img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        >button {
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            z-index: 10;
+            background-color: #dc354580;
+            border-radius: 0;
+            opacity: 0;
+            transition: all 0.1s 0.05s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            .icon {
+                margin: 0;
+            }
+        }
+        &:hover {
+            >button {
+                opacity: 1;
+            }
+        }
+    }
 }
 </style>
