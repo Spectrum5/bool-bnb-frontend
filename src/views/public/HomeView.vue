@@ -7,11 +7,9 @@ import AppCard from '../../components/AppCard.vue';
 import AppLoginModal from '../../components/AppLoginModal.vue';
 import AppMenuSearch from '../../components/AppMenuSearch.vue';
 
-
 // Utilities
 import axios from 'axios';
 import { router } from '../../router';
-
 
 export default {
     name: 'HomeView',
@@ -24,15 +22,17 @@ export default {
     },
     data() {
         return {
+            openFilters: false,
+
             isOpen: false,
             active: false,
             loginModal: false,
-       
+
             router,
             currentPage: 1,
             searchTitle: '',
             apartments: [],
-            
+
             menuItems: [
                 { label: 'Ovunque', link: '#' },
                 { label: '01 giu - 31 ago', link: '#' },
@@ -83,39 +83,95 @@ export default {
             this.currentPage++;
             this.getApartments();
         },
+        getServices() {
+
+        },
         handleSearch() {
             this.$router.push(`/apartments/search/${this.searchTitle}`);
+            console.log('Sto cercando...')
+            // axios.get('', {
+            //     params: {
+            //         destination: this.form.destination ?? null,
+            //         rooms_number: this.form.rooms_number ?? null,
+            //         beds_number: this.form.beds_number ?? null,
+            //         bathrooms_number: this.form.bathrooms_number ?? null
+            //     }
+            // })
         },
         toggleSearchbar() {
             this.isOpen = !this.isOpen;
         },
-     
+
         getLogin() {
             if (this.loginModal) {
                 this.loginModal = false;
-                } else {
+            } else {
                 this.loginModal = true;
-                }
+            }
         },
     },
 
     mounted() {
-      
         this.getApartments();
-
     }
 }
 </script>
 
 <template>
-   
-    <header>
+    <div class="container search">
+
+        <form @submit.prevent="handleSearch()">
+            <div class="group">
+                <label for="destination">Dove vuoi andare?</label>
+                <input type="text" id="destination" name="destination" placeholder="Inserisci la destinazione">
+            </div>
+
+            <div class="group">
+                <label for="rooms_number">Di quante camere hai bisogno?</label>
+                <input type="text" id="rooms_number" name="rooms_number" placeholder="Inserisci il numero di camere">
+            </div>
+
+            <div class="group">
+                <label for="beds_number">Di quanti letti hai bisogno?</label>
+                <input type="text" id="beds_number" name="beds_number" placeholder="Inserisci il numero di letti">
+            </div>
+
+            <div class="group" @click.self="openFilters = !openFilters">
+                <label for="advanced_filters" @click.self="openFilters = !openFilters">Filtri avanzati</label>
+                <div>
+                    <font-awesome-icon icon="fa-solid fa-chevron-down" @click.self="openFilters = !openFilters"/>
+                </div>
+
+                <div class="filters" v-if="openFilters">
+                    <div class="group">
+                        <label for="bathrooms_number">Di quanti bagni hai bisogno?</label>
+                        <input type="text" id="bathrooms_number" name="bathrooms_number" placeholder="Inserisci il numero di bagni">
+                    </div>
+                    <div class="group">
+                        <label for="services">Di quali servizi hai bisogno?</label>
+                        <div class="services">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group">
+                <button @click="handleSearch()">
+                    Cerca
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <!-- <header>
         <nav class="navbar">
             <div class="container-fluid">
-                <!-- MENU LOGO -->
+
                 <AppLogo />
 
-                <!-- MENU HIDDEN 2°SEARCHBAR -->
+               
                 <div class="menu-hidden" v-if="isOpen">
                     <ul>
                         <li class="item" v-for="(item, index) in menuHidden" :key="index"
@@ -126,9 +182,7 @@ export default {
                 </div>
 
 
-                <!-- MENU CENTRALE-->
                 <div class="searchbar first" :class="{ open: isOpen }">
-                    <!-- Prima searchbar -->
                     <ul class="group-list" v-if="!isOpen">
                         <li class="item" v-for="(item, index) in menuItems" :key="index" @click="toggleSearchbar">
                             <a :href="item.link">{{ item.label }}</a>
@@ -142,10 +196,8 @@ export default {
                     </ul>
                 </div>
 
-                 <!-- SEARCHBAR GRANDE NASCOSTA  -->
                 <AppMenuSearch :isOpen="isOpen"/>
 
-                <!-- MENU A DESTRA -->
                 <div class="right-menu">
                     <ul class="group-list">
                         <li class="item" v-for="item in menuItems2" :key="item.label">
@@ -156,7 +208,6 @@ export default {
                         </li>
                     </ul>
                            
-                    <!-- MENU DI LOGIN -->
                     <ul class="group-list ">
                         <li class="item menu-bars d-inline-block">
                             <font-awesome-icon :icon="menuHamb[0].icon" class="bars" @click="getLogin()"/>
@@ -173,7 +224,7 @@ export default {
 
     <div class="icon-bar">
         <AppIconsBar />
-    </div>
+    </div> -->
 
     <div class="cardsContainer">
         <AppCard v-for="apartment in apartments" :apartment="apartment" />
@@ -201,6 +252,32 @@ export default {
 @import '../../styles/partials/mixins.scss';
 @import '../../styles/partials/variables.scss';
 
+.container.search {
+    padding: 1rem 0;
+
+    form {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .group {
+            position: relative;
+        }
+        .group>label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    }
+}
+
+.filters {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    border: 1px solid red;
+    z-index: 20;
+    background-color: white;
+}
 
 .cardsContainer {
     display: flex;
@@ -226,16 +303,19 @@ header {
     position: sticky;
     position: -webkit-sticky;
     position: sticky;
-    top:0;
+    top: 0;
+
     .navbar {
         max-width: 100%;
         width: 100%;
+
         .container-fluid {
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             .menu-hidden {
-               margin-left: 100px;
+                margin-left: 100px;
 
                 .item {
                     font-size: 16px;
@@ -244,7 +324,7 @@ header {
                     font-weight: lighter, bolder;
                     transition: all 0.4s ease-in;
                     cursor: pointer;
-                    
+
 
                     &:hover {
                         border-bottom: 1.5px solid #B8B8B8;
@@ -263,7 +343,7 @@ header {
             .searchbar,
             .open,
             .menu-hidden {
-             
+
                 .group-list,
                 .group-list:last-child {
                     border: 1px solid #B8B8B8;
@@ -304,7 +384,7 @@ header {
                         border: 1px solid none;
                         padding: 6px 9px;
                         border-radius: 50px;
-                        background-color:$color-one-light;
+                        background-color: $color-one-light;
 
                         .myicon {
                             color: white;
@@ -314,7 +394,7 @@ header {
                 }
             }
 
-           .right-menu {
+            .right-menu {
                 width: calc(100% / 4);
                 display: flex;
                 justify-content: center;
@@ -322,7 +402,7 @@ header {
                 position: fixed;
                 top: 10px;
                 right: 10px;
-               
+
 
                 .globe {
                     color: white;
@@ -349,6 +429,7 @@ header {
                         }
                     }
                 }
+
                 .group-list:last-child {
                     border: 1px solid #e0dcdc;
                     border-radius: 50px;
@@ -373,6 +454,7 @@ header {
                     }
                 }
             }
+
             .item {
                 display: inline-block;
                 margin-right: 10px;
@@ -387,5 +469,4 @@ header {
             }
         }
     }
-}
-</style>
+}</style>

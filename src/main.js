@@ -38,6 +38,7 @@ import { faLayerGroup } from '@fortawesome/free-solid-svg-icons'
 import { faEye } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faIgloo } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 
 
@@ -74,7 +75,8 @@ library.add(faBars,
   faIgloo,
   faEye,
   faPlus,
-  faEnvelope)
+  faEnvelope,
+  faChevronDown)
 
 createApp(App)
   .use(router)
