@@ -1,5 +1,10 @@
 <script>
 
+import Vue from 'vue';
+import VuePlaceAutocomplete from 'vue-place-autocomplete';
+
+Vue.use(VuePlaceAutocomplete);
+
 // Components
 import AppLogo from '../../components/AppLogo.vue';
 import AppAside from '../../components/AppAside.vue'
@@ -70,13 +75,14 @@ export default {
 </script>
 
 <template>
-    <header>
+    <place-autocomplete-field placeholder="Address" label="Address" name="field1" api-key="AIzaSyAhSv9zWvisiTXRPRw6K8AE0DCmrRMpQcU"></place-autocomplete-field>
+    <!-- <header>
         <nav class="navbar">
             <div class="container-fluid">
-                <!-- MENU LOGO -->
+           
                 <AppLogo />
 
-                <!-- MENU HIDDEN 2°SEARCHBAR -->
+              
                 <div class="menu-hidden" v-if="isOpen">
                     <ul>
                         <li class="item" v-for="(item, index) in menuHidden" :key="index"
@@ -87,9 +93,9 @@ export default {
                 </div>
 
 
-                <!-- MENU CENTRALE-->
+              
                 <div class="searchbar first" :class="{ open: isOpen }">
-                    <!-- Prima searchbar -->
+               
                     <ul class="group-list" v-if="!isOpen">
                         <li class="item" v-for="(item, index) in menuItems" :key="index" @click="toggleSearchbar">
                             <a :href="item.link">{{ item.label }}</a>
@@ -103,10 +109,10 @@ export default {
                     </ul>
                 </div>
 
-                <!-- SEARCHBAR GRANDE NASCOSTA  -->
+            
                 <AppMenuSearch :isOpen="isOpen" />
 
-                <!-- MENU A DESTRA -->
+            
                 <div class="right-menu">
                     <ul class="group-list">
                         <li class="item" v-for="item in menuItems2" :key="item.label">
@@ -117,7 +123,7 @@ export default {
                         </li>
                     </ul>
 
-                    <!-- MENU DI LOGIN -->
+               
                     <ul class="group-list ">
                         <li class="item menu-bars d-inline-block">
                             <font-awesome-icon :icon="menuHamb[0].icon" class="bars" @click="getLogin()" />
@@ -133,7 +139,7 @@ export default {
     </header>
 
      <AppAside/>
-     <AppMain/>
+     <AppMain/> -->
   
 
     <!-- 
