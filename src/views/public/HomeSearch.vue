@@ -3,12 +3,14 @@
 // Utilities
 import axios from 'axios';
 import { router } from '../../router';
+import { store } from '../../store';
 
 export default {
     name: 'HomeSearch',
     data() {
         return {
             router,
+            store,
             currentPage: 1,
             apartments: []
         }
@@ -17,8 +19,12 @@ export default {
         getApartments() {
             axios.get('http://localhost:8000/api/apartments', {
                 params: {
-                    title: this.$route.params.title,
-                    page: this.currentPage,
+                    address: this.store.searchForm.address != '' ? this.store.searchForm.address : null,
+                    rooms_number: this.store.searchForm.rooms_number > 0 ? this.store.searchForm.rooms_number : null,
+                    beds_number: this.store.searchForm.beds_number > 0 ? this.store.searchForm.beds_number : null,
+                    bathrooms_number: this.store.searchForm.bathrooms_number > 0 ? this.store.searchForm.bathrooms_number : null,
+                    services: this.store.searchForm.services.length > 0 ? this.store.searchForm.services : [],
+                    page: this.currentPage
                 }
             })
                 .then((response) => {
@@ -36,7 +42,7 @@ export default {
     },
     mounted() {
         this.getApartments();
-        console.log('searchTitle', this.$route.params.title);
+        // console.log('searchTitle', this.$route.params.title);
     },
     computed: {
     }

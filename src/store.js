@@ -8,6 +8,13 @@ import axios from 'axios';
 export const store = reactive({
     errors: [],
     user: null,
+    searchForm: {
+        address: '',
+        rooms_number: null,
+        beds_number: null,
+        bathrooms_number: null,
+        services: []
+    },
     filterModalOpen: false,
     test: 'store.js funziona!',
     images: [

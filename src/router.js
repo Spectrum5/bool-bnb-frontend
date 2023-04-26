@@ -37,7 +37,9 @@ const router = createRouter({
             component: ApartmentView
         },
            {
-            path: '/search',
+            path: '/apartments/search/',
+            // path: '/apartments/search/:params(.*)*/:params(.*)*/:params(.*)*/:params(.*)*/:params(.*)*',
+            // path: '/apartments/search/:address?/:rooms_number?/:beds_number?/:bathrooms_number?/:services?',
             name: 'search',
             component: HomeSearch
         },
