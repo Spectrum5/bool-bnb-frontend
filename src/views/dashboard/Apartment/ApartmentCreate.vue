@@ -23,7 +23,7 @@ export default {
                 title: '',
                 lat: null,
                 lng: null,
-                address: '',
+                address: null,
                 images: [],
                 visibility: null,
                 price: null,
@@ -354,6 +354,16 @@ export default {
     mounted() {
         document.title = 'Apartment | Create';
         this.getFormData();
+        const address = document.querySelector('#address');
+        let autocomplete = new google.maps.places.Autocomplete(address);
+        const self = this;
+        autocomplete.addListener('place_changed', function () {
+            let place = autocomplete.getPlace();
+            let address = place.formatted_address;
+            self.form.address = address;
+            // let city = place.address_components.find(component => component.types.includes('locality')).long_name;
+            // aggiorna i campi dell'indirizzo e della città con i dati trovati
+        });
     }
 }
 </script>
@@ -474,7 +484,6 @@ export default {
                 <AppErrorForm />
             </form>
         </div>
-
     </AppDashboardLayoutVue>
 </template>
 
@@ -503,6 +512,7 @@ label {
     border-radius: $small-border-radius;
     background-color: $light-color-three;
     transition: all 0.1s;
+
     .preview {
         width: 36px;
         height: 36px;
@@ -510,12 +520,14 @@ label {
         border: 1px solid $dark-color-one;
         position: relative;
         padding: 0;
+
         >img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 4px;
         }
+
         >button {
             position: absolute;
             top: 0px;
@@ -531,10 +543,12 @@ label {
             justify-content: center;
             align-items: center;
             border: none;
+
             .icon {
                 margin: 0;
             }
         }
+
         &:hover {
             >button {
                 opacity: 1;
