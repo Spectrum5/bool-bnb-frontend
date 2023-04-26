@@ -92,23 +92,23 @@ $border-radius-small: 12px;
 $color-three-light: #faa95e;
 $color-three-dark: #f39237;
 
-@mixin customOutline {
-    outline-style: solid;
-    outline-color: $color-three-dark;
-    outline-offset: 2px;
-    outline-width: 0px;
+// @mixin customOutline {
+//     outline-style: solid;
+//     outline-color: $color-three-dark;
+//     outline-offset: 2px;
+//     outline-width: 0px;
 
-    transition: outline-width 0.05s, outline-color 0.03s;
+//     transition: outline-width 0.05s, outline-color 0.03s;
 
-    &:hover,
-    &:focus-visible {
-        outline-width: 2px;
-    }
+//     &:hover,
+//     &:focus-visible {
+//         outline-width: 2px;
+//     }
 
-    &:active {
-        outline-color: $color-three-light;
-    }
-}
+//     &:active {
+//         outline-color: $color-three-light;
+//     }
+// }
 
 button {
     background: none;
@@ -121,11 +121,12 @@ button {
     cursor: pointer;
     border-radius: $border-radius-small;
 
-    @include customOutline;
+    // @include customOutline;
 
     .imageContainer {
         height: $cardWidth;
         margin-bottom: 0.75rem;
+        transition: all 0.3s;
 
         border-radius: $border-radius-small;
         background-color: rgb(181, 241, 181);
@@ -172,6 +173,12 @@ button {
             font-weight: 600;
         }
     }
+
+    // &:hover {
+    //     .imageContainer img {
+    //         transform: scale(1.05);
+    //     }
+    // }
 }
 
 .cardFavorites {

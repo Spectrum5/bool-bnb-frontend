@@ -5,8 +5,14 @@ import axios from 'axios';
 import { router } from '../../router';
 import { store } from '../../store';
 
+// Components
+import AppErrorForm from '../../components/AppErrorForm.vue';
+
 export default {
     name: 'ApartmentView',
+    components: { 
+        AppErrorForm
+    },
     data() {
         return {
             router,
@@ -18,10 +24,30 @@ export default {
             message: {
                 contactEmail: null,
                 text: ''
-            }
+            },
+            images: [],
         }
     },
     methods: {
+        addError(message, field) {
+            // Controlla se in store.errors sono presenti errori con lo stesso campo di quello passato
+            // e se non ci sono aggiunge l'errore passato come argomento, altrimenti no
+            if (this.store.errors.length == 0) {
+                this.store.errors.push({
+                    message: message,
+                    field: field
+                });
+            }
+            else {
+                if (!this.store.errors.some(error => error.field == field)) {
+                    this.store.errors.push({
+                        message: message,
+                        field: field
+                    });
+                }
+            }
+        },
+
         getApartment() {
             // Richiesta dell'appartamento corrispondente allo slug passato come parametro
             axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}`)
@@ -32,9 +58,20 @@ export default {
 
                     // Richiede la mappa solo dopo aver ricevuto le coordinate dell'appartamento
                     this.getMap();
+
+                    // Richiede le immagini dopo aver salvato i valori dell'appartamento in this.apartment
+                    this.getImages();
                 })
                 .catch((response) => {
                     console.log('Errore Richiesta Appartamento', response.data);
+                })
+        },
+
+        getImages() {
+            axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
+                .then((response) => {
+                    this.images = response.data.images;
+                    console.log('Images', response.data);
                 })
         },
         async getMap() {
@@ -84,6 +121,21 @@ export default {
                 emailInput.classList.add('invalid');
             }
         },
+
+        messageValidation() {
+            const messageInput = document.getElementById('message');
+            messageInput.classList.remove('invalid');
+
+            const messageValue = messageInput.value.trim();
+
+            if (messageValue.length < 10) {
+                this.addError('Il messaggio deve essere di almeno 10 caratteri', 'message');
+                messageInput.classList.add('invalid');
+            } else if (messageValue.length > 4096) {
+                this.addError('Il messaggio deve essere di massimo 4096 caratteri', 'message');
+                messageInput.classList.add('invalid');
+            }
+        },
         sendMessage() {
             console.log('Invio messaggio...');
 
@@ -103,6 +155,7 @@ export default {
     mounted() {
         document.title = 'Boolbnb';
         this.getApartment();
+        // this.getImages();
     }
 }
 </script>
@@ -125,7 +178,7 @@ export default {
         </section>
         <!-- SEZIONE IMMAGINI APARTMENT -->
         <div>
-            <img src="https://thumbs.dreamstime.com/b/camera-classica-con-il-giardino-di-fiore-751996.jpg" alt="">
+            <img :src="`http://localhost:8000/storage/apartments/${images[0].url}`" alt="">
         </div>
         <!-- CONTAINER PER INFO APARTMENT + MESSAGGIO -->
         <div class="my-secondary-container my-4">
@@ -225,6 +278,7 @@ export default {
                             </div>
                         </div>
                         <button type="submit" class="btn my-btn">Invia richiesta</button>
+                        <AppErrorForm />
                     </div>
                 </form>
             </div>
