@@ -30,7 +30,7 @@ export default {
             ],
 
             menuItems2: [
-                { label: 'Affitta con Airbnb', link: '#' },
+                { label: 'Affitta con Boolbnb', link: '#' },
                 { icon: 'fa-solid fa-globe', link: '#' },
             ],
             menuHamb: [
@@ -151,6 +151,9 @@ export default {
 
             </div>
         -->
+        <div class="btn-container">
+            <button @click="loadMore()">LOAD MORE</button>
+        </div>
 </template>
 
 <style lang="scss" scoped>
@@ -364,6 +367,20 @@ header {
                     color: black;
                 }
             }
+        }
+    }
+}
+
+.btn-container {
+    text-align: center;
+    margin: 15px auto;
+    button{
+        padding: 7px 14px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        &:hover{
+            background-color: #ccc;
         }
     }
 }
