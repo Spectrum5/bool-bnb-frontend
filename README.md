@@ -189,3 +189,24 @@ $hotels = [
     "address"=> "Amelia Island, 4750 Amelia Island Pkwy, Amelia Island, FL 32034, Stati Uniti",
     "description" => "Appartamenti eleganti e confortevoli a pochi passi dalle spiagge bianche di Amelia Island, con ampi terrazzi e piscine private, per un soggiorno di lusso sulla costa della Florida."],
 ]
+
+<!-- DESCRIZIONI PER HOTEL AGGIUNTIVE -->
+1. Questo appartamento di lusso ti accoglie con una vista panoramica sulla città e interni arredati con mobili moderni di alta qualità. Dotato di ogni comfort, è il luogo perfetto per un soggiorno di relax e benessere.
+
+2. Immerso nella natura, questa casa vacanza di montagna ti offre un soggiorno accogliente e romantico con interni in legno rustico e camino. Respira l'atmosfera della montagna e goditi il panorama delle cime innevate.
+
+3. Scopri il fascino del passato in questo hotel boutique, arredato con interni in stile coloniale e dotato di una piscina sul tetto con vista panoramica sulla città. Un soggiorno esclusivo e raffinato nel cuore della città.
+
+4. Questo appartamento al mare ti offre un'esperienza autentica con vista sulle onde e arredamento in stile marinaro. Rilassati sulla spiaggia o goditi la vista dal balcone e respira la brezza marina.
+
+5. Scegli la pace e la tranquillità della campagna in questa casa vacanza con interni in pietra e soffitti con travi a vista. Un soggiorno rilassante e rigenerante nella natura, lontano dal caos della città.
+
+6. Questo appartamento moderno con interni minimalisti e terrazza panoramica è la scelta perfetta per un soggiorno di design nel cuore della città. Rilassati dopo una giornata di visite turistiche e goditi la vista dalla terrazza.
+
+7. Vivi l'esperienza della montagna in questo chalet con interni in legno e viste spettacolari sulle cime innevate. Un soggiorno avventuroso e romantico nella natura, lontano dallo stress della città.
+
+8. Questo hotel di charme con arredi in stile boho-chic e giardino privato ti offre un soggiorno di relax e benessere nel cuore della città. Scopri l'atmosfera romantica e rilassante di questo luogo unico.
+
+9. Soggiorna in questo appartamento sul mare con arredamento in stile mediterraneo e vista sulla costa, per un'esperienza autentica e rilassante sulle spiagge più belle. Goditi il mare e la brezza marina in un ambiente confortevole e accogliente.
+
+10. Rilassati e goditi il lusso e il comfort di questa casa vacanza di montagna, con interni moderni e vista sulle cime innevate. Un soggiorno indimenticabile nella natura più incontaminata.
