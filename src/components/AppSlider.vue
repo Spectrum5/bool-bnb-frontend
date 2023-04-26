@@ -26,6 +26,8 @@ export default {
 </template>
 
 <style scoped lang="scss">
+@use '../styles/partials/variables.scss' as *;
+
 #slider {
     position: relative;
     width: 100%;
@@ -33,7 +35,6 @@ export default {
     height: 100%;
     --swiper-navigation-color: #f39237;
     --swiper-pagination-color: #ffffff;
-   
 }
 
 .slide {
@@ -45,6 +46,11 @@ export default {
         height: 100%;
         object-fit: cover;
         display: block;
+        transition: all 0.3s;
+
+        &:hover {
+            transform: scale(1.05);
+        }
     }
 }
 </style>
