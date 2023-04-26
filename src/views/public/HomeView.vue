@@ -76,24 +76,28 @@ export default {
         //     }
         // },
         handleSearch() {
-            if(this.searchForm.address != '' || this.searchForm.rooms_number > 0 || this.searchForm.beds_number > 0 || this.searchForm.bathrooms_number > 0 || this.searchForm.services.length > 0) {
+            if (this.searchForm.address != '' || this.searchForm.rooms_number > 0 || this.searchForm.beds_number > 0 || this.searchForm.bathrooms_number > 0 || this.searchForm.services.length > 0) {
                 this.$router.push(`/apartments/search?
                 ${this.searchForm.address != '' ? `address=${this.searchForm.address}` : ''}
                 ${this.searchForm.rooms_number > 0 ? `&rooms_number=${this.searchForm.rooms_number}` : ''}
                 ${this.searchForm.beds_number > 0 ? `&beds_number=${this.searchForm.beds_number}` : ''}
-                ${this.searchForm.bathrooms_number > 0 ? `&bathrooms_number= ${this.searchForm.bathrooms_number}`: ''}
+                ${this.searchForm.bathrooms_number > 0 ? `&bathrooms_number= ${this.searchForm.bathrooms_number}` : ''}
                 ${this.searchForm.services.length > 0 ? `&services=${this.searchForm.services}` : ''}`);
 
-                if(this.searchForm.address != '') this.store.searchForm.address = this.searchForm.address;
-                if(this.searchForm.rooms_number > 0) this.store.searchForm.rooms_number = this.searchForm.rooms_number;
-                if(this.searchForm.beds_number > 0) this.store.searchForm.beds_number = this.searchForm.beds_number;
-                if(this.searchForm.bathrooms_number > 0) this.store.searchForm.bathrooms_number = this.searchForm.bathrooms_number;
-                if(this.searchForm.services.length > 0) this.store.searchForm.services = this.searchForm.services;
+                if (this.searchForm.address != '') this.store.searchForm.address = this.searchForm.address;
+                if (this.searchForm.rooms_number > 0) this.store.searchForm.rooms_number = this.searchForm.rooms_number;
+                if (this.searchForm.beds_number > 0) this.store.searchForm.beds_number = this.searchForm.beds_number;
+                if (this.searchForm.bathrooms_number > 0) this.store.searchForm.bathrooms_number = this.searchForm.bathrooms_number;
+                if (this.searchForm.services.length > 0) this.store.searchForm.services = this.searchForm.services;
             }
             // this.store.search.address = 
         }
 
     },
+    mounted() {
+        let input = document.getElementById('destination');
+        let autocomplete = new google.maps.places.Autocomplete(input);
+    }
 }
 </script>
 
@@ -103,17 +107,20 @@ export default {
         <form @submit.prevent="handleSearch()">
             <div class="group">
                 <label for="destination">Dove vuoi andare?</label>
-                <input type="text" id="destination" name="destination" placeholder="Inserisci la destinazione" v-model="searchForm.address">
+                <input type="text" id="destination" name="destination" placeholder="Inserisci la destinazione"
+                    v-model="searchForm.address">
             </div>
 
             <div class="group">
                 <label for="rooms_number">Di quante camere hai bisogno?</label>
-                <input type="text" id="rooms_number" name="rooms_number" placeholder="Inserisci il numero di camere" v-model="searchForm.rooms_number">
+                <input type="text" id="rooms_number" name="rooms_number" placeholder="Inserisci il numero di camere"
+                    v-model="searchForm.rooms_number">
             </div>
 
             <div class="group">
                 <label for="beds_number">Di quanti letti hai bisogno?</label>
-                <input type="text" id="beds_number" name="beds_number" placeholder="Inserisci il numero di letti" v-model="searchForm.beds_number">
+                <input type="text" id="beds_number" name="beds_number" placeholder="Inserisci il numero di letti"
+                    v-model="searchForm.beds_number">
             </div>
 
             <div class="group" @click.self="openFilters = !openFilters">
@@ -470,5 +477,4 @@ export default {
 //             }
 //         }
 //     }
-// }
-</style>
+// }</style>
