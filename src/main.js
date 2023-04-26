@@ -19,8 +19,8 @@ import { faUtensils } from '@fortawesome/free-solid-svg-icons'
 import { faTv } from '@fortawesome/free-solid-svg-icons'
 import { faSnowflake } from '@fortawesome/free-solid-svg-icons'
 import { faUserLock } from '@fortawesome/free-solid-svg-icons'
-import {  faBroom } from '@fortawesome/free-solid-svg-icons'
-import { faSoap} from '@fortawesome/free-solid-svg-icons'
+import { faBroom } from '@fortawesome/free-solid-svg-icons'
+import { faSoap } from '@fortawesome/free-solid-svg-icons'
 import { faPaw } from '@fortawesome/free-solid-svg-icons'
 import { faVault } from '@fortawesome/free-solid-svg-icons'
 import { faGun } from '@fortawesome/free-solid-svg-icons'
@@ -40,8 +40,9 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faIgloo } from '@fortawesome/free-solid-svg-icons'
 import { faMugSaucer } from '@fortawesome/free-solid-svg-icons'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
-
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
+
+import GoogleMapsAutocomplete from "./components/GoogleMapsAutocomplete.vue";
 
 library.add(faBars,
   faCircleUser,
@@ -81,4 +82,5 @@ library.add(faBars,
 createApp(App)
   .use(router)
   .component('font-awesome-icon', FontAwesomeIcon)
-  .mount('#app')
+  .component('google-maps-autocomplete', GoogleMapsAutocomplete)
+  .mount('#app');

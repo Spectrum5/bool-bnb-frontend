@@ -38,7 +38,7 @@ export default {
                     <div class="card shadow">
                         <ul>
                             <li class="pack">standard</li>
-                            <li id="standard" class="price bottom-bar">&euro;2.99</li>
+                            <li id="standard" class="price bottom-bar">&euro;2<sup>99</sup></li>
                             <li class="bottom-bar">Time: 24 ore</li>
                             <li class="bottom-bar">2 case</li>
                             <li class="bottom-bar">no support</li>
@@ -48,7 +48,7 @@ export default {
                     <div class="card active">
                         <ul>
                             <li class="pack">premium</li>
-                            <li id="plus" class="price bottom-bar">&euro;9.99</li>
+                            <li id="plus" class="price bottom-bar">&euro;9<sup>99</sup></li>
                             <li class="bottom-bar">Time: 72 ore</li>
                             <li class="bottom-bar">case infinite</li>
                             <li class="bottom-bar">Support 24/7 (non è vero)</li>
@@ -58,7 +58,7 @@ export default {
                     <div class="card shadow">
                         <ul>
                             <li class="pack">plus</li>
-                            <li id="premium" class="price bottom-bar">&euro;5.99</li>
+                            <li id="premium" class="price bottom-bar">&euro;5<sup>99</sup></li>
                             <li class="bottom-bar">Time: 48 ore</li>
                             <li class="bottom-bar">case non infinite</li>
                             <li class="bottom-bar">support 9-12</li>
@@ -73,6 +73,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+@use '../../../styles/partials/mixins.scss' as *;
 
 main {
     width: 100%;
@@ -93,8 +94,7 @@ main {
     // background-color: red;
 
     .cards {
-        display: flex;
-        justify-content: center;
+        @include flexRowCenter;
         align-items: center;
         flex-wrap: wrap;
 
@@ -109,6 +109,11 @@ main {
                 flex-direction: column;
                 align-items: center;
                 justify-content: space-around;
+
+                sup {
+                    font-size: 30px;
+                    vertical-align: top;
+                }
             }
         }
 
@@ -134,6 +139,8 @@ main {
         justify-content: center;
         width: 100%;
         padding: 1rem 0;
+        // line-height: 3rem;
+
 
         .btn {
             margin-top: 1rem;
