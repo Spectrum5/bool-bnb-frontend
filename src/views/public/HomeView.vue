@@ -1,5 +1,7 @@
 <script>
 
+// Utilities
+import axios from 'axios';
 import { store } from '../../store';
 
 // Components
@@ -22,13 +24,15 @@ export default {
         return {
             store,
             openFilters: false,
+            searchUrl: '',
             searchForm: {
                 address: '',
                 rooms_number: null,
                 beds_number: null,
                 bathrooms_number: null,
                 services: []
-            }
+            },
+            allServices: []
             // isOpen: false,
             // active: false,
             // loginModal: false,
@@ -75,14 +79,18 @@ export default {
         //         this.loginModal = true;
         //     }
         // },
+        getServices() {
+            axios.get('http://localhost:8000/api/services')
+                .then(response => {
+                    console.log(response.data.services);
+                    this.allServices = response.data.services;
+                })
+        },
         handleSearch() {
             if (this.searchForm.address != '' || this.searchForm.rooms_number > 0 || this.searchForm.beds_number > 0 || this.searchForm.bathrooms_number > 0 || this.searchForm.services.length > 0) {
-                this.$router.push(`/apartments/search?
-                ${this.searchForm.address != '' ? `address=${this.searchForm.address}` : ''}
-                ${this.searchForm.rooms_number > 0 ? `&rooms_number=${this.searchForm.rooms_number}` : ''}
-                ${this.searchForm.beds_number > 0 ? `&beds_number=${this.searchForm.beds_number}` : ''}
-                ${this.searchForm.bathrooms_number > 0 ? `&bathrooms_number= ${this.searchForm.bathrooms_number}` : ''}
-                ${this.searchForm.services.length > 0 ? `&services=${this.searchForm.services}` : ''}`);
+
+                this.calcUrl();
+                this.$router.push(this.searchUrl);
 
                 if (this.searchForm.address != '') this.store.searchForm.address = this.searchForm.address;
                 if (this.searchForm.rooms_number > 0) this.store.searchForm.rooms_number = this.searchForm.rooms_number;
@@ -90,13 +98,41 @@ export default {
                 if (this.searchForm.bathrooms_number > 0) this.store.searchForm.bathrooms_number = this.searchForm.bathrooms_number;
                 if (this.searchForm.services.length > 0) this.store.searchForm.services = this.searchForm.services;
             }
-            // this.store.search.address = 
-        }
+        },
+        calcUrl() {
+            this.searchUrl = '/apartments/search?';
 
+            let size = 0;
+
+            // Calcolo numero campi compilati form
+            for (const field in this.searchForm) {
+                if (Array.isArray(this.searchForm[field])) {
+                    if (this.searchForm[field].length > 0) {
+                        size++;
+                    }
+                }
+                else {
+                    if (this.searchForm[field] != null) {
+                        size++;
+                    }
+                }
+            }
+
+            let index = 1;
+            // Generazione Url
+            for (const field in this.searchForm) {
+                if (this.searchForm[field] != null && this.searchForm[field].length > 0) {
+                    this.searchUrl += `${field}=${this.searchForm[field]}`
+                    if (index < size) {
+                        this.searchUrl += '&'
+                    }
+                    index++;
+                }
+            }
+        }
     },
     mounted() {
-        let input = document.getElementById('destination');
-        let autocomplete = new google.maps.places.Autocomplete(input);
+        this.getServices();
     }
 }
 </script>
@@ -138,7 +174,10 @@ export default {
                     <div class="group">
                         <label for="services">Di quali servizi hai bisogno?</label>
                         <div class="services">
-
+                            <div class="service" v-for="service in allServices">
+                                <input type="checkbox" :name="service.name" :id="service.name" :value="service.id" v-model="this.searchForm.services">
+                                <label :for="service.name">{{ service.name }}</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -266,7 +305,11 @@ export default {
     right: 0;
     border: 1px solid red;
     z-index: 20;
-    background-color: white;
+    background-color: gray;
+}
+
+.service {
+    margin-bottom: 5px;
 }
 
 
@@ -477,4 +520,5 @@ export default {
 //             }
 //         }
 //     }
-// }</style>
+// }
+</style>
