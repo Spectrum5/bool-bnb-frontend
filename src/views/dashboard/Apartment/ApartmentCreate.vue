@@ -280,7 +280,7 @@ export default {
             }
         },
         async getCoordinates() {
-            const coordinates = await fetch(`${this.url_api_tomtom}Piazza del Colosseo, 1, 00184 Roma RM.json?key=${this.api_key_tomtom}&typeahead=true&limit=1&radius=500`);
+            const coordinates = await fetch(`${this.url_api_tomtom}${this.form.address}.json?key=${this.api_key_tomtom}&typeahead=true&limit=1&radius=500`);
             // const data = await coordinates.blob();
             let json = await coordinates.json();
             console.log('COORDINATE', json.results[0].position);

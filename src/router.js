@@ -112,7 +112,7 @@ const router = createRouter({
             },
         },
         {
-            path: '/apartments/search/:title',
+            path: '/apartments/search/',
             name: 'apartment-search',
             component: HomeSearch
         },

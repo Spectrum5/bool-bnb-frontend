@@ -38,13 +38,19 @@ export default {
 
 <template>
   <!-- Link Button -->
-  <router-link :to="this.to" v-if="this.to" :class="this.type" :palette="this.palette ?? ''">
+  <router-link :to="this.to" v-if="this.to && !this.action" :class="this.type" :palette="this.palette ?? ''">
     <font-awesome-icon :icon="`fa-solid fa-${this.icon}`" class="icon" v-if="this.icon" />
     <span v-if="this.label">{{ this.label }}</span>
   </router-link>
 
   <!-- Action Button -->
-  <button v-if="this.action" :class="this.type" :palette="this.palette ?? ''" @click="this.action">
+  <button v-if="this.action && !this.to" :class="this.type" :palette="this.palette ?? ''" @click="this.action">
+    <font-awesome-icon :icon="`fa-solid fa-${this.icon}`" class="icon" v-if="this.icon" />
+    <span v-if="this.label">{{ this.label }}</span>
+  </button>
+
+  <!-- Standard Button -->
+  <button v-if="!this.action && !this.to" :class="this.type" :palette="this.palette ?? ''">
     <font-awesome-icon :icon="`fa-solid fa-${this.icon}`" class="icon" v-if="this.icon" />
     <span v-if="this.label">{{ this.label }}</span>
   </button>

@@ -9,7 +9,7 @@ import { router } from '../../../router';
 
 export default {
     name: 'ApartmentShow',
-    components: { 
+    components: {
         AppDashboardLayoutVue
     },
     data() {
@@ -45,10 +45,16 @@ export default {
         },
         goBackToDashboard() {
             console.log('GO TO DASHBOARD');
-            this.$router.push('/dashboard/apartments');
-            // router.push('/dashboard/apartments');
-        }
-    
+            this.router.push('/dashboard/apartments');
+        },
+        getImages() {
+            axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
+                .then((response) => {
+                    this.images = response.data.images;
+                    console.log('Images', response.data);
+                })
+        },
+
     },
     computed() {
         return this.apartment.title;
@@ -60,14 +66,11 @@ export default {
 </script>
 
 <template>
-     <AppDashboardLayoutVue 
-            :title=" apartment.title "
-            :button="
-                {
-                    label: 'Torna alla dashboard',
-                    // icon: 'plus',
-                    action: goBackToDashboard
-                        }">
+    <AppDashboardLayoutVue :title="apartment.title" :button="{
+            label: 'Torna alla dashboard',
+            // icon: 'plus',
+            action: goBackToDashboard
+        }">
 
 <div class="my-container">
     <div v-if="apartment">
@@ -155,6 +158,7 @@ export default {
     padding: 10px;
     overflow: scroll;
 }
+
 .mb {
     margin-bottom: 15px;
 }
@@ -165,7 +169,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    img{
+
+    img {
         max-width: 700px;
         border-radius: 10px;
     }
@@ -183,31 +188,33 @@ export default {
         }
     }
 }
-.services{
-        border: 1px solid;
-        border-radius: 5px;
-        padding-inline: 7px;
-        margin-right: 7px;
-        display: inline-block;
-        margin-bottom: 7px;
+
+.services {
+    border: 1px solid;
+    border-radius: 5px;
+    padding-inline: 7px;
+    margin-right: 7px;
+    display: inline-block;
+    margin-bottom: 7px;
+    vertical-align: middle;
+    line-height: 25px;
+
+    // text-transform: capitalize;
+    span {
         vertical-align: middle;
         line-height: 25px;
-        // text-transform: capitalize;
-        span{
-            vertical-align: middle;
-            line-height: 25px;
-            font-size: 0.8rem;
-        }
+        font-size: 0.8rem;
     }
+}
+
 .btn {
     padding: 7px 10px;
     border-radius: 10px;
     margin-right: 5px;
     cursor: pointer;
 }
+
 .btn-sponsor {
     background-color: #59DCC0;
     border: 2px solid #59DCC0;
-}
-
-</style>
+}</style>

@@ -1,4 +1,4 @@
-@use '../partials/variables.scss' as *;
+@use './variables.scss' as *;
 
 @mixin flexSpaceBtwn ($gap: 0) {
     display: flex;
