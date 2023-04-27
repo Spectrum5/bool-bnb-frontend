@@ -41,7 +41,6 @@ import { faIgloo } from '@fortawesome/free-solid-svg-icons'
 import { faMugSaucer } from '@fortawesome/free-solid-svg-icons'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
-
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faBars,
@@ -83,4 +82,4 @@ library.add(faBars,
 createApp(App)
   .use(router)
   .component('font-awesome-icon', FontAwesomeIcon)
-  .mount('#app')
+  .mount('#app');

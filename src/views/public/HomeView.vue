@@ -26,7 +26,7 @@ export default {
             openFilters: false,
             searchUrl: '',
             searchForm: {
-                address: '',
+                address: null,
                 rooms_number: null,
                 beds_number: null,
                 bathrooms_number: null,
@@ -133,6 +133,18 @@ export default {
     },
     mounted() {
         this.getServices();
+        
+        const address = document.querySelector('#address');
+        const autocomplete = new google.maps.places.Autocomplete(address);
+        const self = this;
+        autocomplete.addListener('place_changed', function () {
+            const place = autocomplete.getPlace();
+            const address = place.formatted_address;
+            self.searchForm.address = address;
+            // aggiornamento degli altri campi del form con i dati trovati
+        });
+
+
     }
 }
 </script>
@@ -142,8 +154,8 @@ export default {
 
         <form @submit.prevent="handleSearch()">
             <div class="group">
-                <label for="destination">Dove vuoi andare?</label>
-                <input type="text" id="destination" name="destination" placeholder="Inserisci la destinazione"
+                <label for="address">Dove vuoi andare?</label>
+                <input type="text" id="address" name="address" placeholder="Inserisci la destinazione"
                     v-model="searchForm.address">
             </div>
 
@@ -175,7 +187,8 @@ export default {
                         <label for="services">Di quali servizi hai bisogno?</label>
                         <div class="services">
                             <div class="service" v-for="service in allServices">
-                                <input type="checkbox" :name="service.name" :id="service.name" :value="service.id" v-model="this.searchForm.services">
+                                <input type="checkbox" :name="service.name" :id="service.name" :value="service.id"
+                                    v-model="this.searchForm.services">
                                 <label :for="service.name">{{ service.name }}</label>
                             </div>
                         </div>

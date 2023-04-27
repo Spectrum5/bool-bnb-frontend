@@ -2,13 +2,11 @@
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
 import AppErrorForm from '../../../components/AppErrorForm.vue';
-
 // Utilities
 import { store } from '../../../store';
 import { router } from '../../../router';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
-
 export default {
     name: 'ApartmentCreate',
     components: {
@@ -23,7 +21,7 @@ export default {
                 title: '',
                 lat: null,
                 lng: null,
-                address: '',
+                address: null,
                 images: [],
                 visibility: null,
                 price: null,
@@ -71,12 +69,10 @@ export default {
                 }
             }
         },
-
         titleValidation() {
             // Title Length
             const titleInput = document.getElementById('title');
             titleInput.classList.remove('invalid');
-
             if (titleInput.value.trim().length === 0) {
                 this.addError('Il campo nome deve essere compilato', 'title');
                 titleInput.classList.add('invalid');
@@ -88,11 +84,9 @@ export default {
                 titleInput.classList.add('invalid');
             }
         },
-
         addressValidation() {
             const addressInput = document.getElementById('address');
             addressInput.classList.remove('invalid');
-
             if (addressInput.value.trim().length === 0) {
                 this.addError('Il campo indirizzo deve essere compilato', 'address');
                 addressInput.classList.add('invalid');
@@ -104,12 +98,10 @@ export default {
                 addressInput.classList.add('invalid');
             }
         },
-
         // imageValidation() {
         //     const fileInput = document.getElementById('image');
         //     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
         //     fileInput.classList.remove('invalid');
-
         //     if (!fileInput.value) {
         //         this.addError('Devi selezionare un\'immagine', 'image');
         //         fileInput.classList.add('invalid');
@@ -118,11 +110,9 @@ export default {
         //         fileInput.classList.add('invalid');
         //     }
         // },
-
         priceValidation() {
             const priceInput = document.getElementById('price');
             priceInput.classList.remove('invalid');
-
             if (priceInput.value.trim().length === 0) {
                 this.addError('Il campo prezzo deve essere compilato', 'price');
                 priceInput.classList.add('invalid');
@@ -134,11 +124,9 @@ export default {
                 priceInput.classList.add('invalid');
             }
         },
-
         roomsNumberValidation() {
             const roomsNumberInput = document.getElementById('rooms_number');
             roomsNumberInput.classList.remove('invalid');
-
             if (roomsNumberInput.value.trim().length === 0) {
                 this.addError('Il campo stanze deve essere compilato', 'rooms_number');
                 roomsNumberInput.classList.add('invalid');
@@ -150,11 +138,9 @@ export default {
                 roomsNumberInput.classList.add('invalid');
             }
         },
-
         bathroomsNumberValidation() {
             const bathroomsNumberInput = document.getElementById('bathrooms_number');
             bathroomsNumberInput.classList.remove('invalid');
-
             if (bathroomsNumberInput.value.trim().length === 0) {
                 this.addError('Il campo numero di bagni deve essere compilato', 'bathrooms_number');
                 bathroomsNumberInput.classList.add('invalid');
@@ -166,13 +152,10 @@ export default {
                 bathroomsNumberInput.classList.add('invalid');
             }
         },
-
         descriptionValidation() {
             const descriptionInput = document.getElementById('description');
             descriptionInput.classList.remove('invalid');
-
             const descriptionValue = descriptionInput.value.trim();
-
             if (descriptionValue.length < 10) {
                 this.addError('La descrizione deve essere di almeno 10 caratteri', 'description');
                 descriptionInput.classList.add('invalid');
@@ -181,11 +164,9 @@ export default {
                 descriptionInput.classList.add('invalid');
             }
         },
-
         sizeValidation() {
             const sizeInput = document.getElementById('size');
             sizeInput.classList.remove('invalid');
-
             if (sizeInput.value.trim().length === 0) {
                 this.addError('Il campo Inserisci i mq deve essere compilato', 'size');
                 sizeInput.classList.add('invalid');
@@ -200,39 +181,32 @@ export default {
                 sizeInput.classList.add('invalid');
             }
         },
-
         visibilityValidation() {
             const visibilityInput = document.getElementById('visibility');
             visibilityInput.classList.remove('invalid');
-
             if (this.form.visibility !== true && this.form.visibility !== false) {
                 this.addError('Il campo visibilità non è valido', 'visibility');
                 visibilityInput.classList.add('invalid');
             }
         },
-
         // latValidation() {
         //     // Latitude Validation
         //     const latInput = document.getElementById('lat');
         //     latInput.classList.remove('invalid');
-
         //     if (isNaN(latInput.value) || latInput.value < -90 || latInput.value > 90) {
         //         this.addError('Inserisci una latitudine valida', 'lat');
         //         latInput.classList.add('invalid');
         //     }
         // },
-
         // lngValidation() {
         //     // Longitude Validation
         //     const lngInput = document.getElementById('lng');
         //     lngInput.classList.remove('invalid');
-
         //     if (isNaN(lngInput.value) || lngInput.value < -180 || lngInput.value > 180) {
         //         this.addError('Inserisci una longitudine valida', 'lng');
         //         lngInput.classList.add('invalid');
         //     }
         // },
-
         validateData() {
             // Front End Validation
             // console.log('Validating Create apartment data...');
@@ -250,14 +224,12 @@ export default {
             this.descriptionValidation();
             this.sizeValidation();
             // this.servicesValidation();
-
             // https://api.tomtom.com/search/2/geocode/Piazza del Colosseo, 1, 00184 Roma RM.json?key=Vru3uP06eapOxpYMujwrRlVLMB5Vkqch&typeahead=true&limit=1&radius=500
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) {
                 // async getMap() {
                 // }
                 this.getCoordinates();
-
                 // axios.get(`https://api.tomtom.com/search/2/geocode/${'Piazza del Colosseo, 1, 00184 Roma RM'}.json`, {
                 //     key: 'Vru3uP06eapOxpYMujwrRlVLMB5Vkqch',
                 //     // address: 'Piazza del Colosseo, 1, 00184 Roma RM',
@@ -354,6 +326,16 @@ export default {
     mounted() {
         document.title = 'Apartment | Create';
         this.getFormData();
+        const address = document.querySelector('#address');
+        let autocomplete = new google.maps.places.Autocomplete(address);
+        const self = this;
+        autocomplete.addListener('place_changed', function () {
+            let place = autocomplete.getPlace();
+            let address = place.formatted_address;
+            self.form.address = address;
+            // let city = place.address_components.find(component => component.types.includes('locality')).long_name;
+            // aggiorna i campi dell'indirizzo e della città con i dati trovati
+        });
     }
 }
 </script>
@@ -474,7 +456,6 @@ export default {
                 <AppErrorForm />
             </form>
         </div>
-
     </AppDashboardLayoutVue>
 </template>
 
@@ -483,19 +464,15 @@ export default {
 @use '../../../styles/partials/form.scss' as *;
 @use '../../../styles/partials/variables.scss' as *;
 @use '../../../styles/partials/formcreateedit.scss' as *;
-
 label {
     text-transform: none !important;
 }
-
 .invalid {
     border: 1px solid $danger-color-dark !important;
 }
-
 #images {
     display: none;
 }
-
 .previews {
     @include flexRowCenter(5px);
     width: fit-content;
