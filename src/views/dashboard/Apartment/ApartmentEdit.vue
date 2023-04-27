@@ -132,6 +132,9 @@ export default {
         },
         deleteImage(index) {
             this.previewUrls.splice(index, 1);
+        },
+        deleteOldImage(index) {
+            this.images.splice(index, 1);
         }
     },
     created() {
@@ -232,16 +235,29 @@ export default {
                    </div>
                 </div>
                 <div class="group small">
-                    <label for="images">images</label>
+                    <label for="images">
+                        <strong>Immagini</strong>
+                        <!-- 
+                            
+                         -->
+                    </label>
                     <div class="container">
-                        <label for="images" class="fakeInput" :class="previewUrls.length >= 3 ? 'disabled' : ''">
+                        <label for="images" class="fakeInput" :class="(previewUrls.length + images.length) >= 3 ? 'disabled' : ''">
                             <font-awesome-icon icon="fa-solid fa-plus" class="icon" />
                             add images
                         </label>
                         <input name="images" id="images" type="file" accept="image/*" multiple
                             @change="addFiles($event.target.name, $event.target.files)"
-                            :disabled="previewUrls.length >= 3">
+                            :disabled="(previewUrls.length + images.length) >= 3">
                         <!-- <transition name="fade"> -->
+                            <div class="previews" v-if="images.length > 0">
+                                <div class="preview" v-for="element, index in images">
+                                    <img :src="`http://localhost:8000/storage/apartments/${element.url}`" alt="img">
+                                    <button @click.prevent="deleteOldImage(index)">
+                                        <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
+                                    </button>
+                                </div>
+                            </div>
                         <div class="previews" v-if="previewUrls.length > 0">
                             <div class="preview" v-for="url, index in previewUrls">
                                 <img :src="url" alt="Preview">
@@ -272,6 +288,66 @@ export default {
 
 label{
     text-transform: none !important;
+}
+label.fakeinput,
+input#images{
+    margin-bottom: 10px;
+}
+
+#images {
+    display: none;
+}
+
+.previews {
+    @include flexRowCenter(5px);
+    width: fit-content;
+    padding: 5px;
+    border-radius: $small-border-radius;
+    background-color: $light-color-three;
+    transition: all 0.1s;
+
+    .preview {
+        width: 150px;
+        height: 150px;
+        border-radius: 4px;
+        border: 1px solid $dark-color-one;
+        position: relative;
+        padding: 0;
+
+        >img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        >button {
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            z-index: 10;
+            background-color: #dc354580;
+            border-radius: 0;
+            opacity: 0;
+            transition: all 0.1s 0.05s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+
+            .icon {
+                margin: 0;
+            }
+        }
+
+        &:hover {
+            >button {
+                opacity: 1;
+            }
+        }
+    }
 }
 
 </style>
