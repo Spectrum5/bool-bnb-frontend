@@ -118,24 +118,25 @@ export default {
     <!-- FINE SPONSOR -->
     <hr>
     <!-- MESSAGGI -->
-    <!-- message, email, first_name, last_name -->
+    <!-- message, email, -->
     <div class="mb">
         <h2>I tuoi messaggi</h2>
-        <!-- <div class="mb" v-if="apartment.messages.length > 0">
+        <div class="mb" v-if="apartment.messages.length > 0">
             <span>Hai {{ apartment.messages.length }} messaggi ricevuti</span>
             <div class="row" v-for="message in apartment.messages">
-                <p>Mittente: {{ message.first_name }} {{ message.last_name }}</p>
-                <p>{{ message.title }}</p>
+                <p>Mittente: {{ message.email }}</p>
+                <p>{{ message.message }}</p>
             </div>
         </div>
-        <div v-else> -->
-        <div>
-            <p>Al momento non hai nessun messaggio!</p>
-            <p>Sponsorizza il tuo appartamento per avere maggiore visibilità! Clicca il bottone in basso</p>
-            <button class="btn btn-sponsor">
-                <font-awesome-icon icon="fa-solid fa-rocket" />
-                Sponsorizza
-            </button>
+        <div v-else>
+            <div>
+                <p>Al momento non hai nessun messaggio!</p>
+                <p>Sponsorizza il tuo appartamento per avere maggiore visibilità! Clicca il bottone in basso</p>
+                <button class="btn btn-sponsor">
+                    <font-awesome-icon icon="fa-solid fa-rocket" />
+                    Sponsorizza
+                </button>
+            </div>
         </div>
     </div>
     <!--FINE MESSAGGI -->
