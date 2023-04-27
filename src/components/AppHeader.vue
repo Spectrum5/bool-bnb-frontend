@@ -36,6 +36,8 @@ export default {
             </div>
 
             <div class="group" v-else>
+                <AppButton :to="'/dashboard/apartments'" :label="'dashboard'" :type="'line'" :palette="'primary'"/>
+
                 <div class="user">
                     <p>{{ store.user.first_name }}</p>
                     <p>{{ store.user.last_name }}</p>

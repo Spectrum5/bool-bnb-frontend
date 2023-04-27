@@ -9,13 +9,14 @@ import { router } from '../../../router';
 
 export default {
     name: 'ApartmentShow',
-    components: { 
+    components: {
         AppDashboardLayoutVue
     },
     data() {
         return {
             router,
-            apartment: null
+            apartment: null,
+            images: []
             // form: {},
             // allServices: [],
             // selectedServices: []
@@ -27,7 +28,7 @@ export default {
                 .then((response) => {
                     console.log('Dati Appartamento', response.data.apartment);
                     this.apartment = response.data.apartment;
-
+                    this.getImages();
                 })
                 .catch((response) => {
                     console.log('Errore Ottenimento Appartamento', response.data);
@@ -35,9 +36,16 @@ export default {
         },
         goBackToDashboard() {
             console.log('GO TO DASHBOARD');
-            this.$router.push('/dashboard/apartments');
-        }
-    
+            this.router.push('/dashboard/apartments');
+        },
+        getImages() {
+            axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
+                .then((response) => {
+                    this.images = response.data.images;
+                    console.log('Images', response.data);
+                })
+        },
+
     },
     computed() {
         return this.apartment.title;
@@ -49,68 +57,67 @@ export default {
 </script>
 
 <template>
-     <AppDashboardLayoutVue 
-            :title=" apartment.title "
-            :button="
-                {
-                    label: 'Torna alla dashboard',
-                    // icon: 'plus',
-                    action: goBackToDashboard
-                        }">
+    <AppDashboardLayoutVue :title="apartment.title" :button="{
+            label: 'Torna alla dashboard',
+            // icon: 'plus',
+            action: goBackToDashboard
+        }">
 
-<div class="my-container">
-    <div v-if="apartment">
-        <div class="img-container">
-            <img src="https://montenapodaily.com/wp-content/uploads/2021/07/Rihanna-villa-a-Beverly-hills-scaled-e1626095351453.jpeg" alt="">
-        </div>
-        <div class="mb">
-            <h4>Indirizzo:</h4>
-            <p>{{ apartment.address }}</p>
-        </div>
-        <div class="mb">
-            <h4>Descrizione:</h4>
-            <p style="max-width: 60vw;">{{ apartment.description }}</p>
-        </div>
-        <div class="mb">
-            <h4>Prezzo a notte:</h4>
-            <p>€ {{ apartment.price }}</p>
-        </div>
-        <div class="mb" style="max-width: 60vw;" v-if="apartment.services.length > 0">
-            <h4>Servizi inclusi:</h4>
-            <div class="services" v-for="service in apartment.services">
-                <span>
-                    <font-awesome-icon :icon="`fa-solid fa-${service.icon}`" />
-                </span>
-                <!-- {{ service.name }} {{ price.products_count }} -->
+        <div class="my-container">
+            <div v-if="apartment">
+                <div class="img-container">
+                    <!-- <img src="https://montenapodaily.com/wp-content/uploads/2021/07/Rihanna-villa-a-Beverly-hills-scaled-e1626095351453.jpeg" alt=""> -->
+                    <img :src="`http://localhost:8000/storage/apartments/${images[0].url}`" :alt="apartment.title">
+                </div>
+                <div class="mb">
+                    <h4>Indirizzo:</h4>
+                    <p>{{ apartment.address }}</p>
+                </div>
+                <div class="mb">
+                    <h4>Descrizione:</h4>
+                    <p style="max-width: 60vw;">{{ apartment.description }}</p>
+                </div>
+                <div class="mb">
+                    <h4>Prezzo a notte:</h4>
+                    <p>€ {{ apartment.price }}</p>
+                </div>
+                <div class="mb" style="max-width: 60vw;" v-if="apartment.services.length > 0">
+                    <h4>Servizi inclusi:</h4>
+                    <div class="services" v-for="service in apartment.services">
+                        <span>
+                            <font-awesome-icon :icon="`fa-solid fa-${service.icon}`" />
+                        </span>
+                        <!-- {{ service.name }} {{ price.products_count }} -->
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <hr>
-    <!-- SPONSOR -->
-    <div class="mb">
-        <h2>Sponsorizzazioni</h2>
-        <!-- <div class="mb" v-if="apartment.sponsors.length > 0">
+            <hr>
+            <!-- SPONSOR -->
+            <div class="mb">
+                <h2>Sponsorizzazioni</h2>
+                <!-- <div class="mb" v-if="apartment.sponsors.length > 0">
             <h4>Servizi:</h4>
             <div class="sponsors" v-for="sponsor in apartment.sponsors">
                 <p>{{ sponsor.title }}</p>
             </div>
         </div>
         <div v-else> -->
-        <div>
-            <p>Al momento non hai nessuna sponsorizzazione! Vuoi sponsorizzare il tuo appartamento? Clicca sul bottone in basso</p>
-            <button class="btn btn-sponsor">
-                <font-awesome-icon icon="fa-solid fa-rocket" />
-                Sponsorizza
-            </button>
-        </div>
-    </div>
-    <!-- FINE SPONSOR -->
-    <hr>
-    <!-- MESSAGGI -->
-    <!-- message, email, first_name, last_name -->
-    <div class="mb">
-        <h2>I tuoi messaggi</h2>
-        <!-- <div class="mb" v-if="apartment.messages.length > 0">
+                <div>
+                    <p>Al momento non hai nessuna sponsorizzazione! Vuoi sponsorizzare il tuo appartamento? Clicca sul
+                        bottone in basso</p>
+                    <button class="btn btn-sponsor">
+                        <font-awesome-icon icon="fa-solid fa-rocket" />
+                        Sponsorizza
+                    </button>
+                </div>
+            </div>
+            <!-- FINE SPONSOR -->
+            <hr>
+            <!-- MESSAGGI -->
+            <!-- message, email, first_name, last_name -->
+            <div class="mb">
+                <h2>I tuoi messaggi</h2>
+                <!-- <div class="mb" v-if="apartment.messages.length > 0">
             <span>Hai {{ apartment.messages.length }} messaggi ricevuti</span>
             <div class="row" v-for="message in apartment.messages">
                 <p>Mittente: {{ message.first_name }} {{ message.last_name }}</p>
@@ -118,17 +125,17 @@ export default {
             </div>
         </div>
         <div v-else> -->
-        <div>
-            <p>Al momento non hai nessun messaggio!</p>
-            <p>Sponsorizza il tuo appartamento per avere maggiore visibilità! Clicca il bottone in basso</p>
-            <button class="btn btn-sponsor">
-                <font-awesome-icon icon="fa-solid fa-rocket" />
-                Sponsorizza
-            </button>
+                <div>
+                    <p>Al momento non hai nessun messaggio!</p>
+                    <p>Sponsorizza il tuo appartamento per avere maggiore visibilità! Clicca il bottone in basso</p>
+                    <button class="btn btn-sponsor">
+                        <font-awesome-icon icon="fa-solid fa-rocket" />
+                        Sponsorizza
+                    </button>
+                </div>
+            </div>
+            <!--FINE MESSAGGI -->
         </div>
-    </div>
-    <!--FINE MESSAGGI -->
-</div>
     </AppDashboardLayoutVue>
 </template>
 
@@ -142,6 +149,7 @@ export default {
     padding: 10px;
     overflow: scroll;
 }
+
 .mb {
     margin-bottom: 15px;
 }
@@ -152,7 +160,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    img{
+
+    img {
         max-width: 700px;
         border-radius: 10px;
     }
@@ -170,31 +179,33 @@ export default {
         }
     }
 }
-.services{
-        border: 1px solid;
-        border-radius: 5px;
-        padding-inline: 7px;
-        margin-right: 7px;
-        display: inline-block;
-        margin-bottom: 7px;
+
+.services {
+    border: 1px solid;
+    border-radius: 5px;
+    padding-inline: 7px;
+    margin-right: 7px;
+    display: inline-block;
+    margin-bottom: 7px;
+    vertical-align: middle;
+    line-height: 25px;
+
+    // text-transform: capitalize;
+    span {
         vertical-align: middle;
         line-height: 25px;
-        // text-transform: capitalize;
-        span{
-            vertical-align: middle;
-            line-height: 25px;
-            font-size: 0.8rem;
-        }
+        font-size: 0.8rem;
     }
+}
+
 .btn {
     padding: 7px 10px;
     border-radius: 10px;
     margin-right: 5px;
     cursor: pointer;
 }
+
 .btn-sponsor {
     background-color: #59DCC0;
     border: 2px solid #59DCC0;
-}
-
-</style>
+}</style>

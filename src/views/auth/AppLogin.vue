@@ -4,6 +4,7 @@
 import AppLogo from '../../components/AppLogo.vue';
 import AppFooter from '../../components/AppFooter.vue';
 import AppErrorForm from '../../components/AppErrorForm.vue';
+import AppButton from '../../components/AppButton.vue';
 
 // Utilities
 import { store } from '../../store';
@@ -17,7 +18,8 @@ export default {
     components: {
         AppLogo,
         AppFooter,
-        AppErrorForm
+        AppErrorForm,
+        AppButton
     },
     data() {
         return {
@@ -73,6 +75,10 @@ export default {
                 this.addError('La tua email contiene caratteri non permessi', 'email');
                 emailInput.classList.add('invalid');
             }
+            else {
+                const index = this.store.errors.findIndex(error => error.field === "email");
+                this.store.errors.splice(index, 1);
+            }
         },
         passwordValidation() {
             let passwordInput = document.getElementById('password');
@@ -91,21 +97,12 @@ export default {
                 this.addError('La password non deve superare i 64 caratteri', 'password');
                 passwordInput.classList.add('invalid');
             }
+            else {
+                const index = this.store.errors.findIndex(error => error.field === "password");
+                this.store.errors.splice(index, 1);
+            }
         },
         shakeInputs() {
-            // V1
-            // const emailInput = document.querySelector('#email');
-            // const passwordInput = document.querySelector('#password');
-
-            // if (emailInput.classList.contains('invalid')) emailInput.classList.add('shake');
-            // if (passwordInput.classList.contains('invalid')) passwordInput.classList.add('shake');
-
-            // setTimeout(() => {
-            //     emailInput.classList.remove('shake');
-            //     passwordInput.classList.remove('shake');
-            // }, 200)
-
-            // V2
             if (this.store.errors.length > 0) {
                 this.store.errors.forEach(error => {
                     document.querySelector(`#${error.field}`).classList.add('shake');
@@ -195,10 +192,10 @@ export default {
                     </div>
 
                     <div class="row">
-                        <button class="btn">login</button>
+                        <AppButton :label="'login'" :type="'solid'" :palette="'primary'" />
                     </div>
-                    <AppErrorForm v-if="store.errors.length > 0" />
                 </form>
+                <AppErrorForm v-if="store.errors.length > 0" />
                 <router-link to="/register" class="customLink">Non hai un account? Creane uno.</router-link>
                 <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
             </div>
@@ -209,18 +206,8 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@use '../../styles/partials/variables.scss' as *;
 @use '../../styles/partials/mixins.scss' as *;
 @use '../../styles/partials/form.scss' as *;
-
-.btn {
-    text-transform: capitalize;
-    font-weight: 600;
-    font-family: 'Poppins', sans-serif;
-    padding: 0.5rem;
-    // border: none;
-    // background: none;
-}
 
 .container {
     @include largeContainer;
@@ -234,6 +221,10 @@ header {
 
 main {
     height: 100vh;
+}
+
+.row:last-child::v-deep button {
+    width: 100%;
 }
 
 .campi-required {

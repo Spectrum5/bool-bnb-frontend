@@ -17,7 +17,7 @@ export default {
         return {
             router,
             store,
-            // apartments: null
+            messages: null            // apartments: null
         }
     },
     methods: {
@@ -25,11 +25,11 @@ export default {
             // console.log('USER ID', store.user.id);
             axios.get('http://localhost:8000/api/messages',)
                 .then((response) => {
-                    console.log('Index Messaggi', response.data);
-                    // this.apartments = response.data.apartments;
+                    console.log('Index Messaggi', response.data.messages);
+                    this.messages = response.data.messages;
                 })
                 .catch((response) => {
-                    console.log('Errore Index Messaggi', response.data);
+                    console.log('Errore Index Messaggi', response);
                 })
         },
         // deleteApartment(id) {
@@ -56,7 +56,20 @@ export default {
         :title="'i miei messaggi'">
 
             <main>
-                messaggi
+                <div class="messages" v-if="messages">
+                    <div class="message" v-for="message in messages">
+                        <div class="email">{{ message.email }}</div>
+                        <div class="text">{{ message.message }}</div>
+                    </div>
+
+
+                    <!-- <div class="email">
+                        <p></p>
+                    </div>
+                    <div class="text">
+                        <p class="message" v-for="message in messages">{{ message.message }}</p>
+                    </div> -->
+                </div>
             </main>
 
     </AppDashboardLayoutVue>
@@ -64,7 +77,16 @@ export default {
 
 <style scoped lang="scss">
 @use '../../../styles/partials/mixins.scss' as *;
+@use '../../../styles/partials/variables.scss' as *;
 
+.message {
+    padding: 10px 0;
+    border-bottom: 1px solid $dark-color-one;
+}
+
+.email {
+    font-weight: 600;
+}
 
 main {
     width: 100%;
