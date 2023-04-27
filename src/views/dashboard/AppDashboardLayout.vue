@@ -119,7 +119,9 @@ export default {
     overflow: hidden;
 }
 
-
+.mainTitle {
+    margin-bottom: 0;
+}
 
 .rightSide {
     height: 100vh;

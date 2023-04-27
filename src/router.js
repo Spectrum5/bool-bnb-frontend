@@ -41,8 +41,6 @@ const router = createRouter({
             name: 'search',
             component: HomeSearch
         },
-
-
         // Authentication Pages
         {
             path: '/login',
@@ -111,11 +109,11 @@ const router = createRouter({
                 if (store.user == null) return { name: 'login' }
             },
         },
-        {
-            path: '/apartments/search/',
-            name: 'apartment-search',
-            component: HomeSearch
-        },
+        // {
+        //     path: '/apartments/search/',
+        //     name: 'apartment-search',
+        //     component: HomeSearch
+        // },
 
         
 

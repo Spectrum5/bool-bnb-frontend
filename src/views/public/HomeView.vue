@@ -1,5 +1,6 @@
 <script>
 
+// Utilities
 import axios from 'axios';
 
 // Components

@@ -45,6 +45,10 @@
     transform: translate(-50%, -50%);
 }
 
+@mixin customShadow {
+    box-shadow: 0px 4px 16px 1px #00000060;
+}
+
 @mixin customOutline {
     outline-style: solid;
     outline-color: $color-three-dark;
