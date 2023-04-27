@@ -5,6 +5,7 @@
 // import AppButton from './AppButton.vue';
 
 // Utilities
+import axios from 'axios';
 import { store } from '../store';
 import { router } from '../router';
 
@@ -19,6 +20,7 @@ export default {
             store,
             router,
             servicesMenuOpen: false,
+            allServices: [],
             form: {
                 address: '',
                 rooms_number: 0,
@@ -29,6 +31,15 @@ export default {
         }
     },
     methods: {
+        getServices() {
+            const url = 'http://127.0.0.1:8000/api';
+            axios.get(url + '/services',
+
+            ).then(response => {
+                this.allServices = response.data.services;
+                console.log(this.allServices, 'servizi');
+            })
+        },
         // numberInput(direction, value, min, max) {
         //     if (direction == 'minus') {
         //         if (value > min) {
@@ -75,6 +86,9 @@ export default {
                 if (this.form.bathrooms_number < max) this.form.bathrooms_number++;
             }
         }
+    },
+    mounted() {
+        this.getServices();
     }
 }
 </script>
@@ -86,7 +100,7 @@ export default {
                 <div class="row">
                     <div class="group">
                         <label for="address">dove</label>
-                        <input type="text" id="address" name="address" placeholder="Inserisci l'indirizzo">
+                        <input type="text" id="address" name="address" placeholder="Inserisci l'indirizzo" v-model="form.address">
                     </div>
 
                     <div class="group">
@@ -128,7 +142,7 @@ export default {
                         </div>
                     </div>
 
-                    <div class="group">
+                    <div class="group servicesGroup">
                         <div @click="servicesMenuOpen = !servicesMenuOpen">
                             <label for="services">servizi necessari</label>
                             <div class="iconContainer">
@@ -136,7 +150,19 @@ export default {
                             </div>
                         </div>
 
-                        <div class="servicesMenu" v-if="servicesMenuOpen"></div>
+                        <transition name="fade">
+                            <div class="servicesMenu" v-if="servicesMenuOpen">
+                                <h3>Servizi</h3>
+                                <div class="service" v-for="service in allServices">
+                                    <input v-model="form.services" type="checkbox" :name="service.name" :id="service.name"
+                                        :value="service.id">
+                                    <label :for="service.name">
+                                        <font-awesome-icon :icon='`fa-solid fa-${service.icon}`' />
+                                        {{ service.name }}
+                                    </label>
+                                </div>
+                            </div>
+                        </transition>
                     </div>
 
                     <div class="group">
@@ -145,6 +171,11 @@ export default {
                 </div>
             </form>
         </div>
+
+        <div>current data
+            <br>
+            {{ form }}
+        </div>
     </div>
 </template>
 
@@ -152,6 +183,7 @@ export default {
 @use '../styles/partials/variables.scss' as *;
 @use '../styles/partials/mixins.scss' as *;
 @use '../styles/partials/form.scss' as *;
+@use '../styles/partials/transitions.scss' as *;
 
 .container {
     @include largeContainer;
@@ -194,6 +226,33 @@ export default {
                 flex-grow: 1;
                 max-width: 450px;
             }
+
+            &.servicesGroup {
+                position: relative;
+
+                .servicesMenu {
+                    display: flex;
+                    flex-wrap: wrap;
+                    width: 420px;
+
+                    h3 {
+                        flex-basis: 100%;
+                        margin-bottom: 4px;
+                    }
+                    .service {
+                        flex-basis: 50%;
+                    }
+
+                    input {
+                        width: fit-content;
+                        margin-right: 5px;
+                    }
+
+                    label {
+                        display: inline-block;
+                    }
+                }
+            }
         }
     }
 }
@@ -224,4 +283,16 @@ export default {
         align-items: center;
         background-color: gray;
     }
+}
+
+.servicesMenu {
+    position: absolute;
+//   transform: translateY(0);
+
+    top: calc(100% + 25px);
+    right: 0;
+    padding: 6px;
+    border: 1px solid $dark-color-one;
+    background-color: $light-color-one;
+    z-index: 8;
 }</style>
