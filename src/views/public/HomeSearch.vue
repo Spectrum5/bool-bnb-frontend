@@ -1,4 +1,9 @@
 <script>
+// Components
+import AppLogo from '../../components/AppLogo.vue';
+import AppHeader from '../../components/AppHeader.vue';
+import AppSearch from '../../components/AppSearch.vue';
+import AppCard from '../../components/AppCard.vue';
 
 // Utilities
 import axios from 'axios';
@@ -7,12 +12,19 @@ import { store } from '../../store';
 
 export default {
     name: 'HomeSearch',
+    components: {
+        AppLogo,
+        AppHeader,
+        AppSearch,
+        AppCard
+    },
     data() {
         return {
             router,
             store,
             currentPage: 1,
-            apartments: []
+            apartments: [],
+            apartmentsFound: false
         }
     },
     methods: {
@@ -28,22 +40,25 @@ export default {
                 }
             })
                 .then((response) => {
-                    console.log('Index Appartamenti con Filtri', response.data);
+                    console.log('Index Appartamenti con Filtri', response.data.apartments);
                     this.apartments = this.apartments.concat(response.data.apartments);
+                    this.apartmentsFound = response.success;
+                    console.log(response.success);
                 })
                 .catch((response) => {
-                    console.log('Errore Index Appartamenti con Filtri', response.data);
+                    console.log('Errore Index Appartamenti con Filtri');
                 })
         },
         loadMore() {
             this.currentPage++;
             // this.getApartments();
-            console.log('store', this.store.searchForm);
         }
     },
     mounted() {
+        document.title = 'Boolbnb | Search'
+        console.log('store', this.store.searchForm);
         this.getApartments();
-        console.log('searchTitle', this.$route.params.title);
+        // console.log('searchTitle', this.$route.params.title);
     },
     computed: {
     }
@@ -51,22 +66,18 @@ export default {
 </script>
 
 <template>
+    <AppHeader />
+    <AppSearch />
 
-    <!-- <div class="container">
-        <label for="searchTitle">Titolo</label>
-        <input type="text" id="searchTitle" name="searchTitle" placeholder="Inserisci il titolo...">
-        <button @click="handleSearch()">Cerca</button>
-    </div> -->
-
-    <div class="container">
-
-        <!-- <div class="card" v-for="apartment in apartments" @click="$router.push(`/apartments/${apartment.slug}`)">
-            <h2>Titolo: {{ apartment.title }}</H2>
-            <p>Descrizione: {{ apartment.description }}</p>
-        </div> -->
-
+    <div class="container" v-if="apartments.length > 0">
+        <AppCard v-for="apartment in apartments" :apartment="apartment" />
     </div>
-    <button @click="loadMore()">LOAD MORE</button>
+    <div class="centered" v-else><p class="mainTitle">Nessun appartamento trovato</p></div>
+
+
+    <div class="btn-container">
+        <button @click="loadMore()">LOAD MORE</button>
+    </div>
 </template>
 
 <style lang="scss" scoped>
@@ -84,9 +95,13 @@ h2 {
     font-size: 0.8rem;
 }
 
-.card {
-    width: 200px;
-    padding: 1rem;
-    border: 2px solid lightblue;
+// .card {
+//     width: 200px;
+//     padding: 1rem;
+//     border: 2px solid lightblue;
+// }
+
+.centered {
+    text-align: center;
 }
 </style>

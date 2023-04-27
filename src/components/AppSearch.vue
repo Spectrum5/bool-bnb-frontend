@@ -90,13 +90,14 @@ export default {
             if (this.form.address != '' || this.form.rooms_number > 0 || this.form.beds_number > 0 || this.form.bathrooms_number > 0 || this.form.services.length > 0) {
 
                 this.calcUrl();
-                this.$router.push(this.searchUrl);
 
                 if (this.form.address != '') this.store.searchForm.address = this.form.address;
                 if (this.form.rooms_number > 0) this.store.searchForm.rooms_number = this.form.rooms_number;
                 if (this.form.beds_number > 0) this.store.searchForm.beds_number = this.form.beds_number;
                 if (this.form.bathrooms_number > 0) this.store.searchForm.bathrooms_number = this.form.bathrooms_number;
                 if (this.form.services.length > 0) this.store.searchForm.services = this.form.services;
+
+                this.$router.push(this.searchUrl);
             }
         },
         calcUrl() {

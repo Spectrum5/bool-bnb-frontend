@@ -11,7 +11,7 @@ export const store = reactive({
     filterModalOpen: false,
     
     searchForm: {
-        address: '',
+        address: null,
         rooms_number: null,
         beds_number: null,
         bathrooms_number: null,
