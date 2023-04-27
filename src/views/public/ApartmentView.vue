@@ -26,6 +26,7 @@ export default {
                 text: ''
             },
             images: [],
+            requestSent: false,
         }
     },
     methods: {
@@ -181,6 +182,12 @@ export default {
                 })
                     .then((response) => {
                         console.log('Messaggio Inviato', response);
+                        this.requestSent = true;
+
+                        setTimeout(() => {
+                            this.requestSent = false;
+                            this.message.text = '';
+                        }, 1900);
                     })
                     .catch((response) => {
                         console.log('Errore Messaggio', response.data);
@@ -325,7 +332,10 @@ export default {
                                 v-on:blur="messageValidation()" ></textarea>
                             </div>
                         </div>
-                        <button type="submit" class="btn my-btn">Invia richiesta</button>
+                        <button v-if="!this.requestSent" type="submit" class="btn my-btn">Invia richiesta</button>
+                        <button v-if="this.requestSent" class="btn my-btn-created">Richiesta inviata
+                            <font-awesome-icon icon="fa-solid fa-check" />
+                        </button>
                         <AppErrorForm />
                     </div>
                 </form>
@@ -342,6 +352,11 @@ export default {
     border-radius: 10px;
     padding: 7px;
     margin: 5px;
+}
+
+.my-btn-created{
+    background: linear-gradient(90deg, rgba(86, 219, 117, 1) 25%, rgba(40, 167, 69, 1) 75%);
+    border: rgb(40, 167, 69)!important;
 }
 
 section:not(#title-address, section:last-of-type) {
