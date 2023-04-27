@@ -46,6 +46,7 @@ export default {
         goBackToDashboard() {
             console.log('GO TO DASHBOARD');
             this.$router.push('/dashboard/apartments');
+            // router.push('/dashboard/apartments');
         }
     
     },

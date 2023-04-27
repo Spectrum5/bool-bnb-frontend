@@ -43,7 +43,7 @@
 }
 
 .my-row {
-    div {
+    div:not(div.previews, div.preview) {
         margin-bottom: 15px;
         padding-bottom: 15px;
         // border-bottom: 1px solid;
