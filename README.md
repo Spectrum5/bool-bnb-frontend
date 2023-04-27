@@ -1,19 +1,14 @@
 ## PRIORITA'
-Ricerca per Filtri (Localita', Stanze, Letti, Servizi, Raggio entro la localita') manca frontend
+Ricerca per Filtri (Localita', Raggio entro la localita')
 Ordine Risultati per Distanza dalla localita'
 Autocompletamento Indirizzo Localita'
-Immagini in Show ed Edit Apartment
-
-Calcolo Coordinate per Apartment Store // OK
-Modale Conferma Apartment Delete // OK
-Aggiunta immagini Apartments // OK
 
 Loader Iniziale con Logo
-LOADER IMMAGINI CARDS
-EFFETTO HOVER CARDS
-GESTIRE VISUALIZZAZIONI
-MOSTRARE VISUALIZZAZIONI NELLE CARDS
-VALIDAZIONI messaggio (compreso tra 10 e 4096 caratteri)
+Loader Immagini Cards
+Effetto Hover Cards
+Gestire Visualizzazioni
+Mostrare Visualizzazioni Nelle Cards
+Validazioni messaggio (compreso tra 10 e 4096 caratteri)
 Statistiche (Visualizzazioni)
 Inserimento di Sponsorizzazione
 Gestione Pagamento
@@ -42,7 +37,7 @@ $hotels = [
 
     ["nome"=> "Casa Belvedere",
     "address"=> "Salita Baratta, 16, 16034 Portofino GE, Italia",
-    "description" => "Una casa di charme nel cuore del centro di Portofino, con camere eleganti e una vista che affaccia sulmare, per un'esperienza di divertimento e storia nella città ligure."],
+    "description" => "Una casa di charme nel cuore del centro di Portofino, con camere eleganti e una vista che affaccia sul mare, per un'esperienza di divertimento e storia nella città ligure."],
 
     ["nome"=> "Casa Excelsior",
     "address"=> "1200 Arch St, Philadelphia, PA 19107, Stati Uniti",

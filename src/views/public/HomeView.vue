@@ -7,6 +7,7 @@ import AppLogo from '../../components/AppLogo.vue';
 import AppHeader from '../../components/AppHeader.vue';
 import AppSearch from '../../components/AppSearch.vue';
 import AppCard from '../../components/AppCard.vue';
+import AppButton from '../../components/AppButton.vue';
 
 export default {
     name: 'HomeView',
@@ -14,7 +15,8 @@ export default {
         AppLogo,
         AppHeader,
         AppSearch,
-        AppCard
+        AppCard,
+        AppButton
     },
     data() {
         return {
@@ -62,7 +64,7 @@ export default {
     <div class="centered" v-if="this.notFound"><p class="mainTitle">Nessun appartamento trovato</p></div>
 
     <div class="btn-container">
-        <button @click="loadMore()">LOAD MORE</button>
+        <AppButton :action="loadmore" :type="'line'" :palette="'primary'" :label="'load more'"/>
     </div>
 </template>
 
