@@ -119,6 +119,8 @@ export default {
                 });
             }
         },
+
+        // VALIDAZIONE DEI DATI
         validateData() {
             // Front End Validation
             console.log('Validazione dati login...');

@@ -29,25 +29,10 @@ export default {
         }
     },
     methods: {
-        addError(message, field) {
-            // Controlla se in store.errors sono presenti errori con lo stesso campo di quello passato
-            // e se non ci sono aggiunge l'errore passato come argomento, altrimenti no
-            if (this.store.errors.length == 0) {
-                this.store.errors.push({
-                    message: message,
-                    field: field
-                });
-            }
-            else {
-                if (!this.store.errors.some(error => error.field == field)) {
-                    this.store.errors.push({
-                        message: message,
-                        field: field
-                    });
-                }
-            }
-        },
-
+        /* FUNZIONER PER OTTENIMENTO APPARTAMENTO SINGOLO +
+        MAPPA +
+        IMMAGINE
+        */
         getApartment() {
             // Richiesta dell'appartamento corrispondente allo slug passato come parametro
             axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}`)
@@ -74,6 +59,8 @@ export default {
                     console.log('Images', response.data);
                 })
         },
+
+        // CARICAMENTO MAPPA
         async getMap() {
             // const map = await fetch(`${this.url_api_tomtom}/1/staticimage?`, {
             //     key: this.api_key_tomtom,
@@ -97,6 +84,29 @@ export default {
                 return true;
             }
         },
+
+        // AGGIUNTA ERRORI PER INVIO MESSAGGIO
+        addError(message, field) {
+            // Controlla se in store.errors sono presenti errori con lo stesso campo di quello passato
+            // e se non ci sono aggiunge l'errore passato come argomento, altrimenti no
+            if (this.store.errors.length == 0) {
+                this.store.errors.push({
+                    message: message,
+                    field: field
+                });
+            }
+            else {
+                if (!this.store.errors.some(error => error.field == field)) {
+                    this.store.errors.push({
+                        message: message,
+                        field: field
+                    });
+                }
+            }
+        },
+
+        // FUNZIONE PER VALIDAZIONI CONTATTI
+
         emailValidation() {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
@@ -136,20 +146,51 @@ export default {
                 messageInput.classList.add('invalid');
             }
         },
-        sendMessage() {
-            console.log('Invio messaggio...');
+        
+        // FUNZIONE PER SHAKE ERROR
+        shakeInputs() {
+            if (this.store.errors.length > 0) {
+                this.store.errors.forEach(error => {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                });
+            }
+        },
+        // VALIDAZIONE DEI DATI AL MOMENTO DEL CLICK S INVIA RICHIESTA
+        validateData() {
+            // Front End Validation
+            console.log('Validazione dati inseriti...');
+            this.store.errors = [];
 
-            axios.post('http://localhost:8000/api/messages', {
-                email: this.message.contactEmail,
-                message: this.message.text,
-                apartment_id: this.apartment.id
-            })
-                .then((response) => {
-                    console.log('Messaggio Inviato', response);
+            this.emailValidation();
+            this.messageValidation();
+
+            this.shakeInputs();
+
+            // Controlla se validazione e' andata a buon fine
+            if (this.store.errors.length == 0){
+
+                console.log('Invio messaggio...');
+    
+                axios.post('http://localhost:8000/api/messages', {
+                    email: this.message.contactEmail,
+                    message: this.message.text,
+                    apartment_id: this.apartment.id
                 })
-                .catch((response) => {
-                    console.log('Errore Messaggio', response.data);
-                })
+                    .then((response) => {
+                        console.log('Messaggio Inviato', response);
+                    })
+                    .catch((response) => {
+                        console.log('Errore Messaggio', response.data);
+                    })
+            }
+            else console.log('Hai inserito dati non corretti. Riprova.');
+        },
+
+        sendMessage() {
+            this.validateData();
         }
     },
     mounted() {
@@ -268,13 +309,20 @@ export default {
                         <div class="group large">
                             <label for="email">Indirizzo email</label>
                             <input type="email" id="email" name="email" placeholder="Inserisci la tua mail"
-                                v-model="message.contactEmail" :disabled="setContactEmail()">
+                                v-model="message.contactEmail" :disabled="setContactEmail()"
+                                v-on:blur="emailValidation()">
                         </div>
                         <div class="row">
                             <div class="group large">
                                 <label for="message" class="form-label mb-1">Scrivi il tuo messaggio</label>
-                                <textarea class="form-control" name="message" id="message" rows="6"
-                                    placeholder="Scrivi il tuo messaggio" v-model="message.text"></textarea>
+                                <textarea
+                                class="form-control"
+                                name="message"
+                                id="message"
+                                rows="6"
+                                placeholder="Scrivi il tuo messaggio"
+                                v-model="message.text"
+                                v-on:blur="messageValidation()" ></textarea>
                             </div>
                         </div>
                         <button type="submit" class="btn my-btn">Invia richiesta</button>
