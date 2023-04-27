@@ -3,6 +3,7 @@
 // Components
 import AppLogo from '../../components/AppLogo.vue';
 import AppButton from '../../components/AppButton.vue';
+import AppSidebar from '../../components/AppSidebar.vue';
 
 // Utilities
 import { store } from '../../store';
@@ -13,29 +14,30 @@ export default {
     name: 'AppDashboardLayout',
     components: {
         AppLogo,
-        AppButton
+        AppButton,
+        AppSidebar
     },
     data() {
         return {
             store,
             router,
-            asideLinks: [
-                {
-                    label: 'apartments',
-                    icon: 'house-chimney',
-                    link: '/dashboard/apartments'
-                },
-                {
-                    label: 'messages',
-                    icon: 'envelope',
-                    link: '/dashboard/messages'
-                },
-                {
-                    label: 'sponsors',
-                    icon: 'layer-group',
-                    link: '/dashboard/sponsors'
-                }
-            ]
+            // asideLinks: [
+            //     {
+            //         label: 'apartments',
+            //         icon: 'house-chimney',
+            //         link: '/dashboard/apartments'
+            //     },
+            //     {
+            //         label: 'messages',
+            //         icon: 'envelope',
+            //         link: '/dashboard/messages'
+            //     },
+            //     {
+            //         label: 'sponsors',
+            //         icon: 'layer-group',
+            //         link: '/dashboard/sponsors'
+            //     }
+            // ]
         }
     },
     props: {
@@ -61,7 +63,8 @@ export default {
 <template>
     <div class="wrapper">
 
-        <aside>
+        <AppSidebar />
+        <!-- <aside>
             <div class="sidebar">
                 <header>
                     <AppLogo />
@@ -76,7 +79,7 @@ export default {
                     </li>
                 </ul>
             </div>
-        </aside>
+        </aside> -->
 
         <div class="rightSide">
 
@@ -116,42 +119,7 @@ export default {
     overflow: hidden;
 }
 
-aside {
-    width: 260px;
-    height: 100vh;
-    border-right: 2px solid $dark-color-one;
 
-    header {
-        @include flexRowCenter;
-        height: 80px;
-    }
-
-    ul {
-        padding: 1rem;
-        list-style: none;
-
-        li {
-            margin-bottom: 0.5rem;
-
-            a {
-                @include flexRowCenter (0.75rem);
-                justify-content: flex-start;
-
-                width: 100%;
-                padding: 0.75rem 1rem;
-                text-transform: capitalize;
-                text-decoration: none;
-                background-color: gray;
-
-                border-radius: $small-border-radius;
-
-                .icon {
-                    font-size: 1.25rem;
-                }
-            }
-        }
-    }
-}
 
 .rightSide {
     height: 100vh;

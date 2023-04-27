@@ -5,10 +5,8 @@ Autocompletamento Indirizzo Localita'
 
 Loader Iniziale con Logo
 Loader Immagini Cards
-Effetto Hover Cards
 Gestire Visualizzazioni
 Mostrare Visualizzazioni Nelle Cards
-Validazioni messaggio (compreso tra 10 e 4096 caratteri)
 Statistiche (Visualizzazioni)
 Inserimento di Sponsorizzazione
 Gestione Pagamento
