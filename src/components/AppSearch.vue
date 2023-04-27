@@ -101,7 +101,7 @@ export default {
             }
         },
         calcUrl() {
-            this.searchUrl = '/apartments/search?';
+            this.searchUrl = '/search?';
 
             let size = 0;
 
@@ -207,7 +207,7 @@ export default {
                             </div>
                         </div>
 
-                        <transition name="fade">
+                        <transition name="fade-slide">
                             <div class="servicesMenu" v-if="servicesMenuOpen">
                                 <h3>Servizi</h3>
                                 <div class="service" v-for="service in allServices">

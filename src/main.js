@@ -43,6 +43,8 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { faMinus } from '@fortawesome/free-solid-svg-icons'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faGear } from '@fortawesome/free-solid-svg-icons'
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 import GoogleMapsAutocomplete from "./components/GoogleMapsAutocomplete.vue";
 
@@ -81,7 +83,9 @@ library.add(faBars,
   faMugSaucer,
   faXmark,
   faMinus,
-  faChevronDown)
+  faChevronDown,
+  faGear,
+  faRightFromBracket)
 
 createApp(App)
   .use(router)
