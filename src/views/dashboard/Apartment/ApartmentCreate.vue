@@ -443,7 +443,7 @@ export default {
                         <label for="visibility">Al momento non disponibile</label>
                     </div>
                     <div>
-                        <label class="mb-2 d-block">Fai conoscere agli utenti tutti i servizi del tuo alloggio</label>
+                        <label class="mb-2 d-block">Fai conoscere agli utenti tutti i servizi del tuo alloggio *</label>
                         <div class="services">
                             <span class="service" v-for="service in services">
                                 <input v-model="form.services" type="checkbox" :name="service.name" :id="service.name"
@@ -454,7 +454,7 @@ export default {
                     </div>
 
                     <div class="group small">
-                        <label for="images">images</label>
+                        <label class="mb-2" for="images">Aggiungi le immagini *</label>
                         <div class="container">
                             <label for="images" class="fakeInput" :class="previewUrls.length >= 3 ? 'disabled' : ''">
                                 <font-awesome-icon icon="fa-solid fa-plus" class="icon" />
@@ -508,14 +508,15 @@ label {
 .previews {
     @include flexRowCenter(5px);
     width: fit-content;
-    padding: 5px;
+    margin-top: 10px;
+    padding: 10px;
     border-radius: $small-border-radius;
     background-color: $light-color-three;
     transition: all 0.1s;
 
     .preview {
-        width: 36px;
-        height: 36px;
+        width: 150px;
+        height: 150px;
         border-radius: 4px;
         border: 1px solid $dark-color-one;
         position: relative;

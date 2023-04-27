@@ -15,7 +15,8 @@ export default {
     data() {
         return {
             router,
-            apartment: null
+            apartment: null,
+            images: [],
             // form: {},
             // allServices: [],
             // selectedServices: []
@@ -28,14 +29,24 @@ export default {
                     console.log('Dati Appartamento', response.data.apartment);
                     this.apartment = response.data.apartment;
 
+                    // Richiede le immagini dopo aver salvato i valori dell'appartamento in this.apartment
+                    this.getImages();
                 })
                 .catch((response) => {
                     console.log('Errore Ottenimento Appartamento', response.data);
                 })
         },
+         getImages() {
+            axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
+                .then((response) => {
+                    this.images = response.data.images;
+                    console.log('Images', response.data);
+                })
+        },
         goBackToDashboard() {
             console.log('GO TO DASHBOARD');
             this.$router.push('/dashboard/apartments');
+            // router.push('/dashboard/apartments');
         }
     
     },
@@ -60,8 +71,9 @@ export default {
 
 <div class="my-container">
     <div v-if="apartment">
+        <!-- SEZIONE IMMAGINI APARTMENT -->
         <div class="img-container">
-            <img src="https://montenapodaily.com/wp-content/uploads/2021/07/Rihanna-villa-a-Beverly-hills-scaled-e1626095351453.jpeg" alt="">
+            <img :src="`http://localhost:8000/storage/apartments/${images[0].url}`" alt="">
         </div>
         <div class="mb">
             <h4>Indirizzo:</h4>
@@ -107,24 +119,25 @@ export default {
     <!-- FINE SPONSOR -->
     <hr>
     <!-- MESSAGGI -->
-    <!-- message, email, first_name, last_name -->
+    <!-- message, email, -->
     <div class="mb">
         <h2>I tuoi messaggi</h2>
-        <!-- <div class="mb" v-if="apartment.messages.length > 0">
+        <div class="mb" v-if="apartment.messages.length > 0">
             <span>Hai {{ apartment.messages.length }} messaggi ricevuti</span>
             <div class="row" v-for="message in apartment.messages">
-                <p>Mittente: {{ message.first_name }} {{ message.last_name }}</p>
-                <p>{{ message.title }}</p>
+                <p>Mittente: {{ message.email }}</p>
+                <p>{{ message.message }}</p>
             </div>
         </div>
-        <div v-else> -->
-        <div>
-            <p>Al momento non hai nessun messaggio!</p>
-            <p>Sponsorizza il tuo appartamento per avere maggiore visibilità! Clicca il bottone in basso</p>
-            <button class="btn btn-sponsor">
-                <font-awesome-icon icon="fa-solid fa-rocket" />
-                Sponsorizza
-            </button>
+        <div v-else>
+            <div>
+                <p>Al momento non hai nessun messaggio!</p>
+                <p>Sponsorizza il tuo appartamento per avere maggiore visibilità! Clicca il bottone in basso</p>
+                <button class="btn btn-sponsor">
+                    <font-awesome-icon icon="fa-solid fa-rocket" />
+                    Sponsorizza
+                </button>
+            </div>
         </div>
     </div>
     <!--FINE MESSAGGI -->
