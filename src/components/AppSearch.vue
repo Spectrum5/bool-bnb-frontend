@@ -85,6 +85,50 @@ export default {
             else if (direction == 'plus') {
                 if (this.form.bathrooms_number < max) this.form.bathrooms_number++;
             }
+        },
+        handleSearch() {
+            if (this.form.address != '' || this.form.rooms_number > 0 || this.form.beds_number > 0 || this.form.bathrooms_number > 0 || this.form.services.length > 0) {
+
+                this.calcUrl();
+                this.$router.push(this.searchUrl);
+
+                if (this.form.address != '') this.store.searchForm.address = this.form.address;
+                if (this.form.rooms_number > 0) this.store.searchForm.rooms_number = this.form.rooms_number;
+                if (this.form.beds_number > 0) this.store.searchForm.beds_number = this.form.beds_number;
+                if (this.form.bathrooms_number > 0) this.store.searchForm.bathrooms_number = this.form.bathrooms_number;
+                if (this.form.services.length > 0) this.store.searchForm.services = this.form.services;
+            }
+        },
+        calcUrl() {
+            this.searchUrl = '/apartments/search?';
+
+            let size = 0;
+
+            // Calcolo numero campi compilati form
+            for (const field in this.form) {
+                if (Array.isArray(this.form[field])) {
+                    if (this.form[field].length > 0) {
+                        size++;
+                    }
+                }
+                else {
+                    if (this.form[field] != null) {
+                        size++;
+                    }
+                }
+            }
+
+            let index = 1;
+            // Generazione Url
+            for (const field in this.form) {
+                if (this.form[field] != null && this.form[field].length > 0) {
+                    this.searchUrl += `${field}=${this.form[field]}`
+                    if (index < size) {
+                        this.searchUrl += '&'
+                    }
+                    index++;
+                }
+            }
         }
     },
     mounted() {
@@ -96,11 +140,12 @@ export default {
 <template>
     <div class="container">
         <div class="searchbar">
-            <form>
+            <form @submit.prevent="handleSearch()">
                 <div class="row">
                     <div class="group">
                         <label for="address">dove</label>
-                        <input type="text" id="address" name="address" placeholder="Inserisci l'indirizzo" v-model="form.address">
+                        <input type="text" id="address" name="address" placeholder="Inserisci l'indirizzo"
+                            v-model="form.address">
                     </div>
 
                     <div class="group">
@@ -171,11 +216,6 @@ export default {
                 </div>
             </form>
         </div>
-
-        <div>current data
-            <br>
-            {{ form }}
-        </div>
     </div>
 </template>
 
@@ -195,7 +235,6 @@ export default {
     padding: 0.75rem;
     box-shadow: 0px 4px 16px 1px #00000060;
     border-radius: $small-border-radius;
-
 
     form {
         .row {
@@ -239,6 +278,7 @@ export default {
                         flex-basis: 100%;
                         margin-bottom: 4px;
                     }
+
                     .service {
                         flex-basis: 50%;
                     }
@@ -287,7 +327,7 @@ export default {
 
 .servicesMenu {
     position: absolute;
-//   transform: translateY(0);
+    //   transform: translateY(0);
 
     top: calc(100% + 25px);
     right: 0;
@@ -295,4 +335,5 @@ export default {
     border: 1px solid $dark-color-one;
     background-color: $light-color-one;
     z-index: 8;
-}</style>
+}
+</style>

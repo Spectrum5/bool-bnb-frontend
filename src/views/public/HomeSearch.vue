@@ -17,16 +17,20 @@ export default {
         getApartments() {
             axios.get('http://localhost:8000/api/apartments', {
                 params: {
-                    title: this.$route.params.title,
-                    page: this.currentPage,
+                    address: this.store.searchForm.address != '' ? this.store.searchForm.address : null,
+                    rooms_number: this.store.searchForm.rooms_number > 0 ? this.store.searchForm.rooms_number : null,
+                    beds_number: this.store.searchForm.beds_number > 0 ? this.store.searchForm.beds_number : null,
+                    bathrooms_number: this.store.searchForm.bathrooms_number > 0 ? this.store.searchForm.bathrooms_number : null,
+                    services: this.store.searchForm.services.length > 0 ? this.store.searchForm.services : [],
+                    page: this.currentPage
                 }
             })
                 .then((response) => {
-                    console.log('Index Appartamenti Cercati', response.data);
+                    console.log('Index Appartamenti con Filtri', response.data);
                     this.apartments = this.apartments.concat(response.data.apartments);
                 })
                 .catch((response) => {
-                    console.log('Errore Index Appartamenti Cercati', response.data);
+                    console.log('Errore Index Appartamenti con Filtri', response.data);
                 })
         },
         loadMore() {
