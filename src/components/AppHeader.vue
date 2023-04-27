@@ -64,7 +64,7 @@ export default {
 
                 <div class="user" @click="menuOpen = !menuOpen">
                     <p>{{ store.user.first_name }} {{ store.user.last_name }}</p>
-                    <font-awesome-icon icon="fa-solid fa-chevron-down" class="icon" />
+                    <font-awesome-icon icon="fa-solid fa-chevron-down" class="icon" :class="menuOpen ? 'rotated' : ''"/>
                 </div>
                 <transition name="fade-slide">
                     <AppMenu :menuData="userMenu" :isLastDanger="true" v-if="menuOpen" />
