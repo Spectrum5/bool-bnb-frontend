@@ -22,7 +22,7 @@ export default {
             servicesMenuOpen: false,
             allServices: [],
             form: {
-                address: '',
+                address: null,
                 rooms_number: 0,
                 beds_number: 0,
                 bathrooms_number: 0,
@@ -132,7 +132,18 @@ export default {
         }
     },
     mounted() {
+
         this.getServices();
+
+        const address = document.querySelector('#address');
+        const autocomplete = new google.maps.places.Autocomplete(address);
+        const self = this;
+        autocomplete.addListener('place_changed', function () {
+            const place = autocomplete.getPlace();
+            const address = place.formatted_address;
+            self.form.address = address;
+            // aggiornamento degli altri campi del form con i dati trovati
+        });
     }
 }
 </script>
@@ -229,6 +240,7 @@ export default {
     @include largeContainer;
     padding: 0 2rem;
     // border: 2px solid red;
+    margin-bottom: 3rem !important;
 }
 
 .searchbar {

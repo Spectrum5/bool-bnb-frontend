@@ -1,5 +1,7 @@
 <script>
 
+import axios from 'axios';
+
 // Components
 import AppLogo from '../../components/AppLogo.vue';
 import AppHeader from '../../components/AppHeader.vue';
@@ -28,8 +30,8 @@ export default {
                 }
             })
                 .then((response) => {
-                    console.log('Index Appartamenti', response.data);
-                    this.apartments = this.apartments.concat(response.data.apartments);
+                    console.log('Index Appartamenti', response.data.apartments.data);
+                    this.apartments = this.apartments.concat(response.data.apartments.data);
                     if(this.apartments.length == 0) {
                         this.notFound = true;
                     }
@@ -54,8 +56,9 @@ export default {
     <AppSearch />
 
     <div class="container" v-if="apartments.length > 0">
-        <AppCard v-for="apartment in apartments" />
+        <AppCard v-for="apartment in apartments" :apartment="apartment"/>
     </div>
+
     <div class="centered" v-if="this.notFound"><p class="mainTitle">Nessun appartamento trovato</p></div>
 
     <div class="btn-container">
@@ -71,5 +74,6 @@ export default {
     @include flexRowCenter;
     @include largeContainer;
     gap: 2.5rem 1.5rem;
+    flex-wrap: wrap;
 }
 </style>

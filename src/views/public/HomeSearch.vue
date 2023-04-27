@@ -3,12 +3,14 @@
 // Utilities
 import axios from 'axios';
 import { router } from '../../router';
+import { store } from '../../store';
 
 export default {
     name: 'HomeSearch',
     data() {
         return {
             router,
+            store,
             currentPage: 1,
             apartments: []
         }
@@ -35,7 +37,8 @@ export default {
         },
         loadMore() {
             this.currentPage++;
-            this.getApartments();
+            // this.getApartments();
+            console.log('store', this.store.searchForm);
         }
     },
     mounted() {
@@ -49,18 +52,18 @@ export default {
 
 <template>
 
-    <div class="container">
+    <!-- <div class="container">
         <label for="searchTitle">Titolo</label>
         <input type="text" id="searchTitle" name="searchTitle" placeholder="Inserisci il titolo...">
         <button @click="handleSearch()">Cerca</button>
-    </div>
+    </div> -->
 
     <div class="container">
 
-        <div class="card" v-for="apartment in apartments" @click="$router.push(`/apartments/${apartment.slug}`)">
+        <!-- <div class="card" v-for="apartment in apartments" @click="$router.push(`/apartments/${apartment.slug}`)">
             <h2>Titolo: {{ apartment.title }}</H2>
             <p>Descrizione: {{ apartment.description }}</p>
-        </div>
+        </div> -->
 
     </div>
     <button @click="loadMore()">LOAD MORE</button>

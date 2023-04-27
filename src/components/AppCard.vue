@@ -185,7 +185,7 @@ button {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    z-index: 20;
+    z-index: 7;
 
     padding-top: 2em;
     background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/66955/web_heart_animation.png');
