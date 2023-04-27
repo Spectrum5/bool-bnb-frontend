@@ -52,6 +52,8 @@ export default {
                 }
             }
         },
+
+        // FUNZIONI PER VALIDAZIONI SINGOLI INPUT
         firstNameValidation() {
             let firstNameInput = document.getElementById('first_name');
             firstNameInput.classList.remove('invalid');
@@ -171,6 +173,19 @@ export default {
                 }
             }
         },
+
+        // FUNZIONE PER SHAKE ERROR
+        shakeInputs() {
+            if (this.store.errors.length > 0) {
+                this.store.errors.forEach(error => {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                });
+            }
+        },
+
         validateData() {
             // Front End Validation
             console.log('Validazione dati registrazione...');
@@ -182,6 +197,8 @@ export default {
             this.passwordValidation();
             this.passwordConfirmationValidation();
             this.dateOfBirthValidation();
+
+            this.shakeInputs();
 
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.postRegisterData();

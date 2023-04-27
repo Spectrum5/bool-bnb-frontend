@@ -50,6 +50,8 @@ export default {
                 }
             }
         },
+
+        // FUNZIONI PER VALIDAZIONI SINGOLI INPUT
         emailValidation() {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
@@ -92,6 +94,8 @@ export default {
                 passwordInput.classList.add('invalid');
             }
         },
+
+        // FUNZIONE PER SHAKE ERROR
         shakeInputs() {
             // V1
             // const emailInput = document.querySelector('#email');
