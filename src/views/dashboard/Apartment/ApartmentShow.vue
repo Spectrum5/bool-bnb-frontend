@@ -45,7 +45,7 @@ export default {
         },
         goBackToDashboard() {
             console.log('GO TO DASHBOARD');
-            this.router.push('/dashboard/apartments');
+            this.$router.push('/dashboard/apartments');
         },
         getImages() {
             axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
@@ -76,7 +76,7 @@ export default {
     <div v-if="apartment">
         <!-- SEZIONE IMMAGINI APARTMENT -->
         <div class="img-container">
-            <img :src="`http://localhost:8000/storage/apartments/${images[0].url}`" alt="">
+            <!-- <img :src="`http://localhost:8000/storage/apartments/${images[0].url}`" alt=""> -->
         </div>
         <div class="mb">
             <h4>Indirizzo:</h4>
