@@ -18,10 +18,13 @@ export default {
     data() {
         return {
             router,
+            store,
             form: {},
             allServices: [],
             selectedServices: [],
-            store,
+            images: [],
+            previewUrls: [],
+
         }
     },
     methods: {
@@ -34,9 +37,21 @@ export default {
                     this.allServices = response.data.services;
                     this.setCheckboxes();
                     this.setVisibility();
+
+                    this.getImages();
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti', response.data);
+                })
+        },
+        getImages() {
+            axios.get(`http://localhost:8000/api/images/${this.form.id}`)
+                .then((response) => {
+                    this.images = response.data.images;
+                    console.log('Images', response.data);
+                })
+                .catch((response) => {
+                    console.log('Errore caricamento img dell\'appartamento', response.data);
                 })
         },
         updateApartment() {
@@ -45,7 +60,6 @@ export default {
                 lat: 37.9312320,
                 lng: -103.6998280,
                 address: this.form.address,
-                image: 'img.1',
                 visibility: !this.form.visibility,
                 price: this.form.price,
                 rooms_number: this.form.rooms_number,
@@ -85,6 +99,39 @@ export default {
             else{
                 return this.form.visibility = false;
             }
+        },
+
+        // sezione immagini
+        addFiles(fieldName, fileList) {
+            this.form.images = fileList;
+            for (let i = 0; i < fileList.length; i++) {
+                this.previewUrls.push(URL.createObjectURL(fileList[i]));
+            }
+            // console.log('Files Aggiunti');
+            // console.log('URL creati', this.previewUrls);
+        },
+        postImages(id) {
+            // console.log('Images', this.form.images);
+            const images = this.form.images;
+            let config = {
+                header: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+            const formData = new FormData();
+            formData.append('apartment_id', id);
+            // console.log('FormData', formData);
+            for (let i = 0; i < images.length; i++) {
+                // console.log('Appending', images[i]);
+                formData.append(`image-${i}`, images[i]);
+            }
+            axios.post('http://localhost:8000/api/images', formData, config)
+                .then((response) => {
+                    // console.log("Images sent correctly");
+                })
+        },
+        deleteImage(index) {
+            this.previewUrls.splice(index, 1);
         }
     },
     created() {
@@ -183,6 +230,28 @@ export default {
                         <label :for="service.name">{{ service.name }}</label>
                     </span>
                    </div>
+                </div>
+                <div class="group small">
+                    <label for="images">images</label>
+                    <div class="container">
+                        <label for="images" class="fakeInput" :class="previewUrls.length >= 3 ? 'disabled' : ''">
+                            <font-awesome-icon icon="fa-solid fa-plus" class="icon" />
+                            add images
+                        </label>
+                        <input name="images" id="images" type="file" accept="image/*" multiple
+                            @change="addFiles($event.target.name, $event.target.files)"
+                            :disabled="previewUrls.length >= 3">
+                        <!-- <transition name="fade"> -->
+                        <div class="previews" v-if="previewUrls.length > 0">
+                            <div class="preview" v-for="url, index in previewUrls">
+                                <img :src="url" alt="Preview">
+                                <button @click.prevent="deleteImage(index)">
+                                    <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
+                                </button>
+                            </div>
+                        </div>
+                        <!-- </transition> -->
+                    </div>
                 </div>
             </div>
             <button v-if="!this.store.editedApartment" type="submit" class="btn my-btn">Aggiorna appartamento</button>
