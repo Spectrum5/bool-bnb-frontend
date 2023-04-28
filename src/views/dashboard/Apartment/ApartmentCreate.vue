@@ -116,19 +116,21 @@ export default {
             }
         },
 
-        // imageValidation() {
-        //     const fileInput = document.getElementById('image');
-        //     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-        //     fileInput.classList.remove('invalid');
+        imageValidation() {
+            const fileInput = document.getElementById('images');
+            const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            fileInput.classList.remove('invalid');
 
-        //     if (!fileInput.value) {
-        //         this.addError('Devi selezionare un\'immagine', 'image');
-        //         fileInput.classList.add('invalid');
-        //     } else if (!allowedExtensions.exec(fileInput.value)) {
-        //         this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'image');
-        //         fileInput.classList.add('invalid');
-        //     }
-        // },
+            this.functionDeleteError('address');
+
+            if (!fileInput.value) {
+                this.addError('Devi selezionare almeno un\'immagine', 'image');
+                fileInput.classList.add('invalid');
+            } else if (!allowedExtensions.exec(fileInput.value)) {
+                this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'image');
+                fileInput.classList.add('invalid');
+            }
+        },
 
         priceValidation() {
             const priceInput = document.getElementById('price');
@@ -173,13 +175,13 @@ export default {
             this.functionDeleteError('beds_number');
 
             if (bedsNumberInput.value.trim().length === 0) {
-                this.addError('Il campo stanze deve essere compilato', 'beds_number');
+                this.addError('Il campo posti letto deve essere compilato', 'beds_number');
                 bedsNumberInput.classList.add('invalid');
             } else if (isNaN(bedsNumberInput.value.trim())) {
-                this.addError('Il campo stanze deve contenere solo numeri', 'beds_number');
+                this.addError('Il campo posti letto deve contenere solo numeri', 'beds_number');
                 bedsNumberInput.classList.add('invalid');
-            } else if (bedsNumberInput.value.trim() <= 0 || bedsNumberInput.value.trim() > 8) {
-                this.addError('Il campo stanze deve essere compreso tra 1 e 8', 'beds_number');
+            } else if (bedsNumberInput.value.trim() <= 0 || bedsNumberInput.value.trim() > 16) {
+                this.addError('Il campo posti letto deve essere compreso tra 1 e 16', 'beds_number');
                 bedsNumberInput.classList.add('invalid');
             }
         },
@@ -252,6 +254,12 @@ export default {
             }
         },
 
+        servicesValidation() {
+            if (this.form.services.length == 0) {
+                this.addError('Devi selezionare almeno un servizio', 'services');
+            }
+        },
+
         // FUNZIONE PER SHAKE ERROR
         shakeInputs() {
             if (this.store.errors.length > 0) {
@@ -276,10 +284,10 @@ export default {
             this.roomsNumberValidation();
             this.bedsNumberValidation();
             this.bathroomsNumberValidation();
-            // this.imageValidation();
             this.descriptionValidation();
             this.visibilityValidation();
-            // this.servicesValidation();
+            this.servicesValidation();
+            this.imageValidation();
             
             this.shakeInputs();
 
@@ -495,7 +503,8 @@ export default {
                             </label>
                             <input name="images" id="images" type="file" accept="image/*" multiple
                                 @change="addFiles($event.target.name, $event.target.files)"
-                                :disabled="previewUrls.length >= 3">
+                                :disabled="previewUrls.length >= 3"
+                                v-on:blur="imageValidation()">
                             <!-- <transition name="fade"> -->
                             <div class="previews" v-if="previewUrls.length > 0">
                                 <div class="preview" v-for="url, index in previewUrls">

@@ -40,7 +40,7 @@ export default {
             axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
                 .then((response) => {
                     this.images = response.data.images;
-                    console.log('Images', response.data);
+                    console.log('Immagini appartamento', response.data);
                 })
         },
         goBackToDashboard() {
@@ -72,7 +72,7 @@ export default {
 <div class="my-container">
     <div v-if="apartment">
         <!-- SEZIONE IMMAGINI APARTMENT -->
-        <div class="img-container">
+        <div class="img-container" v-if="images.length > 0">
             <img :src="`http://localhost:8000/storage/apartments/${images[0].url}`" alt="">
         </div>
         <div class="mb">
