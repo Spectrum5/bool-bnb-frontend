@@ -98,6 +98,7 @@ export default {
                                 Ben tornato,
                                 <br>
                                 {{ store.user.first_name }} {{ store.user.last_name }}
+                                <AppButton :to="'/dashboard/apartments'" :label="'dashboard'" :type="'line'" :palette="'primary'" />
                             </h3>
                         </div>
                         <div class="public" v-else>
@@ -186,7 +187,10 @@ header {
             justify-content: center;
             align-items: center;
             gap: 0.5rem;
+        }
 
+        .public,
+        .auth {
             &:deep a {
                 width: 100%;
                 text-align: center;
