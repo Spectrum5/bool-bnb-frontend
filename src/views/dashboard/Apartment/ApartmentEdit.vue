@@ -131,10 +131,10 @@ export default {
             this.functionDeleteError('address');
 
             if (!fileInput.value) {
-                this.addError('Devi selezionare almeno un\'immagine', 'image');
+                this.addError('Devi selezionare almeno un\'immagine', 'images');
                 fileInput.classList.add('invalid');
             } else if (!allowedExtensions.exec(fileInput.value)) {
-                this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'image');
+                this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'images');
                 fileInput.classList.add('invalid');
             }
         },
@@ -219,14 +219,14 @@ export default {
 
             const descriptionValue = descriptionInput.value.trim();
 
-            if (descriptionValue.length = 0) {
+            if (descriptionValue.trim().length === 0) {
                 this.addError('La descrizione deve essere compilata', 'description');
                 descriptionInput.classList.add('invalid');
             }
-            else if (descriptionValue.length < 10) {
+            else if (descriptionValue.trim() < 10) {
                 this.addError('La descrizione deve essere di almeno 10 caratteri', 'description');
                 descriptionInput.classList.add('invalid');
-            } else if (descriptionValue.length > 4096) {
+            } else if (descriptionValue.trim() > 4096) {
                 this.addError('La descrizione deve essere di massimo 4096 caratteri', 'description');
                 descriptionInput.classList.add('invalid');
             }
@@ -335,6 +335,7 @@ export default {
             })
                 .then((response) => {
                     console.log('Appartamento aggiornato', response);
+                    this.postImages(response.data.apartment_id);
                 })
                 .catch((response) => {
                     console.log('Errore aggiornamento', response.data);
@@ -383,6 +384,7 @@ export default {
                 }
             }
             const formData = new FormData();
+            console.log(id);
             formData.append('apartment_id', id);
             // console.log('FormData', formData);
             for (let i = 0; i < images.length; i++) {
@@ -397,9 +399,17 @@ export default {
         deleteImage(index) {
             this.previewUrls.splice(index, 1);
         },
-        deleteOldImage(index) {
-            this.images.splice(index, 1);
-        }
+        // deleteOldImage(index) {
+        //     this.images.splice(index, 1);
+        // },
+        deleteOldImage(index, i) {
+            this.images.splice(i, 1);
+            axios.delete(`http://localhost:8000/api/images/${index}`)
+                .then((response) => {
+                    console.log('Immagine cancellata con id', index);
+                    // this.getApartments();
+                });
+        },
     },
     created() {
         this.getApartment();
@@ -427,7 +437,7 @@ export default {
         <div class="my-container">
              <!-- FORM PER EDIT -->
 
-        <form @submit.prevent="updateApartment()">
+        <form @submit.prevent="validateData()">
             <div class="my-row row">
                 <div class="group small">
                     <label class="d-block mb-2" for="title">Inserisci nome appartamento: *</label>
@@ -545,7 +555,7 @@ export default {
                             <div class="previews" v-if="images.length > 0">
                                 <div class="preview" v-for="element, index in images">
                                     <img :src="`http://localhost:8000/storage/apartments/${element.url}`" alt="img">
-                                    <button @click.prevent="deleteOldImage(index)">
+                                    <button @click.prevent="deleteOldImage(element.id, index)">
                                         <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
                                     </button>
                                 </div>
