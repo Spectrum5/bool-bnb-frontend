@@ -31,6 +31,7 @@ export default {
     position: absolute;
     top: calc(100% + 10px);
     right: 0;
+    z-index: 20;
     border-radius: $big-border-radius;
     padding: 6px;
     background-color: #ffffff;

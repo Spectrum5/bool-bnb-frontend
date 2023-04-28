@@ -86,7 +86,7 @@ aside {
     }
 }
 
-li::v-deep a {
+li:deep a {
     width: 100%;
     padding: 24px 16px !important;
 }

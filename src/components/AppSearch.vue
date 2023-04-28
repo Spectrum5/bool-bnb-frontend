@@ -1,9 +1,5 @@
 <script>
 
-// Components
-// import AppLogo from './AppLogo.vue';
-// import AppButton from './AppButton.vue';
-
 // Utilities
 import axios from 'axios';
 import { store } from '../store';
@@ -12,8 +8,6 @@ import { router } from '../router';
 export default {
     name: 'AppSearch',
     components: {
-        // AppLogo,
-        // AppButton
     },
     data() {
         return {
@@ -30,30 +24,25 @@ export default {
             }
         }
     },
+    props: {
+        allFields: {
+            type: Boolean,
+            default: false
+        }
+    },
     methods: {
         getServices() {
+            // Ottiene i servizi da mostrare nei filtri
             const url = 'http://127.0.0.1:8000/api';
             axios.get(url + '/services',
 
             ).then(response => {
                 this.allServices = response.data.services;
-                console.log(this.allServices, 'servizi');
+                // console.log('Servizi', this.allServices);
             })
         },
-        // numberInput(direction, value, min, max) {
-        //     if (direction == 'minus') {
-        //         if (value > min) {
-        //             value--;
-        //         }
-        //     }
-        //     else {
-        //         if (value < max) {
-        //             value++;
-        //         }
-        //     }
-        //     console.log(value);
-        // }
         roomsInput(direction) {
+            // Incrementa l'input Camere
             const min = 0;
             const max = 8;
 
@@ -65,6 +54,7 @@ export default {
             }
         },
         bedsInput(direction) {
+            // Incrementa l'input Letti
             const min = 0;
             const max = 16;
 
@@ -76,6 +66,7 @@ export default {
             }
         },
         bathroomsInput(direction) {
+            // Incrementa l'input Letti
             const min = 0;
             const max = 8;
 
@@ -87,6 +78,7 @@ export default {
             }
         },
         handleSearch() {
+            // Se dei parametri sono stati inseriti, rimanda alla pagina di ricerca
             if (this.form.address != '' || this.form.rooms_number > 0 || this.form.beds_number > 0 || this.form.bathrooms_number > 0 || this.form.services.length > 0) {
 
                 this.calcUrl();
@@ -101,6 +93,7 @@ export default {
             }
         },
         calcUrl() {
+            // Calcola l'url
             this.searchUrl = '/search?';
 
             let size = 0;
@@ -133,7 +126,6 @@ export default {
         }
     },
     mounted() {
-
         this.getServices();
 
         const address = document.querySelector('#address');
@@ -150,17 +142,17 @@ export default {
 </script>
 
 <template>
-    <div class="container">
+    <div class="container" :class="!allFields ? 'small' : ''">
         <div class="searchbar">
             <form @submit.prevent="handleSearch()">
                 <div class="row">
                     <div class="group">
-                        <label for="address">dove</label>
-                        <input type="text" id="address" name="address" placeholder="Inserisci l'indirizzo"
+                        <label for="address">dove vuoi andare?</label>
+                        <input type="text" id="address" name="address" placeholder="Digita l'indirizzo"
                             v-model="form.address">
                     </div>
 
-                    <div class="group">
+                    <div class="group" v-if="allFields">
                         <label for="rooms_number">camere minime</label>
                         <div class="numberInput">
                             <div class="button" @click="roomsInput('minus')"><font-awesome-icon icon="fa-solid fa-minus" />
@@ -173,7 +165,7 @@ export default {
                         </div>
                     </div>
 
-                    <div class="group">
+                    <div class="group" v-if="allFields">
                         <label for="beds_number">letti minimi</label>
                         <div class="numberInput">
                             <div class="button" @click="bedsInput('minus')"><font-awesome-icon icon="fa-solid fa-minus" />
@@ -186,7 +178,7 @@ export default {
                         </div>
                     </div>
 
-                    <div class="group">
+                    <div class="group" v-if="allFields">
                         <label for="bathrooms_number">bagni minimi</label>
                         <div class="numberInput">
                             <div class="button" @click="bathroomsInput('minus')"><font-awesome-icon
@@ -199,7 +191,7 @@ export default {
                         </div>
                     </div>
 
-                    <div class="group servicesGroup">
+                    <div class="group servicesGroup" v-if="allFields">
                         <div @click="servicesMenuOpen = !servicesMenuOpen">
                             <label for="services">servizi necessari</label>
                             <div class="iconContainer">
@@ -207,7 +199,7 @@ export default {
                             </div>
                         </div>
 
-                        <transition name="fade-slide">
+                        <transition name="fade-slide-top">
                             <div class="servicesMenu" v-if="servicesMenuOpen">
                                 <h3>Servizi</h3>
                                 <div class="service" v-for="service in allServices">
@@ -238,16 +230,25 @@ export default {
 @use '../styles/partials/transitions.scss' as *;
 
 .container {
-    @include largeContainer;
+    width: 100%;
     padding: 0 2rem;
-    // border: 2px solid red;
     margin-bottom: 3rem !important;
+    
+    &.small {
+        max-width: 960px !important;
+
+        .group:first-child {
+            max-width: unset;
+        }
+    }
 }
 
 .searchbar {
-    padding: 0.75rem;
+    width: 100%;
+    padding: 1rem;
     box-shadow: 0px 4px 16px 1px #00000060;
-    border-radius: $small-border-radius;
+    border-radius: $big-border-radius;
+    background-color: #ffffff;
 
     form {
         .row {
@@ -312,26 +313,24 @@ export default {
 
 .numberInput {
     display: flex;
-    // background-color: blue;
     font-size: 0.95rem;
     border-radius: 10px;
     overflow: hidden;
 
     .value {
-        flex-grow: 1;
+        min-width: 65px;
         padding: 10px 0;
-        background: $light-color-two;
+        flex-grow: 1;
         display: flex;
         justify-content: center;
         align-items: center;
-        min-width: 65px;
+        background: $light-color-two;
     }
 
     .button {
-        display: flex;
-        padding: 10px 0;
-        // height: calc(20px + 0.95rem);
         width: 40px;
+        padding: 10px 0;
+        display: flex;
         justify-content: center;
         align-items: center;
         background-color: gray;
@@ -340,13 +339,11 @@ export default {
 
 .servicesMenu {
     position: absolute;
-    //   transform: translateY(0);
-
     top: calc(100% + 25px);
     right: 0;
+    z-index: 5;
     padding: 6px;
     border: 1px solid $dark-color-one;
     background-color: $light-color-one;
-    z-index: 8;
 }
 </style>

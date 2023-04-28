@@ -25,10 +25,11 @@ export default {
     },
     methods: {
         getImages() {
+            // Ottiene le immagini relative all'appartamento
             axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
                 .then((response) => {
                     this.images = response.data.images;
-                    console.log('Images', response.data);
+                    // console.log(`Immagini di ${this.apartment.id} ottenute`, response.data);
                 })
         },
         goShow() {
@@ -36,7 +37,7 @@ export default {
             this.$router.push(`/apartments/${this.apartment.slug}`)
         },
         addToFavorites() {
-            console.log(`${this.apartment.title} aggiunto ai preferiti!`);
+            // console.log(`${this.apartment.title} aggiunto ai preferiti!`);
             this.$refs.btn.classList.toggle('animate');
         }
     },
@@ -51,14 +52,13 @@ export default {
 }
 </script>
 
-
 <template>
     <div class="card" tabindex="0">
 
         <button class="cardFavorites" @click.stop="addToFavorites()" ref="btn"></button>
 
         <div class="imageContainer">
-            <AppSlider :images="this.images" v-if="this.images" @goShowEvent="goShow()"/>
+            <AppSlider :images="this.images" v-if="this.images" @goShowEvent="goShow()" />
         </div>
 
         <div class="infoContainer" @click="goShow()">
@@ -83,32 +83,40 @@ export default {
     </div> <!-- /card-->
 </template>
 
-
 <style lang="scss" scoped>
-// @use '../styles/partials/variables.scss' as *;
+@use '../styles/partials/variables.scss' as *;
 
-$cardWidth: 260px;
-$border-radius-small: 12px;
-$color-three-light: #faa95e;
-$color-three-dark: #f39237;
+@media screen and (max-width:840px) {
+    $cardWidth: 310px;
 
-// @mixin customOutline {
-//     outline-style: solid;
-//     outline-color: $color-three-dark;
-//     outline-offset: 2px;
-//     outline-width: 0px;
+    .card {
+        width: $cardWidth;
 
-//     transition: outline-width 0.05s, outline-color 0.03s;
+        .imageContainer {
+            height: $cardWidth;
+        }
 
-//     &:hover,
-//     &:focus-visible {
-//         outline-width: 2px;
-//     }
+        .cardTitle {
+            max-width: calc($cardWidth - 40px);
+        }
+    }
+}
 
-//     &:active {
-//         outline-color: $color-three-light;
-//     }
-// }
+@media screen and (min-width:820px) {
+    $cardWidth: 280px;
+
+    .card {
+        width: $cardWidth;
+
+        .imageContainer {
+            height: $cardWidth;
+        }
+
+        .cardTitle {
+            max-width: calc($cardWidth - 40px);
+        }
+    }
+}
 
 button {
     background: none;
@@ -116,19 +124,15 @@ button {
 }
 
 .card {
-    width: $cardWidth;
     position: relative;
     cursor: pointer;
-    border-radius: $border-radius-small;
-
-    // @include customOutline;
+    border-radius: $big-border-radius;
 
     .imageContainer {
-        height: $cardWidth;
         margin-bottom: 0.75rem;
         transition: all 0.3s;
 
-        border-radius: $border-radius-small;
+        border-radius: $big-border-radius;
         background-color: rgb(181, 241, 181);
     }
 
@@ -140,13 +144,11 @@ button {
     }
 
     .cardTitle {
-        max-width: calc($cardWidth - 40px);
-
         flex-grow: 1;
         flex-shrink: 0;
         font-size: 0.8rem;
         margin-bottom: 2px;
-        
+
         h3 {
             text-overflow: ellipsis;
             overflow: hidden;
@@ -173,19 +175,13 @@ button {
             font-weight: 600;
         }
     }
-
-    // &:hover {
-    //     .imageContainer img {
-    //         transform: scale(1.05);
-    //     }
-    // }
 }
 
 .cardFavorites {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    z-index: 7;
+    z-index: 5;
 
     padding-top: 2em;
     background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/66955/web_heart_animation.png');
@@ -210,5 +206,4 @@ button {
     100% {
         background-position: right
     }
-}
-</style>
+}</style>
