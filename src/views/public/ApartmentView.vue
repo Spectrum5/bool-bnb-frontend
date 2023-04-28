@@ -131,6 +131,10 @@ export default {
                 this.addError('La tua email contiene caratteri non permessi', 'email');
                 emailInput.classList.add('invalid');
             }
+            else {
+                const index = this.store.errors.findIndex(error => error.field === "email");
+                this.store.errors.splice(index, 1);
+            }
         },
 
         messageValidation() {
@@ -145,6 +149,9 @@ export default {
             } else if (messageValue.length > 4096) {
                 this.addError('Il messaggio deve essere di massimo 4096 caratteri', 'message');
                 messageInput.classList.add('invalid');
+            } else {
+                const index = this.store.errors.findIndex(error => error.field === "message");
+                this.store.errors.splice(index, 1);
             }
         },
         
