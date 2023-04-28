@@ -4,6 +4,8 @@
 import AppLogo from '../../components/AppLogo.vue';
 import AppFooter from '../../components/AppFooter.vue';
 import AppErrorForm from '../../components/AppErrorForm.vue';
+import AppButton from '../../components/AppButton.vue';
+
 
 // Utilities
 import { store } from '../../store';
@@ -16,7 +18,8 @@ export default {
     components: {
         AppLogo,
         AppFooter,
-        AppErrorForm
+        AppErrorForm,
+        AppButton
     },
     data() {
         return {
@@ -281,7 +284,7 @@ export default {
                     </div>
 
                     <div class="row">
-                        <button class="btn">registrati</button>
+                        <AppButton :label="'register'" :type="'solid'" :palette="'primary'" />
                     </div>
                     <AppErrorForm v-if="store.errors.length > 0" />
                 </form>
@@ -342,6 +345,10 @@ form .row {
     margin-bottom: 0;
 }
 
+.row:last-child::v-deep button {
+    width: 100%;
+}
+
 @media screen and (min-width: 500px) {
     .row {
         @include flexRowCenter(0.25rem);
@@ -350,6 +357,9 @@ form .row {
         .group {
             flex-grow: 1;
         }
+    }
+    form .row {
+        margin-bottom: 1rem;
     }
 }
 </style>
