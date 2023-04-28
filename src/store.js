@@ -17,8 +17,12 @@ export const store = reactive({
         bathrooms_number: null,
         services: []
     },
- 
+
     // modale giada
     showModal: false,
     editedApartment: false,
+
+    clear() {
+        this.overlayOpen = false
+    }
 })

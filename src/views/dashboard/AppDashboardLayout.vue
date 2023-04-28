@@ -1,14 +1,14 @@
 <script>
 
+// Utilities
+import axios from 'axios';
+import { store } from '../../store';
+import { router } from '../../router';
+
 // Components
 import AppLogo from '../../components/AppLogo.vue';
 import AppButton from '../../components/AppButton.vue';
 import AppSidebar from '../../components/AppSidebar.vue';
-
-// Utilities
-import { store } from '../../store';
-import { router } from '../../router';
-import axios from 'axios';
 
 export default {
     name: 'AppDashboardLayout',
@@ -20,24 +20,7 @@ export default {
     data() {
         return {
             store,
-            router,
-            // asideLinks: [
-            //     {
-            //         label: 'apartments',
-            //         icon: 'house-chimney',
-            //         link: '/dashboard/apartments'
-            //     },
-            //     {
-            //         label: 'messages',
-            //         icon: 'envelope',
-            //         link: '/dashboard/messages'
-            //     },
-            //     {
-            //         label: 'sponsors',
-            //         icon: 'layer-group',
-            //         link: '/dashboard/sponsors'
-            //     }
-            // ]
+            router
         }
     },
     props: {
@@ -53,9 +36,10 @@ export default {
             this.store.user = null;
             console.log('Logged Out');
             router.push('/');
-        },
+        }
     },
     mounted() {
+        this.$nextTick(this.store.clear());
     }
 }
 </script>
@@ -64,22 +48,6 @@ export default {
     <div class="wrapper">
 
         <AppSidebar />
-        <!-- <aside>
-            <div class="sidebar">
-                <header>
-                    <AppLogo />
-                </header>
-
-                <ul>
-                    <li v-for="item in asideLinks">
-                        <router-link :to="item.link">
-                            <font-awesome-icon class="icon" :icon="`fa-solid fa-${item.icon}`" />
-                            <span class="label">{{ item.label }}</span>
-                        </router-link>
-                    </li>
-                </ul>
-            </div>
-        </aside> -->
 
         <div class="rightSide">
 
@@ -92,13 +60,6 @@ export default {
             <div class="content">
                 <header>
                     <h2 class="mainTitle">{{ this.title }}</h2>
-
-                    <!-- <div class="create" @click="this.button.action" v-if="this.button">
-                        <button class="btn btn-create">
-                            <font-awesome-icon :icon="`fa-solid fa-${this.button.icon}`" />
-                            {{ this.button.label }}
-                        </button>
-                    </div> -->
                     <AppButton v-if="button" :to="button.link ?? null" :action="button.action ?? null" :label="button.label" :icon="button.icon ?? null" :type="'solid'" :palette="'primary'"/>
                 </header>
 
@@ -138,8 +99,6 @@ export default {
 
         display: flex;
         flex-direction: column;
-        // justify-content: center;
-        // align-items: center;
 
         header {
             width: 100%;

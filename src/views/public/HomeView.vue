@@ -53,6 +53,7 @@ export default {
         }
     },
     mounted() {
+        this.$nextTick(this.store.clear());
         this.getApartments();
     }
 }
