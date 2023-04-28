@@ -47,7 +47,6 @@ export default {
         getFormData() {
             axios.get('http://localhost:8000/api/apartments/create')
                 .then(response => {
-                    // console.log(response.data.services);
                     this.services = response.data.services;
                 })
         },
@@ -72,10 +71,20 @@ export default {
             }
         },
 
+        functionDeleteError(fieldName) {
+            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+            const index = this.store.errors.findIndex(error => error.field === fieldName);
+            if (index >= 0) {
+                this.store.errors.splice(index, 1);
+            }
+        },
+
         titleValidation() {
             // Title Length
             const titleInput = document.getElementById('title');
             titleInput.classList.remove('invalid');
+
+            this.functionDeleteError('title');
 
             if (titleInput.value.trim().length === 0) {
                 this.addError('Il campo nome deve essere compilato', 'title');
@@ -92,6 +101,8 @@ export default {
         addressValidation() {
             const addressInput = document.getElementById('address');
             addressInput.classList.remove('invalid');
+
+            this.functionDeleteError('address');
 
             if (addressInput.value.trim().length === 0) {
                 this.addError('Il campo indirizzo deve essere compilato', 'address');
@@ -123,6 +134,8 @@ export default {
             const priceInput = document.getElementById('price');
             priceInput.classList.remove('invalid');
 
+            this.functionDeleteError('price');
+
             if (priceInput.value.trim().length === 0) {
                 this.addError('Il campo prezzo deve essere compilato', 'price');
                 priceInput.classList.add('invalid');
@@ -139,6 +152,8 @@ export default {
             const roomsNumberInput = document.getElementById('rooms_number');
             roomsNumberInput.classList.remove('invalid');
 
+            this.functionDeleteError('rooms_number');
+
             if (roomsNumberInput.value.trim().length === 0) {
                 this.addError('Il campo stanze deve essere compilato', 'rooms_number');
                 roomsNumberInput.classList.add('invalid');
@@ -151,9 +166,29 @@ export default {
             }
         },
 
+        bedsNumberValidation() {
+            const bedsNumberInput = document.getElementById('beds_number');
+            bedsNumberInput.classList.remove('invalid');
+
+            this.functionDeleteError('beds_number');
+
+            if (bedsNumberInput.value.trim().length === 0) {
+                this.addError('Il campo stanze deve essere compilato', 'beds_number');
+                bedsNumberInput.classList.add('invalid');
+            } else if (isNaN(bedsNumberInput.value.trim())) {
+                this.addError('Il campo stanze deve contenere solo numeri', 'beds_number');
+                bedsNumberInput.classList.add('invalid');
+            } else if (bedsNumberInput.value.trim() <= 0 || bedsNumberInput.value.trim() > 8) {
+                this.addError('Il campo stanze deve essere compreso tra 1 e 8', 'beds_number');
+                bedsNumberInput.classList.add('invalid');
+            }
+        },
+
         bathroomsNumberValidation() {
             const bathroomsNumberInput = document.getElementById('bathrooms_number');
             bathroomsNumberInput.classList.remove('invalid');
+
+            this.functionDeleteError('bathrooms_number');
 
             if (bathroomsNumberInput.value.trim().length === 0) {
                 this.addError('Il campo numero di bagni deve essere compilato', 'bathrooms_number');
@@ -171,6 +206,8 @@ export default {
             const descriptionInput = document.getElementById('description');
             descriptionInput.classList.remove('invalid');
 
+            this.functionDeleteError('description');
+
             const descriptionValue = descriptionInput.value.trim();
 
             if (descriptionValue.length < 10) {
@@ -185,6 +222,8 @@ export default {
         sizeValidation() {
             const sizeInput = document.getElementById('size');
             sizeInput.classList.remove('invalid');
+
+            this.functionDeleteError('size');
 
             if (sizeInput.value.trim().length === 0) {
                 this.addError('Il campo Inserisci i mq deve essere compilato', 'size');
@@ -205,33 +244,25 @@ export default {
             const visibilityInput = document.getElementById('visibility');
             visibilityInput.classList.remove('invalid');
 
+            this.functionDeleteError('visibility');
+
             if (this.form.visibility !== true && this.form.visibility !== false) {
                 this.addError('Il campo visibilità non è valido', 'visibility');
                 visibilityInput.classList.add('invalid');
             }
         },
 
-        // latValidation() {
-        //     // Latitude Validation
-        //     const latInput = document.getElementById('lat');
-        //     latInput.classList.remove('invalid');
-
-        //     if (isNaN(latInput.value) || latInput.value < -90 || latInput.value > 90) {
-        //         this.addError('Inserisci una latitudine valida', 'lat');
-        //         latInput.classList.add('invalid');
-        //     }
-        // },
-
-        // lngValidation() {
-        //     // Longitude Validation
-        //     const lngInput = document.getElementById('lng');
-        //     lngInput.classList.remove('invalid');
-
-        //     if (isNaN(lngInput.value) || lngInput.value < -180 || lngInput.value > 180) {
-        //         this.addError('Inserisci una longitudine valida', 'lng');
-        //         lngInput.classList.add('invalid');
-        //     }
-        // },
+        // FUNZIONE PER SHAKE ERROR
+        shakeInputs() {
+            if (this.store.errors.length > 0) {
+                this.store.errors.forEach(error => {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                });
+            }
+        },
 
         validateData() {
             // Front End Validation
@@ -239,19 +270,21 @@ export default {
             // Reset Form Validation
             this.store.errors = [];
             this.titleValidation();
-            // this.latValidation();
-            // this.lngValidation();
-            this.addressValidation();
-            // this.imageValidation();
-            this.visibilityValidation();
             this.priceValidation();
-            this.roomsNumberValidation();
-            this.bathroomsNumberValidation();
-            this.descriptionValidation();
             this.sizeValidation();
+            this.addressValidation();
+            this.roomsNumberValidation();
+            this.bedsNumberValidation();
+            this.bathroomsNumberValidation();
+            // this.imageValidation();
+            this.descriptionValidation();
+            this.visibilityValidation();
             // this.servicesValidation();
+            
+            this.shakeInputs();
 
             // https://api.tomtom.com/search/2/geocode/Piazza del Colosseo, 1, 00184 Roma RM.json?key=Vru3uP06eapOxpYMujwrRlVLMB5Vkqch&typeahead=true&limit=1&radius=500
+            
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) {
                 // async getMap() {
