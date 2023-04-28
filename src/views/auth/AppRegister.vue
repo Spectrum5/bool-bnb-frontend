@@ -232,7 +232,7 @@ export default {
                 <form @submit.prevent="handleRegister()">
 
                     <!-- First Name & Last Name -->
-                    <div class="row inline-center">
+                    <div class="row">
                         <div class="group small">
                             <label for="first_name">nome *</label>
                             <input type="text" id="first_name" name="first_name" placeholder="Il tuo nome"
@@ -256,7 +256,7 @@ export default {
                     </div>
 
                     <!-- Password & Password Confirmation -->
-                    <div class="row inline-center">
+                    <div class="row">
                         <div class="group small">
                             <label for="password">password *</label>
                             <input type="password" id="password" name="password" placeholder="La tua password"
@@ -283,7 +283,7 @@ export default {
                     <div class="row">
                         <button class="btn">registrati</button>
                     </div>
-                    <AppErrorForm v-if="store.errors.length > 0"/>
+                    <AppErrorForm v-if="store.errors.length > 0" />
                 </form>
                 <router-link to="/login" class="customLink">Hai gia' un account? Accedi.</router-link>
                 <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
@@ -299,11 +299,15 @@ export default {
 @use '../../styles/partials/mixins.scss' as *;
 @use '../../styles/partials/form.scss' as *;
 
-.row.inline-center {
-    .group {
-        flex-grow: 1;
-    }
+.row {
+    margin-bottom: 0;
 }
+
+.group {
+    flex-grow: 1;
+    margin-bottom: 0.8rem;
+}
+
 
 .campi-required {
     font-size: 0.75rem;
@@ -332,5 +336,20 @@ header {
 
 main {
     height: 100vh;
+}
+
+form .row {
+    margin-bottom: 0;
+}
+
+@media screen and (min-width: 500px) {
+    .row {
+        @include flexRowCenter(0.25rem);
+        width: 100%;
+
+        .group {
+            flex-grow: 1;
+        }
+    }
 }
 </style>
