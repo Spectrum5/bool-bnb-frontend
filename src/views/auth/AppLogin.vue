@@ -223,7 +223,7 @@ main {
     height: 100vh;
 }
 
-.row:last-child::v-deep button {
+.row:last-child:deep button {
     width: 100%;
 }
 

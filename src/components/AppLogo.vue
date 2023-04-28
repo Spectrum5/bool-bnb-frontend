@@ -29,19 +29,13 @@ export default {
 @use '../styles/partials/mixins.scss' as *;
 
 .logoContainer {
-    width: 150px;
     height: 30px;
-
+    
     >img {
         width: 100%;
         height: 100%;
         object-fit: contain;
         display: block;
     }
-
-   
-
-    
 }
-
 </style>

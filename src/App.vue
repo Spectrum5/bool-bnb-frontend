@@ -1,18 +1,17 @@
 <script>
 
 // Utilities
-import { store } from './store';
-import { router } from './router';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
+import { store } from './store';
+import { router } from './router';
 
 export default {
     name: 'App',
-    components: {
-    },
     data() {
         return {
-            store
+            store,
+            router
         }
     },
     methods: {

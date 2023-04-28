@@ -9,7 +9,7 @@ export const store = reactive({
     errors: [],
     user: null,
     filterModalOpen: false,
-    
+    overlayOpen: false,
     searchForm: {
         address: null,
         rooms_number: null,

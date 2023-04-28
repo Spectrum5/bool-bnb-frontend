@@ -1,33 +1,75 @@
 //              576         767          992      
 // extra small   |   small   |   medium   |   large
 
-$breakpoints: (
-    'extra-small': 576px,
-    'small': 767px,
-    'medium': 992px,
-    'large': 1200px,
-    'extra-large': 1860px,
-);
+// $breakpoints: (
+//     'extra-small': 576px,
+//     'small': 767px,
+//     'medium': 992px,
+//     'large': 1200px,
+//     'extra-large': 1860px,
+// );
 
-$cardSizes: (
-    'small': 230px,
-    'medium': 260px,
-    'large': 100%
-);
+// $cardSizes: (
+//     'small': 230px,
+//     'medium': 260px,
+//     'large': 100%
+// );
 
-@mixin responsiveContainer {
+// @mixin responsiveContainer {
 
-    @each $name, $size in $breakpoints {
+//     @each $name, $size in $breakpoints {
 
-        @if $size <=576px {
-            $size: 100%;
-        }
+//         @if $size <=576px {
+//             $size: 100%;
+//         }
 
-        // @debug($size);
+//         // @debug($size);
 
-        @media screen and (min-width: $size) {
-            // @debug('media'$size);
-            max-width: calc($size - 100px);
-        }
-    }
-}
+//         @media screen and (min-width: $size) {
+//             // @debug('media'$size);
+//             max-width: calc($size - 100px);
+//         }
+//     }
+// }
+
+// @mixin responsiveContainer {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     gap: 2.5rem 3rem;
+
+//     @media screen and (max-width:1620px) {
+//         // .col {
+//         //     border: 3px solid green;
+//         //     flex-basis: calc(20% - (9rem / 4));
+//         // }
+//     }
+
+//     @media screen and (max-width:1120px) {
+//         // .col {
+//         //     border: 3px solid yellow;
+//         //     flex-basis: calc((100% / 3) - (6rem / 2));
+//         // }
+//     }
+
+
+
+//     @media screen and (max-width:759px) {
+//         // .col {
+//         //     flex-basis: 100%;
+//         //     border: 3px solid red;
+//         // }
+//     }
+
+
+//     @media screen and (max-width:760px) {
+//         // .col {
+//         //     border: 3px solid orange;
+//         //     flex-basis: calc(50% - 1.5rem);
+//         // }
+//     }
+
+ 
+
+
+// }
