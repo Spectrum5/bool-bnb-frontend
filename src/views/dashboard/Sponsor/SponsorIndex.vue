@@ -29,7 +29,6 @@ export default {
 </script>
 
 <template>
-
     <AppDashboardLayoutVue :title="'Piani di Sponsor'">
         <main>
 
@@ -76,26 +75,19 @@ export default {
 @use '../../../styles/partials/mixins.scss' as *;
 
 main {
-    width: 100%;
+    max-width: calc(100vw - 200px);
     height: 100%;
     flex-grow: 1;
     overflow: auto;
     padding: 1rem;
-    display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .container {
-    // display: flex;
-    // justify-content: flex-start;
-    // align-items: center;
-    // min-height: 100vh;
-    // margin-top: 5rem;
-    // background-color: red;
 
     .cards {
         @include flexRowCenter;
-        align-items: center;
         flex-wrap: wrap;
 
         .card {
@@ -115,6 +107,10 @@ main {
                     vertical-align: top;
                 }
             }
+
+            &:hover {
+                transform: scale(1.2);
+            }
         }
 
         .shadow {
@@ -127,10 +123,6 @@ main {
                 rgb(163, 240, 218) 0%,
                 rgba(105, 111, 221, 1) 100%);
         color: #fff;
-        display: flex;
-        align-items: center;
-        transform: scale(1.1);
-        z-index: 1;
     }
 
     ul li {
@@ -156,6 +148,13 @@ main {
             color: #fff;
             border: none;
             font-weight: bold;
+            cursor: pointer;
+
+            &:hover {
+                background: linear-gradient(135deg,
+                        rgba(105, 217, 221) 0%,
+                        rgb(163, 168, 240, 1) 100%);
+            }
         }
     }
 
@@ -181,8 +180,13 @@ main {
     }
 }
 
+// Media Query
 
 @media (min-width: 320px) and (max-width: 768px) {
+    main {
+    max-width: 100vw;
+
+    }
     .cards {
         display: flex;
         flex-direction: column;
@@ -193,34 +197,33 @@ main {
     }
 
     .cards .card.active {
-        transform: scale(1);
+        transform: scale(1.1);
     }
 }
 
-@media (min-width: 600px) and (max-width: 700px) {
-    .card {
-        margin-bottom: 1rem;
-        margin-right: 1rem;
-    }
-
-    .cards .card.active {
-        transform: scale(1);
+@media (min-width: 768px) and (max-width: 1209px) {
+    main {
+        .card {
+            margin: 5px;
+        }
+        
     }
 }
 
-@media (min-width: 768px) and (max-width: 900px) {
-    .cards {
+@media (min-width: 1210px) {
+    main {
+        height: 100%;
+        flex-grow: 1;
+        overflow: auto;
+        padding: 1rem;
+        justify-content: center;
+        align-items: center;
         display: flex;
-        height: fit-content;
-    }
 
-    .card {
-        margin-bottom: 2rem;
-        margin-right: 1rem;
-    }
 
-    .cards .card.active {
-        transform: scale(1);
+        .card {
+            margin: 5px;
+        }
     }
 }
 </style>
