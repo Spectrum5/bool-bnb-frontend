@@ -5,6 +5,7 @@ import { store } from './store';
 import HomeView from './views/public/HomeView.vue';
 import ApartmentView from './views/public/ApartmentView.vue';
 import HomeSearch from './views/public/HomeSearch.vue';
+import NotFoundView from './views/public/NotFoundView.vue';
 
 // Authentication Pages
 import AppLogin from './views/auth/AppLogin.vue';
@@ -114,6 +115,12 @@ const router = createRouter({
         //     name: 'apartment-search',
         //     component: HomeSearch
         // },
+
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
+            component: NotFoundView
+        },
 
         
 
