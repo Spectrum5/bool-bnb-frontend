@@ -22,7 +22,9 @@ export default {
         return {
             store,
             apartments: [],
-            apartmentsError: false
+            apartmentsError: false,
+            currentPage: 1,
+            callOk: true
         }
     },
     methods: {
@@ -33,8 +35,14 @@ export default {
                 }
             })
                 .then((response) => {
-                    console.log('Index Appartamenti', response.data.apartments.data);
-                    if (response.data.success) this.apartments = this.apartments.concat(response.data.apartments.data);
+                    if (response.data.success) {
+                        if (response.data.apartments.current_page == 1) {
+                            this.apartments = response.data.apartments.data;
+                        }
+                        else if (response.data.apartments.current_page <= response.data.apartments.last_page) {
+                            this.apartments = this.apartments.concat(response.data.apartments.data);
+                        }
+                    }
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti', response.data);
@@ -42,13 +50,36 @@ export default {
         },
         loadMore() {
             this.currentPage++;
+            console.log('LOAD MORE');
             this.getApartments();
+        },
+        applyInfiniteScroll() {
+            console.log('INFINITE SCROLL OK')
+            const self = this;
+            window.onscroll = function () {
+                if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 1) {
+                    // sei arrivato alla fine della pagina
+                    // console.log('SCROLL',window.innerHeight + window.pageYOffset)
+                    
+                    if (self.callOk) {
+                        self.loadMore();
+                        self.callOk = false;
+                        setTimeout(() => {
+                            self.callOk = true;
+                        }, 1500)
+                    }
+                }
+            };
         }
     },
     mounted() {
         document.title = 'Boolbnb | Home'
-        this.$nextTick(this.store.clear());
         this.getApartments();
+        this.$nextTick(this.store.clear());
+
+        setTimeout(() => {
+            this.applyInfiniteScroll();
+        }, 3500)
     }
 }
 </script>
@@ -61,7 +92,7 @@ export default {
             </div>
         </template>
 
-        <div class="container cards" v-if="apartments.length > 0">
+        <div class="container cards" id="cardsContainer" v-if="apartments.length > 0">
             <h2 class="mainTitle">esplora</h2>
             <AppCard v-for="apartment in apartments" :apartment="apartment" />
         </div>
@@ -70,9 +101,9 @@ export default {
             <p class="mainTitle">Nessun appartamento trovato</p>
         </div>
 
-        <div class="btn-container">
-            <AppButton :action="loadmore" :type="'line'" :palette="'primary'" :label="'load more'" />
-        </div>
+        <!-- <div class="btn-container">
+            <AppButton :action="loadMore" :type="'line'" :palette="'primary'" :label="'load more'" />
+        </div> -->
     </PublicPageLayout>
 </template>
 
