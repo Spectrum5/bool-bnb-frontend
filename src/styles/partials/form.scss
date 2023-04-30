@@ -65,6 +65,9 @@ form .row {
                     animation: horizontalShake 0.2s forwards;
                 }
             }
+            &::placeholder {
+                font-size: clamp(0.9rem, 5vw, 1.05rem);
+            }
         }
 
         .fakeInput {
