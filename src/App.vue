@@ -35,7 +35,7 @@ export default {
     },
     mounted() {
         // Richiediamo lo User alla creazione della pagina per ripristinare la sessione precedente, se ancora valida
-        this.getUser();
+        // this.getUser();
     }
 }
 </script>
