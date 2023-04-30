@@ -39,15 +39,15 @@ export default {
          closeX() {
           this.close = !this.close;
          },
-         getServices() {
-            const url = 'http://127.0.0.1:8000/api';
-            axios.get(url + '/services',              
+        //  getServices() {
+        //     const url = 'http://127.0.0.1:8000/api';
+        //     axios.get(url + '/services',              
                 
-            ).then(response => {
-                 this.services = response.data.services;
-                 console.log(this.services, 'servizi');
-            })
-         },
+        //     ).then(response => {
+        //          this.services = response.data.services;
+        //          console.log(this.services, 'servizi');
+        //     })
+        //  },
 
         getApartment() {
             const url = 'http://127.0.0.1:8000/api';

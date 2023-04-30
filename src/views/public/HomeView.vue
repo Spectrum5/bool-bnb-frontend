@@ -5,28 +5,24 @@ import axios from 'axios';
 import { store } from '../../store';
 
 // Components
-import AppLogo from '../../components/AppLogo.vue';
-import AppHeader from '../../components/AppHeader.vue';
+import PublicPageLayout from './PublicPageLayout.vue';
 import AppSearch from '../../components/AppSearch.vue';
 import AppCard from '../../components/AppCard.vue';
 import AppButton from '../../components/AppButton.vue';
-import AppOverlay from '../../components/AppOverlay.vue';
 
 export default {
     name: 'HomeView',
     components: {
-        AppLogo,
-        AppHeader,
+        PublicPageLayout,
         AppSearch,
         AppCard,
-        AppButton,
-        AppOverlay
+        AppButton
     },
     data() {
         return {
             store,
             apartments: [],
-            notFound: false
+            apartmentsError: false
         }
     },
     methods: {
@@ -38,10 +34,7 @@ export default {
             })
                 .then((response) => {
                     console.log('Index Appartamenti', response.data.apartments.data);
-                    this.apartments = this.apartments.concat(response.data.apartments.data);
-                    if (this.apartments.length == 0) {
-                        this.notFound = true;
-                    }
+                    if (response.data.success) this.apartments = this.apartments.concat(response.data.apartments.data);
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti', response.data);
@@ -53,6 +46,7 @@ export default {
         }
     },
     mounted() {
+        document.title = 'Boolbnb | Home'
         this.$nextTick(this.store.clear());
         this.getApartments();
     }
@@ -60,31 +54,30 @@ export default {
 </script>
 
 <template>
-    <AppHeader />
+    <PublicPageLayout>
+        <template v-slot:hero-section>
+            <div class="hero-section">
+                <AppSearch :allFields="false" />
+            </div>
+        </template>
 
-    <div class="hero-section">
-        <AppSearch :allFields="false" />
-    </div>
+        <div class="container cards" v-if="apartments.length > 0">
+            <h2 class="mainTitle">esplora</h2>
+            <AppCard v-for="apartment in apartments" :apartment="apartment" />
+        </div>
 
-    <div class="container cards" v-if="apartments.length > 0">
-        <h2 class="mainTitle">esplora</h2>
-        <AppCard v-for="apartment in apartments" :apartment="apartment" />
-    </div>
+        <div class="message" v-else>
+            <p class="mainTitle">Nessun appartamento trovato</p>
+        </div>
 
-    <div class="centered" v-if="this.notFound">
-        <p class="mainTitle">Nessun appartamento trovato</p>
-    </div>
-
-    <div class="btn-container">
-        <AppButton :action="loadmore" :type="'line'" :palette="'primary'" :label="'load more'" />
-    </div>
-
-    <AppOverlay v-if="store.overlayOpen" />
+        <div class="btn-container">
+            <AppButton :action="loadmore" :type="'line'" :palette="'primary'" :label="'load more'" />
+        </div>
+    </PublicPageLayout>
 </template>
 
 <style lang="scss" scoped>
 @import '../../styles/partials/mixins.scss';
-@import '../../styles/partials/variables.scss';
 @import '../../styles/partials/grid.scss';
 
 .container.cards {
@@ -99,6 +92,10 @@ export default {
         flex-basis: 100%;
         text-align: center;
     }
+}
+
+.message {
+    text-align: center;
 }
 
 .hero-section {

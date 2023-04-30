@@ -33,7 +33,7 @@ export default {
         },
 
         getApartments() {
-            console.log('USER ID', store.user.id);
+            // console.log('User Id', store.user.id);
             axios.get('http://localhost:8000/api/apartments',
                 {
                     params: {

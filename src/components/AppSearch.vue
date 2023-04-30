@@ -15,8 +15,10 @@ export default {
             router,
             servicesMenuOpen: false,
             allServices: [],
+            tomtomApiKey: import.meta.env.VITE_TOMTOM_API_KEY,
             form: {
                 address: null,
+                radius: 20,
                 rooms_number: 0,
                 beds_number: 0,
                 bathrooms_number: 0,
@@ -33,13 +35,23 @@ export default {
     methods: {
         getServices() {
             // Ottiene i servizi da mostrare nei filtri
-            const url = 'http://127.0.0.1:8000/api';
-            axios.get(url + '/services',
+            axios.get('http://localhost:8000/api/services')
+                .then(response => {
+                    this.allServices = response.data.services;
+                    // console.log('Servizi', this.allServices);
+                })
+        },
+        radiusInput(direction) {
+            // Incrementa l'input Raggio
+            const min = 5;
+            const max = 50;
 
-            ).then(response => {
-                this.allServices = response.data.services;
-                // console.log('Servizi', this.allServices);
-            })
+            if (direction == 'minus') {
+                if (this.form.radius > min) this.form.radius -= 5;
+            }
+            else if (direction == 'plus') {
+                if (this.form.radius < max) this.form.radius += 5;
+            }
         },
         roomsInput(direction) {
             // Incrementa l'input Camere
@@ -77,27 +89,11 @@ export default {
                 if (this.form.bathrooms_number < max) this.form.bathrooms_number++;
             }
         },
-        handleSearch() {
-            // Se dei parametri sono stati inseriti, rimanda alla pagina di ricerca
-            if (this.form.address != '' || this.form.rooms_number > 0 || this.form.beds_number > 0 || this.form.bathrooms_number > 0 || this.form.services.length > 0) {
-
-                this.calcUrl();
-
-                if (this.form.address != '') this.store.searchForm.address = this.form.address;
-                if (this.form.rooms_number > 0) this.store.searchForm.rooms_number = this.form.rooms_number;
-                if (this.form.beds_number > 0) this.store.searchForm.beds_number = this.form.beds_number;
-                if (this.form.bathrooms_number > 0) this.store.searchForm.bathrooms_number = this.form.bathrooms_number;
-                if (this.form.services.length > 0) this.store.searchForm.services = this.form.services;
-
-                this.$router.push(this.searchUrl);
-            }
-        },
         calcUrl() {
             // Calcola l'url
             this.searchUrl = '/search?';
 
             let size = 0;
-
             // Calcolo numero campi compilati form
             for (const field in this.form) {
                 if (Array.isArray(this.form[field])) {
@@ -123,9 +119,40 @@ export default {
                     index++;
                 }
             }
+        },
+        async getCoordinates() {
+            const coordinates = await fetch(`https://api.tomtom.com/search/2/geocode/${this.form.address}.json?key=${this.tomtomApiKey}&typeahead=true&limit=1&radius=500`)
+                .then(response => response.json()
+                )
+                .then(data => {
+                    this.store.searchForm.lat = data.results[0].position.lat;
+                    this.store.searchForm.lng = data.results[0].position.lon;
+
+                })
+                this.$router.push(this.searchUrl);
+                this.$emit('searchEvent');
+        },
+        handleSearch() {
+            // Se dei parametri sono stati inseriti, rimanda alla pagina di ricerca
+            if (this.form.address != '' || this.form.rooms_number > 0 || this.form.beds_number > 0 || this.form.bathrooms_number > 0 || this.form.services.length > 0) {
+
+                this.calcUrl();
+
+                if (this.form.address != '') {
+                    this.getCoordinates();
+                    this.store.searchForm.address = this.form.address;
+                }
+
+                if (this.form.radius > 0) this.store.searchForm.radius = this.form.radius;
+                if (this.form.rooms_number > 0) this.store.searchForm.rooms_number = this.form.rooms_number;
+                if (this.form.beds_number > 0) this.store.searchForm.beds_number = this.form.beds_number;
+                if (this.form.bathrooms_number > 0) this.store.searchForm.bathrooms_number = this.form.bathrooms_number;
+                if (this.form.services.length > 0) this.store.searchForm.services = this.form.services;
+            }
         }
     },
     mounted() {
+        if (this.store.searchForm.address) this.form.address = this.store.searchForm.address;
         this.getServices();
 
         const address = document.querySelector('#address');
@@ -150,6 +177,19 @@ export default {
                         <label for="address">dove vuoi andare?</label>
                         <input type="text" id="address" name="address" placeholder="Digita l'indirizzo"
                             v-model="form.address">
+                    </div>
+
+                    <div class="group" v-if="allFields">
+                        <label for="radius">raggio (km)</label>
+                        <div class="numberInput">
+                            <div class="button" @click="radiusInput('minus')"><font-awesome-icon icon="fa-solid fa-minus" />
+                            </div>
+                            <div class="value">
+                                {{ form.radius }}
+                            </div>
+                            <div class="button" @click="radiusInput('plus')"><font-awesome-icon icon="fa-solid fa-plus" />
+                            </div>
+                        </div>
                     </div>
 
                     <div class="group" v-if="allFields">
@@ -233,7 +273,8 @@ export default {
     width: 100%;
     padding: 0 2rem;
     margin-bottom: 3rem !important;
-    
+    max-width: 1360px;
+
     &.small {
         max-width: 960px !important;
 

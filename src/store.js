@@ -12,6 +12,9 @@ export const store = reactive({
     overlayOpen: false,
     searchForm: {
         address: null,
+        radius: 20,
+        lat: null,
+        lng: null,
         rooms_number: null,
         beds_number: null,
         bathrooms_number: null,
