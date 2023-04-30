@@ -154,6 +154,7 @@ header {
 
 .userMenu {
     @include flexRowCenter (0.5rem);
+    text-transform: capitalize;
     font-weight: 600;
     cursor: pointer;
 }

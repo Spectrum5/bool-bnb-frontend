@@ -1,22 +1,23 @@
 <script>
-// Components
-import AppLogo from '../../components/AppLogo.vue';
-import AppHeader from '../../components/AppHeader.vue';
-import AppSearch from '../../components/AppSearch.vue';
-import AppCard from '../../components/AppCard.vue';
 
 // Utilities
 import axios from 'axios';
 import { router } from '../../router';
 import { store } from '../../store';
 
+// Components
+import PublicPageLayout from './PublicPageLayout.vue';
+import AppSearch from '../../components/AppSearch.vue';
+import AppCard from '../../components/AppCard.vue';
+import AppButton from '../../components/AppButton.vue';
+
 export default {
     name: 'HomeSearch',
     components: {
-        AppLogo,
-        AppHeader,
+        PublicPageLayout,
         AppSearch,
-        AppCard
+        AppCard,
+        AppButton
     },
     data() {
         return {
@@ -24,14 +25,16 @@ export default {
             store,
             currentPage: 1,
             apartments: [],
-            apartmentsFound: false
         }
     },
     methods: {
         getApartments() {
+            // Chiamata API con Filtri
             axios.get('http://localhost:8000/api/apartments', {
                 params: {
-                    address: this.store.searchForm.address != '' ? this.store.searchForm.address : null,
+                    lat: this.store.searchForm.lat,
+                    lng: this.store.searchForm.lng,
+                    radius: this.store.searchForm.radius,
                     rooms_number: this.store.searchForm.rooms_number > 0 ? this.store.searchForm.rooms_number : null,
                     beds_number: this.store.searchForm.beds_number > 0 ? this.store.searchForm.beds_number : null,
                     bathrooms_number: this.store.searchForm.bathrooms_number > 0 ? this.store.searchForm.bathrooms_number : null,
@@ -40,10 +43,16 @@ export default {
                 }
             })
                 .then((response) => {
-                    console.log('Index Appartamenti con Filtri', response.data.apartments);
-                    this.apartments = this.apartments.concat(response.data.apartments);
-                    this.apartmentsFound = response.success;
-                    console.log(response.success);
+                    console.log('Risposta Appartamenti con Filtri', response);
+                    console.log('Index Appartamenti con Filtri', response.data.apartments.data);
+                    if (response.data.success) {
+                        if (response.data.apartments.current_page == 1) {
+                            this.apartments = response.data.apartments.data;
+                        }
+                        else {
+                            this.apartments = this.apartments.concat(response.data.apartments.data);
+                        }
+                    }
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti con Filtri');
@@ -51,57 +60,68 @@ export default {
         },
         loadMore() {
             this.currentPage++;
-            // this.getApartments();
+            this.getApartments();
         }
     },
     mounted() {
         document.title = 'Boolbnb | Search'
-        console.log('store', this.store.searchForm);
         this.getApartments();
-        // console.log('searchTitle', this.$route.params.title);
-    },
-    computed: {
     }
 }
 </script>
 
 <template>
-    <AppHeader />
-    <AppSearch />
+    <PublicPageLayout>
+        <template v-slot:hero-section>
+            <div class="hero-section">
+                <AppSearch :allFields="true" @searchEvent="getApartments" />
+            </div>
+        </template>
 
-    <div class="container" v-if="apartments.length > 0">
-        <AppCard v-for="apartment in apartments" :apartment="apartment" />
-    </div>
-    <div class="centered" v-else><p class="mainTitle">Nessun appartamento trovato</p></div>
+        <div class="container cards" v-if="apartments.length > 0">
+            <h2 class="mainTitle">i tuoi risultati</h2>
+            <AppCard v-for="apartment in apartments" :apartment="apartment" />
+        </div>
 
+        <div class="message" v-else>
+            <p class="mainTitle">Nessun appartamento trovato</p>
+        </div>
 
-    <div class="btn-container">
-        <button @click="loadMore()">LOAD MORE</button>
-    </div>
+        <div class="btn-container">
+            <AppButton :action="loadmore" :type="'line'" :palette="'primary'" :label="'load more'" />
+        </div>
+    </PublicPageLayout>
 </template>
 
 <style lang="scss" scoped>
-h2 {
-    font-size: 1rem;
-}
+@import '../../styles/partials/mixins.scss';
+@import '../../styles/partials/grid.scss';
 
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.container.cards {
+    @include flexRowCenter;
+    @include largeContainer;
+    gap: 2.5rem 3rem;
     flex-wrap: wrap;
-    gap: 1.5rem;
 
-    font-size: 0.8rem;
+    padding: 0 1rem;
+
+    >h2 {
+        flex-basis: 100%;
+        text-align: center;
+    }
 }
 
-// .card {
-//     width: 200px;
-//     padding: 1rem;
-//     border: 2px solid lightblue;
-// }
-
-.centered {
+.message {
     text-align: center;
+}
+
+.hero-section {
+    height: 35vh;
+    @include flexRowCenter;
+    margin-bottom: 3rem;
+    background: url('../../assets/images/hero-section.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 </style>
