@@ -1,21 +1,23 @@
 ## PRIORITA'
-Ricerca per Filtri (Localita', Raggio entro la localita')
-Ordine Risultati per Distanza dalla localita'
-Autocompletamento Indirizzo Localita'
+- Responsive (Pag. publiche)
+- Gestione Pagamento
+- Sponsorizzazioni
+- Far vedere le case sponsorizzate per prime
+- Info appartamento dei messaggi
+- Slider nella show crud e show apartment
 
-Loader Iniziale con Logo
-Loader Immagini Cards
-Gestire Visualizzazioni
-Mostrare Visualizzazioni Nelle Cards
-Statistiche (Visualizzazioni)
-Inserimento di Sponsorizzazione
-Gestione Pagamento
-Sidebar Statistiche
+- Caricamento immagini cards
+- Visualizzazioni (gestione e mostrare nelle cards)
+- Statistiche (Num. Messaggi ricevuti)
+- Togliere errori in pagina se il campo è giusto su create, edit e messaggi
 
 ## BONUS
-Ricerca in Apartment Index
-Aggiunta Immagine User
-Statistiche (Num. Messaggi ricevuti)
+- Responsive (Dashboard)
+- Togliere button dashboard (grafica nuova)
+- Migliorare footer o nuova pagina per il nostro team
+- Ricerca in Apartment Index
+- Loader iniziale con logo
+- Aggiunta Immagine User
 
 <!-- ------------------------------------------------ -->
 

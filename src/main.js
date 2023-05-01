@@ -43,6 +43,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { faMinus } from '@fortawesome/free-solid-svg-icons'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
@@ -84,6 +85,7 @@ library.add(faBars,
   faXmark,
   faMinus,
   faChevronDown,
+  faChevronLeft,
   faGear,
   faRightFromBracket)
 

@@ -72,6 +72,10 @@ export default {
                 this.addError('Il campo nome non deve superare i 128 caratteri', 'first_name');
                 firstNameInput.classList.add('invalid');
             }
+            else {
+                const index = this.store.errors.findIndex(error => error.field === "first_name");
+                this.store.errors.splice(index, 1);
+            }
         },
         lastNameValidation() {
             let lastNameInput = document.getElementById('last_name');
@@ -89,6 +93,10 @@ export default {
             else if (lastNameInput.value.trim().length > 128) {
                 this.addError('Il campo cognome non deve superare i 128 caratteri', 'last_name');
                 lastNameInput.classList.add('invalid');
+            }
+            else {
+                const index = this.store.errors.findIndex(error => error.field === "last_name");
+                this.store.errors.splice(index, 1);
             }
         },
         emailValidation() {
@@ -114,6 +122,10 @@ export default {
                 this.addError('La tua email contiene caratteri non permessi', 'email');
                 emailInput.classList.add('invalid');
             }
+            else {
+                const index = this.store.errors.findIndex(error => error.field === "email");
+                this.store.errors.splice(index, 1);
+            }
         },
         passwordValidation() {
             let passwordInput = document.getElementById('password');
@@ -132,6 +144,10 @@ export default {
                 this.addError('La password non deve superare i 64 caratteri', 'password');
                 passwordInput.classList.add('invalid');
             }
+            else {
+                const index = this.store.errors.findIndex(error => error.field === "password");
+                this.store.errors.splice(index, 1);
+            }
         },
         passwordConfirmationValidation() {
             let passwordConfirmationInput = document.getElementById('password_confirmation');
@@ -147,6 +163,10 @@ export default {
                 this.addError('Le password inserite non coincidono', 'password_confirmation');
                 passwordConfirmationInput.classList.add('invalid');
             }
+            else {
+                const index = this.store.errors.findIndex(error => error.field === "password_confirmation");
+                this.store.errors.splice(index, 1);
+            }
         },
         dateOfBirthValidation() {
             let datOfBirthInput = document.getElementById('date_of_birth');
@@ -159,7 +179,7 @@ export default {
                 this.addError('Devi impostare una data di nascita', 'date_of_birth');
                 datOfBirthInput.classList.add('invalid');
             }
-            else {
+            else if (datOfBirthInput.value != null) {
                 if ((now.getFullYear() - year) <= 9) {
                     this.addError('Devi avere almeno 9 anni per poterti registrare', 'date_of_birth');
                     datOfBirthInput.classList.add('invalid');
@@ -173,6 +193,20 @@ export default {
                     datOfBirthInput.classList.add('invalid');
                 }
             }
+            else {
+                const index = this.store.errors.findIndex(error => error.field === "date_of_birth");
+                this.store.errors.splice(index, 1);
+            }
+        },
+        shakeInputs() {
+            if (this.store.errors.length > 0) {
+                this.store.errors.forEach(error => {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                });
+            }
         },
         validateData() {
             // Front End Validation
@@ -185,6 +219,8 @@ export default {
             this.passwordValidation();
             this.passwordConfirmationValidation();
             this.dateOfBirthValidation();
+
+            this.shakeInputs();
 
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.postRegisterData();
@@ -216,7 +252,7 @@ export default {
     },
     mounted() {
         document.title = 'Boolbnb | Register';
-        this.store.errors = [];
+        this.$nextTick(this.store.clear());
     }
 }
 </script>
@@ -286,8 +322,8 @@ export default {
                     <div class="row">
                         <AppButton :label="'register'" :type="'solid'" :palette="'primary'" />
                     </div>
-                    <AppErrorForm v-if="store.errors.length > 0" />
                 </form>
+                <AppErrorForm v-if="store.errors.length > 0" />
                 <router-link to="/login" class="customLink">Hai gia' un account? Accedi.</router-link>
                 <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
             </div>
@@ -345,7 +381,7 @@ form .row {
     margin-bottom: 0;
 }
 
-.row:last-child::v-deep button {
+.row:last-child:deep button {
     width: 100%;
 }
 
@@ -358,6 +394,7 @@ form .row {
             flex-grow: 1;
         }
     }
+
     form .row {
         margin-bottom: 1rem;
     }

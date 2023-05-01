@@ -151,14 +151,14 @@ export default {
                 }
                 )
                 .catch((response) => {
-                    console.log('Errore Login', response);
-                    this.store.errors = response;
+                    console.log('Errore Invio Dati Login', response);
+                    this.addError('Errore del server. Riprovare piú tardi', 'server_error');
                 })
         }
     },
     mounted() {
         document.title = 'Boolbnb | Login';
-        this.store.errors = [];
+        this.$nextTick(this.store.clear());
     }
 }
 </script>

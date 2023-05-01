@@ -4,14 +4,20 @@
 import axios from 'axios';
 import { router } from '../../router';
 import { store } from '../../store';
+import { register } from 'swiper/element/bundle';
+register();
 
 // Components
+import PublicPageLayout from './PublicPageLayout.vue';
 import AppErrorForm from '../../components/AppErrorForm.vue';
+import AppGoBack from '../../components/AppGoBack.vue';
 
 export default {
     name: 'ApartmentView',
-    components: { 
-        AppErrorForm
+    components: {
+        PublicPageLayout,
+        AppErrorForm,
+        AppGoBack
     },
     data() {
         return {
@@ -47,12 +53,11 @@ export default {
                 }
             }
         },
-
         getApartment() {
             // Richiesta dell'appartamento corrispondente allo slug passato come parametro
             axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}`)
                 .then((response) => {
-                    console.log('Appartamento', response.data.apartment);
+                    console.log('Appartamento Show', response.data.apartment);
                     this.apartment = response.data.apartment;
                     document.title = `Boolbnb | ${this.apartment.title}`;
 
@@ -60,7 +65,7 @@ export default {
                     this.getMap();
 
                     // Richiede le immagini dopo aver salvato i valori dell'appartamento in this.apartment
-                    this.getImages();
+                    // this.getImages();
                 })
                 .catch((response) => {
                     console.log('Errore Richiesta Appartamento', response.data);
@@ -161,134 +166,144 @@ export default {
 </script>
 
 <template>
-    <button class="btn" @click="$router.push('/')">torna alla home</button>
+    <PublicPageLayout>
+        <AppGoBack :label="'torna alla home'"/>
+        <!-- <button class="btn" @click="$router.push('/')">torna alla home</button> -->
 
-    <!-- CONTAINER PRINCIPALE -->
-    <div class="container" v-if="this.apartment">
-        <!-- TITOLO E INDIRIZZO -->
-        <section id="title-address">
-            <h2 class="mb-2">{{ apartment.title }}</h2>
-            <h4 class="mb-4">Dove si trova:
-                <strong>
-                    <span class="text-decoration-underline">
-                        <a class="text-dark" href="#maps">{{ apartment.address }}</a>
-                    </span>
-                </strong>
-            </h4>
-        </section>
-        <!-- SEZIONE IMMAGINI APARTMENT -->
-        <div>
-            <img :src="`http://localhost:8000/storage/apartments/${images[0].url}`" alt="">
-        </div>
-        <!-- CONTAINER PER INFO APARTMENT + MESSAGGIO -->
-        <div class="my-secondary-container my-4">
+        <!-- CONTAINER PRINCIPALE -->
+        <div class="container" v-if="this.apartment">
+            <!-- TITOLO E INDIRIZZO -->
+            <section id="title-address">
+                <h2 class="mb-2">{{ apartment.title }}</h2>
+                <h4 class="mb-4">Dove si trova:
+                    <strong>
+                        <span class="text-decoration-underline">
+                            <a class="text-dark" href="#maps">{{ apartment.address }}</a>
+                        </span>
+                    </strong>
+                </h4>
+            </section>
+            <!-- SEZIONE IMMAGINI APARTMENT -->
             <div>
-                <!-- INFO APARTMENT STANZE, LETTI, BAGNI -->
-                <section class="my-3">
-                    <h3 id="host-name" class="text-capitalize mb-1">Host: {{ apartment.user.first_name }} {{
-                        apartment.user.last_name }}</h3>
-                    <p class="amenities mb-3">
-                        <span>{{ apartment.rooms_number }} camere da letto</span>
-                        &#183;
-                        <span>{{ apartment.beds_number }} letti</span>
-                        &#183;
-                        <span>{{ apartment.bathrooms_number }} bagni</span>
-                    </p>
-                </section>
-                <!-- DESCRIZIONE APARTMENT -->
-                <section class="my-3">
-                    <div class="description">
-                        <h3 class="mb-1">Descrizione</h3>
-                        <p>
-                            {{ apartment.description }}
+                <swiper-container id="slider" :navigation="true" :pagination="true" :slides-per-view="3">
+                    <swiper-slide class="slide" v-for="image in apartment.images">
+                        <img :src="`http://localhost:8000/storage/apartments/${image.url}`" :alt="apartment.title">
+                    </swiper-slide>
+                </swiper-container>
+            </div>
+            <!-- CONTAINER PER INFO APARTMENT + MESSAGGIO -->
+            <div class="my-secondary-container my-4">
+                <div>
+                    <!-- INFO APARTMENT STANZE, LETTI, BAGNI -->
+                    <section class="my-3">
+                        <h3 id="host-name" class="text-capitalize mb-1">Host: {{ apartment.user.first_name }} {{
+                            apartment.user.last_name }}</h3>
+                        <p class="amenities mb-3">
+                            <span>{{ apartment.rooms_number }} camere da letto</span>
+                            &#183;
+                            <span>{{ apartment.beds_number }} letti</span>
+                            &#183;
+                            <span>{{ apartment.bathrooms_number }} bagni</span>
                         </p>
-                    </div>
-                </section>
-                <!-- SERVIZI APARTMENT -->
-                <section class="my-3">
-                    <div>
-                        <h3 class="mb-1">Cosa troverai</h3>
+                    </section>
+                    <!-- DESCRIZIONE APARTMENT -->
+                    <section class="my-3">
+                        <div class="description">
+                            <h3 class="mb-1">Descrizione</h3>
+                            <p>
+                                {{ apartment.description }}
+                            </p>
+                        </div>
+                    </section>
+                    <!-- SERVIZI APARTMENT -->
+                    <section class="my-3">
                         <div>
-                            <div class="services" v-for="service in apartment.services">
-                                <span>
-                                    <font-awesome-icon :icon="`fa-solid fa-${service.icon}`" />
-                                </span>
-                                {{ service.name }}
+                            <h3 class="mb-1">Cosa troverai</h3>
+                            <div>
+                                <div class="services" v-for="service in apartment.services">
+                                    <span>
+                                        <font-awesome-icon :icon="`fa-solid fa-${service.icon}`" />
+                                    </span>
+                                    {{ service.name }}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-                <section class="my-3">
-                    <h3 class="mb-1">Dove dormirai</h3>
-                    <div class="room-desc d-inline-block mb-1" v-for="i in apartment.rooms_number">
-                        <h6 class="mb-1">Camera da letto {{ i }}</h6>
-                        <!-- Se il numero di camere e il numero di letti è pari, avrò un letto matrimoniale per ogni stanza -->
-                        <div v-if="apartment.beds_number % 2 == 0 && apartment.rooms_number % 2 == 0">
-                            <span v-for="i in (apartment.beds_number / apartment.rooms_number)">
-                                <!-- <i class="fa-solid fa-bed"></i> -->
-                                <font-awesome-icon icon="fa-solid fa-bed" />
-                            </span>
-                            <p>1 letto matrimoniale a due piazze</p>
-                        </div>
-                        <div v-else>
-                            <div>
-                                <span v-for=" i in (Math.floor(apartment.beds_number / apartment.rooms_number))">
+                    </section>
+                    <section class="my-3">
+                        <h3 class="mb-1">Dove dormirai</h3>
+                        <div class="room-desc d-inline-block mb-1" v-for="i in apartment.rooms_number">
+                            <h6 class="mb-1">Camera da letto {{ i }}</h6>
+                            <!-- Se il numero di camere e il numero di letti è pari, avrò un letto matrimoniale per ogni stanza -->
+                            <div v-if="apartment.beds_number % 2 == 0 && apartment.rooms_number % 2 == 0">
+                                <span v-for="i in (apartment.beds_number / apartment.rooms_number)">
                                     <!-- <i class="fa-solid fa-bed"></i> -->
                                     <font-awesome-icon icon="fa-solid fa-bed" />
                                 </span>
-                                <p v-if="i == apartment.rooms_number">
-                                    {{ Math.floor(apartment.beds_number / apartment.rooms_number) - 1 }} letto matrimoniale
-                                    + 1 letto singolo
-                                </p>
-                                <p v-else>{{ Math.floor(apartment.beds_number / apartment.rooms_number) }} letti singoli</p>
+                                <p>1 letto matrimoniale a due piazze</p>
+                            </div>
+                            <div v-else>
+                                <div>
+                                    <span v-for=" i in (Math.floor(apartment.beds_number / apartment.rooms_number))">
+                                        <!-- <i class="fa-solid fa-bed"></i> -->
+                                        <font-awesome-icon icon="fa-solid fa-bed" />
+                                    </span>
+                                    <p v-if="i == apartment.rooms_number">
+                                        {{ Math.floor(apartment.beds_number / apartment.rooms_number) - 1 }} letto
+                                        matrimoniale
+                                        + 1 letto singolo
+                                    </p>
+                                    <p v-else>{{ Math.floor(apartment.beds_number / apartment.rooms_number) }} letti singoli
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-                <!-- SEZIONE MAPPA -->
-                <section class="my-3">
-                    <h3 class="mb-1">Dove ti troverai</h3>
-                    <div id="maps">
-                        <img :src="this.mapUrl" alt="" v-if="this.mapUrl">
-                    </div>
-                </section>
-            </div>
-
-            <!-- SEZIONE CONTATTA L'HOST -->
-            <div class="contact">
-                <h3 class="text-center mb-3">Contatta l'host</h3>
-                <h4 class="mb-3">
-                    <strong>
-                        € {{ apartment.price }}
-                    </strong>
-                    / per notte
-                </h4>
-                <form @submit.prevent="sendMessage()">
-                    <div class="row">
-                        <div class="group large">
-                            <label for="email">Indirizzo email</label>
-                            <input type="email" id="email" name="email" placeholder="Inserisci la tua mail"
-                                v-model="message.contactEmail" :disabled="setContactEmail()">
+                    </section>
+                    <!-- SEZIONE MAPPA -->
+                    <section class="my-3">
+                        <h3 class="mb-1">Dove ti troverai</h3>
+                        <div id="maps">
+                            <img :src="this.mapUrl" alt="" v-if="this.mapUrl">
                         </div>
+                    </section>
+                </div>
+
+                <!-- SEZIONE CONTATTA L'HOST -->
+                <div class="contact">
+                    <h3 class="text-center mb-3">Contatta l'host</h3>
+                    <h4 class="mb-3">
+                        <strong>
+                            € {{ apartment.price }}
+                        </strong>
+                        / per notte
+                    </h4>
+                    <form @submit.prevent="sendMessage()">
                         <div class="row">
                             <div class="group large">
-                                <label for="message" class="form-label mb-1">Scrivi il tuo messaggio</label>
-                                <textarea class="form-control" name="message" id="message" rows="6"
-                                    placeholder="Scrivi il tuo messaggio" v-model="message.text"></textarea>
+                                <label for="email">Indirizzo email</label>
+                                <input type="email" id="email" name="email" placeholder="Inserisci la tua mail"
+                                    v-model="message.contactEmail" :disabled="setContactEmail()">
                             </div>
+                            <div class="row">
+                                <div class="group large">
+                                    <label for="message" class="form-label mb-1">Scrivi il tuo messaggio</label>
+                                    <textarea class="form-control" name="message" id="message" rows="6"
+                                        placeholder="Scrivi il tuo messaggio" v-model="message.text"></textarea>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn my-btn">Invia richiesta</button>
+                            <AppErrorForm />
                         </div>
-                        <button type="submit" class="btn my-btn">Invia richiesta</button>
-                        <AppErrorForm />
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div>
 
+            </div>
         </div>
-    </div>
+    </PublicPageLayout>
 </template>
 
 <style lang="scss" scoped>
 @use '../../styles/partials/form.scss' as *;
+
 .btn {
     border: 1.5px solid #000;
     border-radius: 10px;
