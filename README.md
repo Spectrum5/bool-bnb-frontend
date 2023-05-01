@@ -6,6 +6,7 @@
 - Info appartamento dei messaggi
 - Slider nella show crud e show apartment
 
+- Eliminare immagini dallo storage quando si elimina appartamento
 - Caricamento immagini cards
 - Index mostrare solo quelli con visibility = 1
 - Visualizzazioni (gestione e mostrare nelle cards)

@@ -35,10 +35,27 @@ export default {
                 contactEmail: null,
                 text: ''
             },
-            images: [],
+            rooms: [],
+            messageSent: false
         }
     },
     methods: {
+        getApartment() {
+            // Richiesta dell'appartamento corrispondente allo slug passato come parametro
+            axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}`)
+                .then((response) => {
+                    console.log('Appartamento Show', response.data.apartment);
+                    this.apartment = response.data.apartment;
+                    document.title = `Boolbnb | ${this.apartment.title}`;
+                    this.defineRoomsStructure();
+
+                    // Richiede la mappa solo dopo aver ricevuto le coordinate dell'appartamento
+                    this.getMap();
+                })
+                .catch((response) => {
+                    console.log('Errore Richiesta Appartamento', response.data);
+                })
+        },
         handleMessage() {
             this.validateData();
         },
@@ -59,21 +76,6 @@ export default {
                     });
                 }
             }
-        },
-        getApartment() {
-            // Richiesta dell'appartamento corrispondente allo slug passato come parametro
-            axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}`)
-                .then((response) => {
-                    console.log('Appartamento Show', response.data.apartment);
-                    this.apartment = response.data.apartment;
-                    document.title = `Boolbnb | ${this.apartment.title}`;
-
-                    // Richiede la mappa solo dopo aver ricevuto le coordinate dell'appartamento
-                    this.getMap();
-                })
-                .catch((response) => {
-                    console.log('Errore Richiesta Appartamento', response.data);
-                })
         },
         async getMap() {
             const map = await fetch(`${this.url_api_tomtom}/1/staticimage?key=${this.api_key_tomtom}&zoom=15&center=${this.apartment.lng},${this.apartment.lat}&format=png&layer=basic&style=main&width=1305&height=748&view=Unified&language=it-IT`);
@@ -170,10 +172,31 @@ export default {
             })
                 .then((response) => {
                     console.log('Messaggio Inviato', response);
+                    this.messageSent = true;
                 })
                 .catch((response) => {
                     console.log('Errore Messaggio', response.data);
                 })
+        },
+        defineRoomsStructure() {
+            let tot_beds = this.apartment.beds_number;
+            console.log('TEST');
+
+            for (let i = 0; i <= this.apartment.rooms_number; i++) {
+
+                if (tot_beds > 1 && tot_beds % 2 == 0) {
+                    this.rooms.push({
+                        bed: 'large'
+                    })
+                    tot_beds = tot_beds - 2;
+                }
+                else if (tot_beds > 1 && tot_beds % 2 == 1) {
+                    this.rooms.push({
+                        bed: 'small'
+                    })
+                    tot_beds = tot_beds - 1;
+                }
+            }
         }
     },
     mounted() {
@@ -204,8 +227,17 @@ export default {
 
                     <!-- IMMAGINI APARTMENT -->
                     <section id="imagesSection">
-                        <swiper-container id="slider" :navigation="true" :pagination="true" :centered-slides="true"
-                            :slides-per-view="2" :space-between="25">
+                        <swiper-container id="slider" :navigation="true" :pagination="true" :centeredSlides="true"
+                            :breakpoints="{
+                                    '700': {
+                                        slidesPerView: 1,
+                                        // spaceBetween: 20,
+                                    },
+                                    '1024': {
+                                        slidesPerView: 3,
+                                        // spaceBetween: 30,
+                                    },
+                                }" :space-between="25">
                             <swiper-slide class="slide" v-for="image in apartment.images">
                                 <img :src="`http://localhost:8000/storage/apartments/${image.url}`" :alt="apartment.title">
                             </swiper-slide>
@@ -213,7 +245,7 @@ export default {
                     </section>
 
                     <!-- INFO APARTMENT STANZE, LETTI, BAGNI -->
-                    <section class="my-3">
+                    <section>
                         <h3 id="host-name" class="text-capitalize mb-1">Host: {{ apartment.user.first_name }} {{
                             apartment.user.last_name }}</h3>
                         <p class="amenities mb-3">
@@ -226,7 +258,7 @@ export default {
                     </section>
 
                     <!-- DESCRIZIONE APARTMENT -->
-                    <section class="my-3">
+                    <section>
                         <div class="description">
                             <h3 class="mb-1">Descrizione</h3>
                             <p>
@@ -236,7 +268,7 @@ export default {
                     </section>
 
                     <!-- SERVIZI APARTMENT -->
-                    <section class="my-3">
+                    <section>
                         <div>
                             <h3 class="mb-1">Cosa troverai</h3>
                             <div>
@@ -250,46 +282,25 @@ export default {
                         </div>
                     </section>
 
-                    <section class="my-3">
+                    <section>
                         <h3 class="mb-1">Dove dormirai</h3>
-                        <div class="room-desc d-inline-block mb-1" v-for="i in apartment.rooms_number">
-                            <h6 class="mb-1">Camera da letto {{ i }}</h6>
-                            <!-- Se il numero di camere e il numero di letti è pari, avrò un letto matrimoniale per ogni stanza -->
-                            <div v-if="apartment.beds_number % 2 == 0 && apartment.rooms_number % 2 == 0">
-                                <span v-for="i in (apartment.beds_number / apartment.rooms_number)">
-                                    <i class="fa-solid fa-bed"></i>
-                                    <font-awesome-icon icon="fa-solid fa-bed" />
-                                </span>
-                                <p>1 letto matrimoniale a due piazze</p>
-                            </div>
-                            <!-- Se il numero di letti diviso il numero delle stanze è pari avrò anche qui letti matrimoniali in ogni stanza-->
-                            <div v-else-if="(apartment.beds_number / apartment.rooms_number) % 2 == 0">
-                                <span v-for="i in (apartment.beds_number / apartment.rooms_number)">
-                                    <font-awesome-icon icon="fa-solid fa-bed" />
-                                </span>
-                                <p>1 letto matrimoniale a due piazze</p>
-                                <!--  -->
-                            </div>
-                            <div v-else>
+                        <div class="cardsContainer" v-if="this.rooms">
+                            <div class="card" v-for="room, index in rooms">
                                 <div>
-                                    <span v-for=" i in (Math.floor(apartment.beds_number / apartment.rooms_number))">
-                                        <i class="fa-solid fa-bed"></i>
-                                        <font-awesome-icon icon="fa-solid fa-bed" />
-                                    </span>
-                                    <p v-if="i == apartment.rooms_number">
-                                        {{ Math.floor(apartment.beds_number / apartment.rooms_number) - 1 }} letto
-                                        matrimoniale
-                                        + 1 letto singolo
-                                    </p>
-                                    <p v-else>{{ Math.floor(apartment.beds_number / apartment.rooms_number) }} letti singoli
-                                    </p>
+                                    <span class="title">Camera da letto {{ index + 1 }}</span>
+                                </div>
+                                <div>
+                                    <div class="icons">
+                                        <font-awesome-icon icon="fa-solid fa-bed" class="icon" />
+                                        <font-awesome-icon icon="fa-solid fa-bed" class="icon" v-if="room.bed == 'large'" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </section>
 
                     <!-- SEZIONE MAPPA -->
-                    <section class="my-3">
+                    <section>
                         <h3 class="mb-1">Dove ti troverai</h3>
                         <div id="map">
                             <img :src="this.mapUrl" alt="" v-if="this.mapUrl">
@@ -321,13 +332,14 @@ export default {
                                 <div class="group large">
                                     <label for="message" class="form-label mb-1">Scrivi il tuo messaggio</label>
                                     <textarea class="form-control" name="message" id="message" rows="6"
-                                        placeholder="Scrivi il tuo messaggio" v-model="message.text"
+                                        placeholder="Scrivi il tuo messaggio" v-model="message.text" :disabled="messageSent"
                                         v-on:blur="messageValidation()"></textarea>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <AppButton :label="'Invia messaggio'" :type="'solid'" :palette="'primary'" />
+                                <AppButton :label="'messaggio inviato'" :type="'solid'" :palette="'success'" :disabled="true" v-if="messageSent"/>
+                                <AppButton :label="'invia messaggio'" :type="'solid'" :palette="'primary'" v-else/>
                             </div>
                         </form>
                         <AppErrorForm />
@@ -348,13 +360,16 @@ export default {
 
 .container {
     @include largeContainer;
-    padding-top: 1rem;
+    padding: 1rem;
+    // padding-top: 1rem;
 }
 
 .body {
     display: flex;
     width: 100%;
-    gap: 1.5rem;
+    // gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
 
     .leftColumn {
         flex-basis: 75%;
@@ -363,6 +378,10 @@ export default {
     .rightColumn {
         flex-basis: 25%;
     }
+}
+
+section {
+    margin-bottom: 1rem;
 }
 
 section:not(#title-address, section:last-of-type) {
@@ -380,6 +399,7 @@ section:not(#title-address, section:last-of-type) {
 
 #imagesSection {
     max-width: 1100px;
+    // background-color: red;
 
     #slider {
         width: 100%;
@@ -390,11 +410,14 @@ section:not(#title-address, section:last-of-type) {
 
     .slide {
         @include customShadow;
-        width: calc(100% / 3);
+        // width: calc(100% / 3);
+        // width: 100%;
+        // max-width: 400px;
         height: 400px;
         overflow: hidden;
         border-radius: 8px;
         opacity: 0.6;
+        // border: 2px solid green;
 
         &.swiper-slide-active {
             opacity: 1;
@@ -437,30 +460,39 @@ section:not(#title-address, section:last-of-type) {
     }
 }
 
-.room-desc {
+.cardsContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.card {
     background-color: $light-color-one;
     border: 1px solid black;
     border-radius: 10px;
     padding: 10px;
-    margin-right: 10px;
+    width: 150px;
 
-    h6 {
-        font-weight: 700;
-        font-size: 1rem;
+    .title {
+        font-weight: 600;
+        font-size: 0.85rem;
     }
 
-    span {
+    .icon {
         margin-right: 5px;
     }
 
-    p {
-        font-size: 0.8rem;
+    .text {
+        font-size: 0.9rem;
     }
 }
 
 #map {
     height: 450px;
-    width: 600px;
+    max-width: 600px;
+    width: 100%;
     background-color: bisque;
     border: 1px dashed;
 
@@ -483,5 +515,29 @@ section:not(#title-address, section:last-of-type) {
 
 .row:last-child:deep button {
     width: 100%;
+}
+
+@media screen and (max-width: 1560px) {
+    .body {
+        >* {
+            flex-basis: 100% !important;
+            max-width: 100%;
+        }
+    }
+
+    #imagesSection {
+        width: 100%;
+        max-width: unset;
+    }
+}
+
+@media screen and (max-width: 840px) {
+    .cardsContainer {
+        justify-content: space-between;
+
+        .card {
+            width: calc(50% - 0.5rem);
+        }
+    }
 }
 </style>

@@ -26,7 +26,8 @@ export default {
             apartments: [],
             currentPage: 1,
             callOk: true,
-            notFound: false
+            notFound: false,
+            lastPage: null
         }
     },
     methods: {
@@ -46,6 +47,7 @@ export default {
                         else if (response.data.apartments.current_page <= response.data.apartments.last_page) {
                             this.apartments = this.apartments.concat(response.data.apartments.data);
                         }
+                        this.lastPage = response.data.apartments.last_page;
                     }
                 })
                 .catch((response) => {
@@ -54,15 +56,17 @@ export default {
                 })
         },
         loadMore() {
-            this.currentPage++;
-            console.log('LOAD MORE');
-            this.getApartments();
+            if (this.currentPage < this.lastPage) {
+                this.currentPage++;
+                console.log('LOAD MORE');
+                this.getApartments();
+            }
         },
         applyInfiniteScroll() {
             const self = this;
             window.onscroll = function () {
                 if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 1) {
-                    
+
                     if (self.callOk) {
                         self.loadMore();
                         self.callOk = false;
@@ -77,11 +81,12 @@ export default {
     mounted() {
         document.title = 'Boolbnb | Home'
         this.getApartments();
+        // this.getSponsoredApartments();
         this.$nextTick(this.store.clear());
 
         setTimeout(() => {
             this.applyInfiniteScroll();
-        }, 3500)
+        }, 4500)
     }
 }
 </script>
@@ -94,6 +99,11 @@ export default {
             </div>
         </template>
 
+        <!-- <div class="container cards" id="cardsContainer" v-if="apartments.length > 0">
+            <h2 class="mainTitle">sponsorizzati</h2>
+            <AppCard v-for="apartment in apartments" :apartment="apartment" />
+        </div> -->
+
         <div class="container cards" id="cardsContainer" v-if="apartments.length > 0">
             <h2 class="mainTitle">esplora</h2>
             <AppCard v-for="apartment in apartments" :apartment="apartment" />
@@ -103,7 +113,7 @@ export default {
             <p class="mainTitle">Nessun appartamento trovato</p>
         </div>
 
-        <AppLoading v-else/>
+        <AppLoading v-else />
 
         <!-- <div class="btn-container">
             <AppButton :action="loadMore" :type="'line'" :palette="'primary'" :label="'load more'" />
@@ -122,6 +132,7 @@ export default {
     flex-wrap: wrap;
 
     padding: 0 1rem;
+    padding-bottom: 3rem;
 
     >h2 {
         flex-basis: 100%;

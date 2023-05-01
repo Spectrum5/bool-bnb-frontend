@@ -11,6 +11,7 @@ import AppSearch from '../../components/AppSearch.vue';
 import AppCard from '../../components/AppCard.vue';
 import AppButton from '../../components/AppButton.vue';
 import AppOverlay from '../../components/AppOverlay.vue';
+import AppFooter from '../../components/AppFooter.vue';
 
 export default {
     name: 'HomeView',
@@ -20,7 +21,8 @@ export default {
         AppSearch,
         AppCard,
         AppButton,
-        AppOverlay
+        AppOverlay,
+        AppFooter
     },
     data() {
         return {
@@ -36,6 +38,8 @@ export default {
     <slot name="hero-section"></slot>
 
     <slot></slot>
+
+    <AppFooter />
 
     <AppOverlay v-if="store.overlayOpen" />
 </template>

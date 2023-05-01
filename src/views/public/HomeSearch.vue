@@ -28,14 +28,15 @@ export default {
             apartments: [],
             currentPage: 1,
             callOk: true,
-            notFound: false
+            notFound: false,
+            lastPage: null
         }
     },
     methods: {
         getApartments() {
             // Chiamata API con Filtri
             this.notFound = false;
-            axios.get('http://localhost:8000/api/apartments', {
+            axios.get('http://localhost:8000/api/apartments/indexFilter', {
                 params: {
                     lat: this.store.searchForm.lat,
                     lng: this.store.searchForm.lng,
@@ -48,7 +49,7 @@ export default {
                 }
             })
                 .then((response) => {
-                    console.log('Index Appartamenti con Filtri', response.data.apartments.data);
+                    console.log('Index Appartamenti con Filtri', response.data);
                     if (response.data.success) {
                         if (response.data.apartments.data.length == 0) this.notFound = true;
                         if (response.data.apartments.current_page == 1) {
@@ -57,6 +58,7 @@ export default {
                         else if (response.data.apartments.current_page <= response.data.apartments.last_page) {
                             this.apartments = this.apartments.concat(response.data.apartments.data);
                         }
+                        this.lastPage = response.data.apartments.last_page;
                     }
                 })
                 .catch((response) => {
@@ -65,8 +67,11 @@ export default {
                 })
         },
         loadMore() {
-            this.currentPage++;
-            this.getApartments();
+            if (this.currentPage < this.lastPage) {
+                this.currentPage++;
+                console.log('LOAD MORE');
+                this.getApartments();
+            }
         },
         applyInfiniteScroll() {
             const self = this;
@@ -94,7 +99,7 @@ export default {
 
         setTimeout(() => {
             this.applyInfiniteScroll();
-        }, 3500)
+        }, 4500)
     }
 }
 </script>

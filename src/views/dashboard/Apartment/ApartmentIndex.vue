@@ -1,14 +1,14 @@
 <script>
 
-// Components
-import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
-import AppButton from '../../../components/AppButton.vue';
-import AppModaleDelete from '../../../components/AppModaleDelete.vue';
-
 // Utilities
 import axios from 'axios';
 import { router } from '../../../router';
 import { store } from '../../../store';
+
+// Components
+import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppButton from '../../../components/AppButton.vue';
+import AppModaleDelete from '../../../components/AppModaleDelete.vue';
 
 export default {
     name: 'ApartmentIndex',
@@ -22,104 +22,84 @@ export default {
             router,
             store,
             apartments: null,
-            // functionDelete: false,
             selectedApartmentId: null
         }
     },
     methods: {
-        testFunction() {
-            // FUNZIONE PROVA
-            console.log('TEST FUNCTION');
-        },
-
         getApartments() {
-            // console.log('User Id', store.user.id);
-            axios.get('http://localhost:8000/api/apartments',
-                {
-                    params: {
-                        user_id: this.store.user.id,
-                    }
-                })
+            axios.get('http://localhost:8000/api/apartments/indexUser')
                 .then((response) => {
-                    console.log('Index Appartamenti', response.data);
+                    console.log('Index Appartamenti Personali', response.data);
                     this.apartments = response.data.apartments;
                 })
                 .catch((response) => {
-                    console.log('Errore Index Appartamenti', response.data);
+                    console.log('Errore Index Appartamenti Personali', response.data);
                 })
         },
-
         showDeleteModal(id) {
             store.showModal = true;
-            // this.functionDelete = true;
             this.selectedApartmentId = id;
             console.log('Appartamento selezionato da eliminare: ', this.selectedApartmentId);
         },
-
         deleteApartment() {
-                axios.delete(`http://localhost:8000/api/apartments/${this.selectedApartmentId}`)
-                    .then((response) => {
-                        console.log('Apartment Deleted con id', this.selectedApartmentId);
-                        this.getApartments();
-                    });
+            axios.delete(`http://localhost:8000/api/apartments/${this.selectedApartmentId}`)
+                .then((response) => {
+                    console.log('Apartment Deleted con id', this.selectedApartmentId);
+                    this.getApartments();
+                });
             this.store.showModal = false;
-        },
-
+        }
     },
     mounted() {
-        this.store.editedApartment = false;
-        document.title = 'Dashboard | My Apartments';
+        document.title = 'Dashboard | I miei Appartamenti';
+        this.$nextTick(this.store.clear());
         this.getApartments();
     },
-    created(){}
+    created() { }
 }
 </script>
 
 <template>
-    <AppDashboardLayoutVue 
-        :title="'i miei appartamenti'" 
-        :button="
-        {
+    <AppDashboardLayoutVue :title="'i miei appartamenti'" :button="{
             label: 'Aggiungi',
             icon: 'plus',
             link: '/dashboard/apartments/create'
         }">
 
-            <main>
-                <div class="row-my-partm my-container" v-for="apartment in apartments " :key="apartment.id" v-if="apartments != null">
-                    <AppModaleDelete
-                    :action="deleteApartment"
-                    :id="selectedApartmentId">
-                    </AppModaleDelete>
-                    <div>
-                        <p> {{ apartment.title }}</p>
-                    </div>
-                    <div>
-                        <button class="btn btn-show" @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)">
-                            <font-awesome-icon icon="fa-solid fa-eye" />
-                            Vedi dettagli
-                        </button>
-                        <button class="btn btn-edit" @click="$router.push(`/dashboard/apartments/${apartment.slug}/edit`)">
-                            <font-awesome-icon icon="fa-solid fa-pencil" />
-                            Modifica
-                        </button>
-                        <!-- <AppButton :label="'elimina'" :icon="'trash-can'" :type="'solid'" :palette="'danger'" :action="testFunction"/> -->
-                        <!-- @click="deleteApartment(apartment.id)" -->
-                        <button id="myBtn" class="btn btn-delete" @click="showDeleteModal(apartment.id)">
-                            <font-awesome-icon icon="fa-solid fa-trash-can" />
-                            Elimina
-                        </button>
-                        <button class="btn btn-stats">
-                            <font-awesome-icon icon="fa-solid fa-chart-simple" />
-                            Vedi Statistiche
-                        </button>
-                        <button class="btn btn-sponsor hover-effect">
-                            <font-awesome-icon icon="fa-solid fa-rocket" />
-                            Sponsorizza
-                        </button>
-                    </div>
+        <main>
+            <div class="row-my-partm my-container" v-for="apartment in apartments " :key="apartment.id"
+                v-if="apartments != null">
+                <AppModaleDelete :action="deleteApartment" :id="selectedApartmentId">
+                </AppModaleDelete>
+                <div>
+                    <p> {{ apartment.title }}</p>
                 </div>
-            </main>
+                <div>
+                    <button class="btn btn-show" @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)">
+                        <font-awesome-icon icon="fa-solid fa-eye" />
+                        Vedi dettagli
+                    </button>
+                    <button class="btn btn-edit" @click="$router.push(`/dashboard/apartments/${apartment.slug}/edit`)">
+                        <font-awesome-icon icon="fa-solid fa-pencil" />
+                        Modifica
+                    </button>
+                    <!-- <AppButton :label="'elimina'" :icon="'trash-can'" :type="'solid'" :palette="'danger'" :action="testFunction"/> -->
+                    <!-- @click="deleteApartment(apartment.id)" -->
+                    <button id="myBtn" class="btn btn-delete" @click="showDeleteModal(apartment.id)">
+                        <font-awesome-icon icon="fa-solid fa-trash-can" />
+                        Elimina
+                    </button>
+                    <button class="btn btn-stats">
+                        <font-awesome-icon icon="fa-solid fa-chart-simple" />
+                        Vedi Statistiche
+                    </button>
+                    <button class="btn btn-sponsor hover-effect">
+                        <font-awesome-icon icon="fa-solid fa-rocket" />
+                        Sponsorizza
+                    </button>
+                </div>
+            </div>
+        </main>
 
     </AppDashboardLayoutVue>
 </template>
@@ -135,6 +115,7 @@ main {
     overflow: auto;
     padding: 1rem;
 }
+
 .my-container {
     @include flexSpaceBtwn ($gap: 0);
     padding: 10px;
