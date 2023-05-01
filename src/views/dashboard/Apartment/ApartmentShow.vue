@@ -28,9 +28,6 @@ export default {
                 .then((response) => {
                     console.log('Dati Appartamento', response.data.apartment);
                     this.apartment = response.data.apartment;
-
-                    // Richiede le immagini dopo aver salvato i valori dell'appartamento in this.apartment
-                    this.getImages();
                 })
                 .catch((response) => {
                     console.log('Errore Ottenimento Appartamento', response.data);
@@ -46,13 +43,6 @@ export default {
         goBackToDashboard() {
             console.log('GO TO DASHBOARD');
             this.$router.push('/dashboard/apartments');
-        },
-        getImages() {
-            axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
-                .then((response) => {
-                    this.images = response.data.images;
-                    console.log('Images', response.data);
-                })
         },
 
     },
@@ -76,7 +66,7 @@ export default {
     <div v-if="apartment">
         <!-- SEZIONE IMMAGINI APARTMENT -->
         <div class="img-container">
-            <!-- <img :src="`http://localhost:8000/storage/apartments/${images[0].url}`" alt=""> -->
+            <img :src="`http://localhost:8000/storage/apartments/${image.url}`" alt="" v-for="image in apartment.images">
         </div>
         <div class="mb">
             <h4>Indirizzo:</h4>

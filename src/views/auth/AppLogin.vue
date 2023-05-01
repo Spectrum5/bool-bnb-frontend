@@ -1,14 +1,13 @@
 <script>
 
+// Utilities
+import { store } from '../../store';
+
 // Components
 import AppLogo from '../../components/AppLogo.vue';
 import AppFooter from '../../components/AppFooter.vue';
 import AppErrorForm from '../../components/AppErrorForm.vue';
 import AppButton from '../../components/AppButton.vue';
-
-// Utilities
-import { store } from '../../store';
-import { router } from '../../router';
 
 import axios from 'axios';
 axios.defaults.withCredentials = true;
@@ -147,18 +146,18 @@ export default {
                     console.log('Risposta Login', response);
 
                     // Emette ad App.vue l'evento per richiedere l'utente autenticato
-                    this.$emit('getUserEvent');
+                    this.$emit('getUserEvent', true);
                 }
                 )
                 .catch((response) => {
-                    console.log('Errore Login', response);
-                    this.store.errors = response;
+                    console.log('Errore Invio Dati Login', response);
+                    this.addError('Errore del server. Riprovare piú tardi', 'server_error');
                 })
         }
     },
     mounted() {
         document.title = 'Boolbnb | Login';
-        this.store.errors = [];
+        this.$nextTick(this.store.clear());
     }
 }
 </script>

@@ -15,12 +15,12 @@ export default {
         }
     },
     methods: {
-        getUser() {
+        getUser(doRedirect) {
             axios.get('http://localhost:8000/api/user')
                 .then((response) => {
                     console.log('User', response.data)
                     this.store.user = response.data;
-                    router.push('/dashboard/apartments');
+                    if (doRedirect != null && doRedirect == true) router.push('/dashboard/apartments');
                 })
                 .catch((response) => {
                     console.log('Ottenimento user fallito');
@@ -35,13 +35,13 @@ export default {
     },
     mounted() {
         // Richiediamo lo User alla creazione della pagina per ripristinare la sessione precedente, se ancora valida
-        // this.getUser();
+        this.getUser(false);
     }
 }
 </script>
 
 <template>
-    <router-view @[calcEvent]="getUser()"></router-view>
+    <router-view @[calcEvent]="doRedirect => getUser(doRedirect)"></router-view>
 </template>
 
 <style lang="scss">
