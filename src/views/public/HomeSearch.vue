@@ -36,7 +36,7 @@ export default {
         getApartments() {
             // Chiamata API con Filtri
             this.notFound = false;
-            axios.get('http://localhost:8000/api/apartments', {
+            axios.get('http://localhost:8000/api/apartments/indexFilter', {
                 params: {
                     lat: this.store.searchForm.lat,
                     lng: this.store.searchForm.lng,
@@ -49,7 +49,7 @@ export default {
                 }
             })
                 .then((response) => {
-                    console.log('Index Appartamenti con Filtri', response.data.apartments.data);
+                    console.log('Index Appartamenti con Filtri', response.data);
                     if (response.data.success) {
                         if (response.data.apartments.data.length == 0) this.notFound = true;
                         if (response.data.apartments.current_page == 1) {

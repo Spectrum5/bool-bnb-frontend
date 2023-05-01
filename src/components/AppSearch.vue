@@ -322,6 +322,7 @@ export default {
             }
 
             &.servicesGroup {
+                cursor: pointer;
                 position: relative;
 
                 .servicesMenu {

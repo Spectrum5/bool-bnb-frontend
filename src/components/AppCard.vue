@@ -24,14 +24,6 @@ export default {
         apartment: Object
     },
     methods: {
-        getImages() {
-            // Ottiene le immagini relative all'appartamento
-            axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
-                .then((response) => {
-                    this.images = response.data.images;
-                    // console.log(`Immagini di ${this.apartment.id} ottenute`, response.data);
-                })
-        },
         goShow() {
             // Cambia la rotta nella rotta relativa al singolo appartamento
             this.$router.push(`/apartments/${this.apartment.slug}`)
@@ -47,7 +39,6 @@ export default {
         }
     },
     mounted() {
-        this.getImages();
     }
 }
 </script>
@@ -58,7 +49,7 @@ export default {
         <button class="cardFavorites" @click.stop="addToFavorites()" ref="btn"></button>
 
         <div class="imageContainer">
-            <AppSlider :images="this.images" v-if="this.images" @goShowEvent="goShow()" />
+            <AppSlider :images="this.apartment.images" v-if="this.apartment.images" @goShowEvent="goShow()" />
         </div>
 
         <div class="infoContainer" @click="goShow()">
@@ -166,6 +157,11 @@ button {
         color: gray;
         font-size: 0.7rem;
         margin-bottom: 0.5rem;
+
+        width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     .cardPrice {
@@ -207,4 +203,5 @@ button {
     100% {
         background-position: right
     }
-}</style>
+}
+</style>

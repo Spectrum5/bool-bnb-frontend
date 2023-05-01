@@ -31,6 +31,10 @@ export default {
     palette: {
       type: String,
       default: 'primary'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -44,13 +48,13 @@ export default {
   </router-link>
 
   <!-- Action Button -->
-  <button v-if="this.action && !this.to" :class="this.type" :palette="this.palette ?? ''" @click="this.action">
+  <button v-if="this.action && !this.to" :class="this.type" :palette="this.palette ?? ''" @click="this.action" :disabled="this.disabled">
     <font-awesome-icon :icon="`fa-solid fa-${this.icon}`" class="icon" v-if="this.icon" />
     <span v-if="this.label">{{ this.label }}</span>
   </button>
 
   <!-- Standard Button -->
-  <button v-if="!this.action && !this.to" :class="this.type" :palette="this.palette ?? ''">
+  <button v-if="!this.action && !this.to" :class="this.type" :palette="this.palette ?? ''" :disabled="this.disabled">
     <font-awesome-icon :icon="`fa-solid fa-${this.icon}`" class="icon" v-if="this.icon" />
     <span v-if="this.label">{{ this.label }}</span>
   </button>

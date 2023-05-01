@@ -81,6 +81,7 @@ export default {
     mounted() {
         document.title = 'Boolbnb | Home'
         this.getApartments();
+        // this.getSponsoredApartments();
         this.$nextTick(this.store.clear());
 
         setTimeout(() => {
@@ -97,6 +98,11 @@ export default {
                 <AppSearch :allFields="false" />
             </div>
         </template>
+
+        <!-- <div class="container cards" id="cardsContainer" v-if="apartments.length > 0">
+            <h2 class="mainTitle">sponsorizzati</h2>
+            <AppCard v-for="apartment in apartments" :apartment="apartment" />
+        </div> -->
 
         <div class="container cards" id="cardsContainer" v-if="apartments.length > 0">
             <h2 class="mainTitle">esplora</h2>
@@ -126,6 +132,7 @@ export default {
     flex-wrap: wrap;
 
     padding: 0 1rem;
+    padding-bottom: 3rem;
 
     >h2 {
         flex-basis: 100%;
