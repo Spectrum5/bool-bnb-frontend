@@ -7,6 +7,7 @@
 - Slider nella show crud e show apartment
 
 - Caricamento immagini cards
+- Index mostrare solo quelli con visibility = 1
 - Visualizzazioni (gestione e mostrare nelle cards)
 - Statistiche (Num. Messaggi ricevuti)
 - Togliere errori in pagina se il campo è giusto su create, edit e messaggi

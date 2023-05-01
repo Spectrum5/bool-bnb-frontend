@@ -69,7 +69,6 @@ export default {
             this.getApartments();
         },
         applyInfiniteScroll() {
-            console.log('INFINITE SCROLL OK')
             const self = this;
             window.onscroll = function () {
                 if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 1) {

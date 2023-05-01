@@ -1,14 +1,13 @@
 <script>
 
+// Utilities
+import { store } from '../../store';
+
 // Components
 import AppLogo from '../../components/AppLogo.vue';
 import AppFooter from '../../components/AppFooter.vue';
 import AppErrorForm from '../../components/AppErrorForm.vue';
 import AppButton from '../../components/AppButton.vue';
-
-// Utilities
-import { store } from '../../store';
-import { router } from '../../router';
 
 import axios from 'axios';
 axios.defaults.withCredentials = true;
@@ -147,7 +146,7 @@ export default {
                     console.log('Risposta Login', response);
 
                     // Emette ad App.vue l'evento per richiedere l'utente autenticato
-                    this.$emit('getUserEvent');
+                    this.$emit('getUserEvent', true);
                 }
                 )
                 .catch((response) => {
