@@ -190,7 +190,7 @@ export default {
                     <p class="amenities mb-3">
                         <span>{{ apartment.rooms_number }} camere da letto</span>
                         &#183;
-                        <span>{{ apartment.beds_number }} letti</span>
+                        <span>{{ apartment.beds_number }} posti letto</span>
                         &#183;
                         <span>{{ apartment.bathrooms_number }} bagni</span>
                     </p>
@@ -222,18 +222,24 @@ export default {
                     <h3 class="mb-1">Dove dormirai</h3>
                     <div class="room-desc d-inline-block mb-1" v-for="i in apartment.rooms_number">
                         <h6 class="mb-1">Camera da letto {{ i }}</h6>
-                        <!-- Se il numero di camere e il numero di letti è pari, avrò un letto matrimoniale per ogni stanza -->
+                        <!-- Se il numero di camere e il numero di posti letto è pari, avrò un letto matrimoniale per ogni stanza -->
                         <div v-if="apartment.beds_number % 2 == 0 && apartment.rooms_number % 2 == 0">
                             <span v-for="i in (apartment.beds_number / apartment.rooms_number)">
-                                <!-- <i class="fa-solid fa-bed"></i> -->
                                 <font-awesome-icon icon="fa-solid fa-bed" />
                             </span>
                             <p>1 letto matrimoniale a due piazze</p>
                         </div>
+                        <!-- Se il numero di letti diviso il numero delle stanze è pari avrò anche qui letti matrimoniali in ogni stanza-->
+                        <div v-else-if="(apartment.beds_number / apartment.rooms_number) % 2 == 0">
+                            <span v-for="i in (apartment.beds_number / apartment.rooms_number)">
+                                    <font-awesome-icon icon="fa-solid fa-bed" />
+                                </span>
+                                <p>1 letto matrimoniale a due piazze</p>
+                            <!--  -->
+                        </div>
                         <div v-else>
                             <div>
                                 <span v-for=" i in (Math.floor(apartment.beds_number / apartment.rooms_number))">
-                                    <!-- <i class="fa-solid fa-bed"></i> -->
                                     <font-awesome-icon icon="fa-solid fa-bed" />
                                 </span>
                                 <p v-if="i == apartment.rooms_number">
