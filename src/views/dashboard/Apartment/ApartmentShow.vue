@@ -89,8 +89,8 @@ export default {
     </div>
     <hr>
     <!-- SPONSOR -->
-    <div class="mb">
-        <h2>Sponsorizzazioni</h2>
+    <div class="my-3">
+        <h2 class="mb">Sponsorizzazioni</h2>
         <!-- <div class="mb" v-if="apartment.sponsors.length > 0">
             <h4>Servizi:</h4>
             <div class="sponsors" v-for="sponsor in apartment.sponsors">
@@ -99,7 +99,7 @@ export default {
         </div>
         <div v-else> -->
         <div>
-            <p>Al momento non hai nessuna sponsorizzazione! Vuoi sponsorizzare il tuo appartamento? Clicca sul bottone in basso</p>
+            <p class="mb">Al momento non hai nessuna sponsorizzazione! Vuoi sponsorizzare il tuo appartamento? Clicca sul bottone in basso</p>
             <button class="btn btn-sponsor">
                 <font-awesome-icon icon="fa-solid fa-rocket" />
                 Sponsorizza
@@ -110,8 +110,8 @@ export default {
     <hr>
     <!-- MESSAGGI -->
     <!-- message, email, -->
-    <div class="mb">
-        <h2>I tuoi messaggi</h2>
+    <div class="my-3">
+        <h2 class="mb">I tuoi messaggi</h2>
         <div class="mb" v-if="apartment.messages.length > 0">
             <span>Hai {{ apartment.messages.length }} messaggi ricevuti</span>
             <div class="row" v-for="message in apartment.messages">
