@@ -179,6 +179,11 @@ export default {
                 .catch((response) => {
                     console.log('Errore Messaggio', response.data);
                 })
+                this.requestSent = true;
+                setTimeout(() => {
+                    this.requestSent = false;
+                    this.message.text = '';
+            }, 2000);
         }
     },
     mounted() {
@@ -332,7 +337,8 @@ export default {
                             </div>
 
                             <div class="row">
-                                <AppButton :label="'Invia messaggio'" :type="'solid'" :palette="'primary'" />
+                                <AppButton v-if="!this.requestSent" :label="'Invia messaggio'" :type="'solid'" :palette="'primary'" />
+                                <AppButton v-if="this.requestSent" :label="'Messaggio inviato!'" :type="'solid'" :palette="'success'" />
                             </div>
                         </form>
                         <AppErrorForm />
