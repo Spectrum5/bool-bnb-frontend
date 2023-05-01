@@ -287,7 +287,7 @@ export default {
                                         <font-awesome-icon icon="fa-solid fa-bed" />
                                     </span>
                                     <p v-if="i == apartment.rooms_number">
-                                        {{ Math.floor(apartment.beds_number / apartment.rooms_number) - 1 }} letto
+                                        {{ Math.floor(apartment.beds_number / apartment.rooms_number)}} letto
                                         matrimoniale
                                         + 1 letto singolo
                                     </p>
