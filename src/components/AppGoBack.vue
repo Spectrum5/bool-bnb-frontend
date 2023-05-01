@@ -21,7 +21,7 @@ export default {
 
 <template>
     <router-link to="/" class="customLink">
-        <font-awesome-icon icon="fa-solid fa-chevron-left" />
+        <font-awesome-icon icon="fa-solid fa-chevron-left" class="icon"/>
         <span class="label">{{ label }}</span>
     </router-link>
 </template>
@@ -29,5 +29,11 @@ export default {
 <style lang="scss" scoped>
 // @use '../styles/partials/variables.scss' as *;
 // @use '../styles/partials/mixins.scss' as *;
+.icon {
+    margin-right: 5px;
+}
+.label {
+    text-transform: capitalize;
+}
 
 </style>

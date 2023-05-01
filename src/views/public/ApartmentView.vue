@@ -11,13 +11,17 @@ register();
 import PublicPageLayout from './PublicPageLayout.vue';
 import AppErrorForm from '../../components/AppErrorForm.vue';
 import AppGoBack from '../../components/AppGoBack.vue';
+import AppButton from '../../components/AppButton.vue';
+import AppLoading from '../../components/AppLoading.vue';
 
 export default {
     name: 'ApartmentView',
     components: {
         PublicPageLayout,
         AppErrorForm,
-        AppGoBack
+        AppGoBack,
+        AppButton,
+        AppLoading
     },
     data() {
         return {
@@ -35,6 +39,9 @@ export default {
         }
     },
     methods: {
+        handleMessage() {
+            this.validateData();
+        },
         addError(message, field) {
             // Controlla se in store.errors sono presenti errori con lo stesso campo di quello passato
             // e se non ci sono aggiunge l'errore passato come argomento, altrimenti no
@@ -63,35 +70,12 @@ export default {
 
                     // Richiede la mappa solo dopo aver ricevuto le coordinate dell'appartamento
                     this.getMap();
-
-                    // Richiede le immagini dopo aver salvato i valori dell'appartamento in this.apartment
-                    // this.getImages();
                 })
                 .catch((response) => {
                     console.log('Errore Richiesta Appartamento', response.data);
                 })
         },
-
-        getImages() {
-            axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
-                .then((response) => {
-                    this.images = response.data.images;
-                    console.log('Images', response.data);
-                })
-        },
         async getMap() {
-            // const map = await fetch(`${this.url_api_tomtom}/1/staticimage?`, {
-            //     key: this.api_key_tomtom,
-            //     zoom: 15,
-            //     center: `${this.apartment.lng},${this.apartment.lat}`,
-            //     format: 'png',
-            //     layer: 'basic',
-            //     style: 'main',
-            //     width: 1305,
-            //     height: 748,
-            //     view: 'Unified',
-            //     language: 'it-IT'
-            // });
             const map = await fetch(`${this.url_api_tomtom}/1/staticimage?key=${this.api_key_tomtom}&zoom=15&center=${this.apartment.lng},${this.apartment.lat}&format=png&layer=basic&style=main&width=1305&height=748&view=Unified&language=it-IT`);
             const data = await map.blob();
             this.mapUrl = URL.createObjectURL(data);
@@ -125,21 +109,56 @@ export default {
                 this.addError('La tua email contiene caratteri non permessi', 'email');
                 emailInput.classList.add('invalid');
             }
+            else {
+                const index = this.store.errors.findIndex(error => error.field === "email");
+                this.store.errors.splice(index, 1);
+            }
         },
-
         messageValidation() {
             const messageInput = document.getElementById('message');
             messageInput.classList.remove('invalid');
 
             const messageValue = messageInput.value.trim();
 
-            if (messageValue.length < 10) {
+            if (messageValue.length == 0) {
+                this.addError('Non hai inserito un messaggio', 'message');
+                messageInput.classList.add('invalid');
+            }
+            else if (messageValue.length < 10) {
                 this.addError('Il messaggio deve essere di almeno 10 caratteri', 'message');
                 messageInput.classList.add('invalid');
             } else if (messageValue.length > 4096) {
                 this.addError('Il messaggio deve essere di massimo 4096 caratteri', 'message');
                 messageInput.classList.add('invalid');
             }
+            else {
+                const index = this.store.errors.findIndex(error => error.field === "message");
+                this.store.errors.splice(index, 1);
+            }
+        },
+        shakeInputs() {
+            if (this.store.errors.length > 0) {
+                this.store.errors.forEach(error => {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                });
+            }
+        },
+        validateData() {
+            // Front End Validation
+            console.log('Validazione dati messaggio...');
+            this.store.errors = [];
+
+            this.emailValidation();
+            this.messageValidation();
+
+            this.shakeInputs();
+
+            // Controlla se validazione e' andata a buon fine
+            if (this.store.errors.length == 0) this.sendMessage();
+            else console.log('Hai inserito dati non corretti. Riprova.');
         },
         sendMessage() {
             console.log('Invio messaggio...');
@@ -160,40 +179,39 @@ export default {
     mounted() {
         document.title = 'Boolbnb';
         this.getApartment();
-        // this.getImages();
     }
 }
 </script>
 
 <template>
     <PublicPageLayout>
-        <AppGoBack :label="'torna alla home'"/>
-        <!-- <button class="btn" @click="$router.push('/')">torna alla home</button> -->
 
         <!-- CONTAINER PRINCIPALE -->
         <div class="container" v-if="this.apartment">
-            <!-- TITOLO E INDIRIZZO -->
-            <section id="title-address">
-                <h2 class="mb-2">{{ apartment.title }}</h2>
-                <h4 class="mb-4">Dove si trova:
-                    <strong>
-                        <span class="text-decoration-underline">
-                            <a class="text-dark" href="#maps">{{ apartment.address }}</a>
-                        </span>
-                    </strong>
-                </h4>
-            </section>
-            <!-- SEZIONE IMMAGINI APARTMENT -->
-            <div>
-                <swiper-container id="slider" :navigation="true" :pagination="true" :slides-per-view="3">
-                    <swiper-slide class="slide" v-for="image in apartment.images">
-                        <img :src="`http://localhost:8000/storage/apartments/${image.url}`" :alt="apartment.title">
-                    </swiper-slide>
-                </swiper-container>
-            </div>
-            <!-- CONTAINER PER INFO APARTMENT + MESSAGGIO -->
-            <div class="my-secondary-container my-4">
-                <div>
+            <AppGoBack :label="'torna alla home'" />
+
+            <div class="body">
+                <div class="leftColumn">
+                    <!-- TITOLO E INDIRIZZO -->
+                    <section id="title-address">
+                        <h1 class="mainTitle">{{ apartment.title }}</h1>
+                        <h4 class="address">Dove si trova:
+                            <strong>
+                                <a href="#map">{{ apartment.address }}</a>
+                            </strong>
+                        </h4>
+                    </section>
+
+                    <!-- IMMAGINI APARTMENT -->
+                    <section id="imagesSection">
+                        <swiper-container id="slider" :navigation="true" :pagination="true" :centered-slides="true"
+                            :slides-per-view="2" :space-between="25">
+                            <swiper-slide class="slide" v-for="image in apartment.images">
+                                <img :src="`http://localhost:8000/storage/apartments/${image.url}`" :alt="apartment.title">
+                            </swiper-slide>
+                        </swiper-container>
+                    </section>
+
                     <!-- INFO APARTMENT STANZE, LETTI, BAGNI -->
                     <section class="my-3">
                         <h3 id="host-name" class="text-capitalize mb-1">Host: {{ apartment.user.first_name }} {{
@@ -206,6 +224,7 @@ export default {
                             <span>{{ apartment.bathrooms_number }} bagni</span>
                         </p>
                     </section>
+
                     <!-- DESCRIZIONE APARTMENT -->
                     <section class="my-3">
                         <div class="description">
@@ -215,12 +234,13 @@ export default {
                             </p>
                         </div>
                     </section>
+
                     <!-- SERVIZI APARTMENT -->
                     <section class="my-3">
                         <div>
                             <h3 class="mb-1">Cosa troverai</h3>
                             <div>
-                                <div class="services" v-for="service in apartment.services">
+                                <div class="service" v-for="service in apartment.services">
                                     <span>
                                         <font-awesome-icon :icon="`fa-solid fa-${service.icon}`" />
                                     </span>
@@ -229,6 +249,7 @@ export default {
                             </div>
                         </div>
                     </section>
+
                     <section class="my-3">
                         <h3 class="mb-1">Dove dormirai</h3>
                         <div class="room-desc d-inline-block mb-1" v-for="i in apartment.rooms_number">
@@ -236,7 +257,7 @@ export default {
                             <!-- Se il numero di camere e il numero di letti è pari, avrò un letto matrimoniale per ogni stanza -->
                             <div v-if="apartment.beds_number % 2 == 0 && apartment.rooms_number % 2 == 0">
                                 <span v-for="i in (apartment.beds_number / apartment.rooms_number)">
-                                    <!-- <i class="fa-solid fa-bed"></i> -->
+                                    <i class="fa-solid fa-bed"></i>
                                     <font-awesome-icon icon="fa-solid fa-bed" />
                                 </span>
                                 <p>1 letto matrimoniale a due piazze</p>
@@ -244,7 +265,7 @@ export default {
                             <div v-else>
                                 <div>
                                     <span v-for=" i in (Math.floor(apartment.beds_number / apartment.rooms_number))">
-                                        <!-- <i class="fa-solid fa-bed"></i> -->
+                                        <i class="fa-solid fa-bed"></i>
                                         <font-awesome-icon icon="fa-solid fa-bed" />
                                     </span>
                                     <p v-if="i == apartment.rooms_number">
@@ -258,57 +279,82 @@ export default {
                             </div>
                         </div>
                     </section>
+
                     <!-- SEZIONE MAPPA -->
                     <section class="my-3">
                         <h3 class="mb-1">Dove ti troverai</h3>
-                        <div id="maps">
+                        <div id="map">
                             <img :src="this.mapUrl" alt="" v-if="this.mapUrl">
                         </div>
                     </section>
                 </div>
 
-                <!-- SEZIONE CONTATTA L'HOST -->
-                <div class="contact">
-                    <h3 class="text-center mb-3">Contatta l'host</h3>
-                    <h4 class="mb-3">
-                        <strong>
-                            € {{ apartment.price }}
-                        </strong>
-                        / per notte
-                    </h4>
-                    <form @submit.prevent="sendMessage()">
-                        <div class="row">
-                            <div class="group large">
-                                <label for="email">Indirizzo email</label>
-                                <input type="email" id="email" name="email" placeholder="Inserisci la tua mail"
-                                    v-model="message.contactEmail" :disabled="setContactEmail()">
+                <div class="rightColumn">
+                    <!-- SEZIONE CONTATTA L'HOST -->
+                    <div class="contact formContainer">
+                        <h3 class="text-center mb-3">Contatta l'host</h3>
+                        <h4 class="mb-3">
+                            <strong>
+                                € {{ apartment.price }}
+                            </strong>
+                            / per notte
+                        </h4>
+                        <form @submit.prevent="handleMessage()">
+                            <div class="row">
+                                <div class="group large">
+                                    <label for="email">Indirizzo email</label>
+                                    <input type="email" id="email" name="email" placeholder="Inserisci la tua mail"
+                                        v-model="message.contactEmail" :disabled="setContactEmail()"
+                                        v-on:blur="emailValidation()">
+                                </div>
                             </div>
+
                             <div class="row">
                                 <div class="group large">
                                     <label for="message" class="form-label mb-1">Scrivi il tuo messaggio</label>
                                     <textarea class="form-control" name="message" id="message" rows="6"
-                                        placeholder="Scrivi il tuo messaggio" v-model="message.text"></textarea>
+                                        placeholder="Scrivi il tuo messaggio" v-model="message.text"
+                                        v-on:blur="messageValidation()"></textarea>
                                 </div>
                             </div>
-                            <button type="submit" class="btn my-btn">Invia richiesta</button>
-                            <AppErrorForm />
-                        </div>
-                    </form>
-                </div>
 
+                            <div class="row">
+                                <AppButton :label="'Invia messaggio'" :type="'solid'" :palette="'primary'" />
+                            </div>
+                        </form>
+                        <AppErrorForm />
+                    </div>
+                </div>
             </div>
         </div>
+
+        <AppLoading v-else/>
+
     </PublicPageLayout>
 </template>
 
 <style lang="scss" scoped>
 @use '../../styles/partials/form.scss' as *;
+@use '../../styles/partials/variables.scss' as *;
+@use '../../styles/partials/mixins.scss' as *;
 
-.btn {
-    border: 1.5px solid #000;
-    border-radius: 10px;
-    padding: 7px;
-    margin: 5px;
+.container {
+    @include largeContainer;
+    padding-top: 1rem;
+}
+
+.body {
+    display: flex;
+    width: 100%;
+    gap: 1.5rem;
+
+    .leftColumn {
+        flex-basis: 75%;
+    }
+
+    .rightColumn {
+        flex-basis: 25%;
+    }
 }
 
 section:not(#title-address, section:last-of-type) {
@@ -316,74 +362,56 @@ section:not(#title-address, section:last-of-type) {
     padding: 15px 0;
 }
 
-a {
-    color: black;
+.address {
+    margin-bottom: 1rem;
+
+    a {
+        color: gray;
+    }
 }
 
-img {
-    display: inline-block;
-    height: 450px;
-    width: 650px;
-    border-radius: 8px;
-    object-position: center;
-}
+#imagesSection {
+    max-width: 1100px;
 
-h3,
-h4 {
-    font-weight: 600;
-}
-
-.container {
-    margin: auto;
-    margin-top: 40px;
-    max-width: 75%;
-    // border: 1px dashed black;
-}
-
-.my-secondary-container {
-    display: flex;
-    gap: 40px;
-    justify-content: space-between;
-    // margin-top: 40px;
-
-    #host-name {
-        font-weight: 700;
+    #slider {
+        width: 100%;
+        padding: 1rem;
+        --swiper-navigation-color: #f39237;
+        --swiper-pagination-color: #ffffff;
     }
 
-    .description {
-        text-align: justify;
-        text-justify: inter-word;
-    }
+    .slide {
+        @include customShadow;
+        width: calc(100% / 3);
+        height: 400px;
+        overflow: hidden;
+        border-radius: 8px;
+        opacity: 0.6;
 
-    .room-desc {
-        border: 1px solid black;
-        border-radius: 10px;
-        padding: 10px;
-        margin-right: 10px;
-
-        h6 {
-            font-weight: 700;
-            font-size: 1rem;
+        &.swiper-slide-active {
+            opacity: 1;
         }
 
-        span {
-            margin-right: 5px;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
-
-        p {
-            font-size: 0.8rem;
-        }
-    }
-
-    .maps {
-        border: 1px solid;
-        height: 450px;
-        width: 600px;
-        background-color: antiquewhite;
     }
 }
 
-.services {
+#host-name {
+    font-weight: 700;
+}
+
+.description {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.service {
+    background-color: $light-color-one;
     border: 1px solid;
     border-radius: 5px;
     padding-inline: 7px;
@@ -392,8 +420,8 @@ h4 {
     margin-bottom: 7px;
     vertical-align: middle;
     line-height: 25px;
+    text-transform: capitalize;
 
-    // text-transform: capitalize;
     span {
         vertical-align: middle;
         line-height: 25px;
@@ -401,7 +429,28 @@ h4 {
     }
 }
 
-#maps {
+.room-desc {
+    background-color: $light-color-one;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    margin-right: 10px;
+
+    h6 {
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    span {
+        margin-right: 5px;
+    }
+
+    p {
+        font-size: 0.8rem;
+    }
+}
+
+#map {
     height: 450px;
     width: 600px;
     background-color: bisque;
@@ -416,48 +465,15 @@ h4 {
 
 .contact {
     margin-top: 27px;
-    min-width: 40%;
     margin-left: auto;
     border: 1px solid;
-    border-radius: 10px;
-    padding: 1rem;
     align-self: flex-start;
     position: sticky;
-    top: 70px;
+    top: 100px;
     z-index: 1;
+}
 
-    input,
-    textarea {
-        width: 100%;
-        border: 1px solid black;
-        line-height: 30px;
-        border-radius: 10px;
-        padding: 3px 0 3px 7px;
-    }
-
-    // textarea{
-    //     width: 100%;
-    //     border: 1px solid black;
-    //     border-radius: 10px;
-    //     padding: 3px 0 3px 7px;
-    // }
-    .my-btn {
-        display: block;
-        width: 100%;
-        color: white;
-        font-weight: 700;
-        padding: 10px 0px;
-        border-radius: 10px;
-        background-color: #ff4a86;
-        border: #ff4a86 !important;
-    }
-
-    // textarea::placeholder,
-    // input::placeholder {
-    //     font-size: 0.8rem;
-    // }
+.row:last-child:deep button {
+    width: 100%;
 }
 </style>
-
-<!-- $color-one-dark: #d63a5c;
-$color-one-light: #ff4a86; -->

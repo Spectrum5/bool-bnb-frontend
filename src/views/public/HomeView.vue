@@ -62,8 +62,6 @@ export default {
             const self = this;
             window.onscroll = function () {
                 if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 1) {
-                    // sei arrivato alla fine della pagina
-                    // console.log('SCROLL',window.innerHeight + window.pageYOffset)
                     
                     if (self.callOk) {
                         self.loadMore();
