@@ -78,7 +78,7 @@ export default {
             }
         },
 
-        functionDeleteError(fieldName) {
+        deleteError(fieldName) {
             // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
             const index = this.store.errors.findIndex(error => error.field === fieldName);
             if (index >= 0) {
@@ -91,7 +91,7 @@ export default {
             const titleInput = document.getElementById('title');
             titleInput.classList.remove('invalid');
 
-            this.functionDeleteError('title');
+            this.deleteError('title');
 
             if (titleInput.value.trim().length === 0) {
                 this.addError('Il campo nome deve essere compilato', 'title');
@@ -109,7 +109,7 @@ export default {
             const addressInput = document.getElementById('address');
             addressInput.classList.remove('invalid');
 
-            this.functionDeleteError('address');
+            this.deleteError('address');
 
             if (addressInput.value.trim().length === 0) {
                 this.addError('Il campo indirizzo deve essere compilato', 'address');
@@ -128,7 +128,7 @@ export default {
             const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
             fileInput.classList.remove('invalid');
 
-            this.functionDeleteError('address');
+            this.deleteError('address');
 
             if (!fileInput.value) {
                 this.addError('Devi selezionare almeno un\'immagine', 'images');
@@ -143,7 +143,7 @@ export default {
             const priceInput = document.getElementById('price');
             priceInput.classList.remove('invalid');
 
-            this.functionDeleteError('price');
+            this.deleteError('price');
 
             if (priceInput.value.trim().length === 0) {
                 this.addError('Il campo prezzo deve essere compilato', 'price');
@@ -161,7 +161,7 @@ export default {
             const roomsNumberInput = document.getElementById('rooms_number');
             roomsNumberInput.classList.remove('invalid');
 
-            this.functionDeleteError('rooms_number');
+            this.deleteError('rooms_number');
 
             if (roomsNumberInput.value.trim().length === 0) {
                 this.addError('Il campo stanze deve essere compilato', 'rooms_number');
@@ -179,7 +179,7 @@ export default {
             const bedsNumberInput = document.getElementById('beds_number');
             bedsNumberInput.classList.remove('invalid');
 
-            this.functionDeleteError('beds_number');
+            this.deleteError('beds_number');
 
             if (bedsNumberInput.value.trim().length === 0) {
                 this.addError('Il campo posti letto deve essere compilato', 'beds_number');
@@ -197,7 +197,7 @@ export default {
             const bathroomsNumberInput = document.getElementById('bathrooms_number');
             bathroomsNumberInput.classList.remove('invalid');
 
-            this.functionDeleteError('bathrooms_number');
+            this.deleteError('bathrooms_number');
 
             if (bathroomsNumberInput.value.trim().length === 0) {
                 this.addError('Il campo numero di bagni deve essere compilato', 'bathrooms_number');
@@ -215,7 +215,7 @@ export default {
             const descriptionInput = document.getElementById('description');
             descriptionInput.classList.remove('invalid');
 
-            this.functionDeleteError('description');
+            this.deleteError('description');
 
             const descriptionValue = descriptionInput.value.trim();
 
@@ -236,7 +236,7 @@ export default {
             const sizeInput = document.getElementById('size');
             sizeInput.classList.remove('invalid');
 
-            this.functionDeleteError('size');
+            this.deleteError('size');
 
             if (sizeInput.value.trim().length === 0) {
                 this.addError('Il campo Inserisci i mq deve essere compilato', 'size');
@@ -257,7 +257,7 @@ export default {
             const visibilityInput = document.getElementById('visibility');
             visibilityInput.classList.remove('invalid');
 
-            this.functionDeleteError('visibility');
+            this.deleteError('visibility');
 
             if (this.form.visibility !== true && this.form.visibility !== false) {
                 this.addError('Il campo visibilità non è valido', 'visibility');
