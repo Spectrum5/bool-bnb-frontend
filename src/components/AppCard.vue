@@ -48,6 +48,10 @@ export default {
 
         <button class="cardFavorites" @click.stop="addToFavorites()" ref="btn"></button>
 
+        <div v-if="apartment.sponsors.length > 0" class="sponsorized">
+            <font-awesome-icon icon="fa-solid fa-medal" />
+        </div>
+
         <div class="imageContainer">
             <AppSlider :images="this.apartment.images" v-if="this.apartment.images" @goShowEvent="goShow()" />
         </div>
@@ -113,6 +117,16 @@ export default {
 button {
     background: none;
     border: none;
+}
+
+.sponsorized{
+    max-width: fit-content;
+    position: absolute;
+    z-index: 2;
+    color: $color-three-dark;
+    font-size: 25px;
+    top: -0.8rem;
+    left: -0.5rem;
 }
 
 .card {

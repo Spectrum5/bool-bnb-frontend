@@ -28,7 +28,7 @@ export default {
                 last_name: null,
                 email: null,
                 password: null,
-                password_confirmation: null
+                password_confirmation: null,
             }
         }
     },
@@ -54,9 +54,22 @@ export default {
                 }
             }
         },
+
+        deleteError(fieldName){
+            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+            const index = this.store.errors.findIndex(error => error.field === fieldName);
+            if (index >= 0) {
+                this.store.errors.splice(index, 1);
+            }
+        },
+
+        // FUNZIONI PER VALIDAZIONI SINGOLI INPUT
         firstNameValidation() {
             let firstNameInput = document.getElementById('first_name');
             firstNameInput.classList.remove('invalid');
+
+            this.deleteError('first_name');
+                
 
             // First Name Length
             if (firstNameInput.value.trim().length == 0) {
@@ -71,14 +84,16 @@ export default {
                 this.addError('Il campo nome non deve superare i 128 caratteri', 'first_name');
                 firstNameInput.classList.add('invalid');
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "first_name");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "first_name");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         lastNameValidation() {
             let lastNameInput = document.getElementById('last_name');
             lastNameInput.classList.remove('invalid');
+
+            this.deleteError('last_name');
 
             // Last Name Length
             if (lastNameInput.value.trim().length == 0) {
@@ -93,14 +108,16 @@ export default {
                 this.addError('Il campo cognome non deve superare i 128 caratteri', 'last_name');
                 lastNameInput.classList.add('invalid');
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "last_name");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "last_name");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         emailValidation() {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
+
+            this.deleteError('email');
 
             // Email Validation
             if (emailInput.value.trim().length == 0) {
@@ -121,14 +138,16 @@ export default {
                 this.addError('La tua email contiene caratteri non permessi', 'email');
                 emailInput.classList.add('invalid');
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "email");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "email");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         passwordValidation() {
             let passwordInput = document.getElementById('password');
             passwordInput.classList.remove('invalid');
+
+            this.deleteError('password');
 
             // Password Lenght
             if (passwordInput.value.length == 0) {
@@ -143,15 +162,17 @@ export default {
                 this.addError('La password non deve superare i 64 caratteri', 'password');
                 passwordInput.classList.add('invalid');
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "password");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "password");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         passwordConfirmationValidation() {
             let passwordConfirmationInput = document.getElementById('password_confirmation');
             let passwordInput = document.getElementById('password');
             passwordConfirmationInput.classList.remove('invalid');
+
+            this.deleteError('password_confirmation');
 
             // Password Confirmation
             if (passwordConfirmationInput.value.length == 0) {
@@ -162,14 +183,16 @@ export default {
                 this.addError('Le password inserite non coincidono', 'password_confirmation');
                 passwordConfirmationInput.classList.add('invalid');
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "password_confirmation");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "password_confirmation");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         dateOfBirthValidation() {
             let datOfBirthInput = document.getElementById('date_of_birth');
             datOfBirthInput.classList.remove('invalid');
+
+            this.deleteError('date_of_birth');
 
             const [year, month, day] = datOfBirthInput.value.split('-');
             const now = new Date();
@@ -183,6 +206,7 @@ export default {
                     this.addError('Devi avere almeno 9 anni per poterti registrare', 'date_of_birth');
                     datOfBirthInput.classList.add('invalid');
                 }
+                
                 if (month < 1 || month > 12) {
                     this.addError('Il mese deve essere compreso tra 1 e 12', 'date_of_birth');
                     datOfBirthInput.classList.add('invalid');
@@ -192,10 +216,10 @@ export default {
                     datOfBirthInput.classList.add('invalid');
                 }
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "date_of_birth");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "date_of_birth");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         shakeInputs() {
             if (this.store.errors.length > 0) {
@@ -207,6 +231,19 @@ export default {
                 });
             }
         },
+
+        // FUNZIONE PER SHAKE ERROR
+        shakeInputs() {
+            if (this.store.errors.length > 0) {
+                this.store.errors.forEach(error => {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                });
+            }
+        },
+
         validateData() {
             // Front End Validation
             console.log('Validazione dati registrazione...');

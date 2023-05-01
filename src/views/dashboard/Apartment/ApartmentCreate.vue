@@ -47,7 +47,6 @@ export default {
         getFormData() {
             axios.get('http://localhost:8000/api/apartments/create')
                 .then(response => {
-                    // console.log(response.data.services);
                     this.services = response.data.services;
                 })
         },
@@ -72,10 +71,20 @@ export default {
             }
         },
 
+        deleteError(fieldName) {
+            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+            const index = this.store.errors.findIndex(error => error.field === fieldName);
+            if (index >= 0) {
+                this.store.errors.splice(index, 1);
+            }
+        },
+
         titleValidation() {
             // Title Length
             const titleInput = document.getElementById('title');
             titleInput.classList.remove('invalid');
+
+            this.deleteError('title');
 
             if (titleInput.value.trim().length === 0) {
                 this.addError('Il campo nome deve essere compilato', 'title');
@@ -93,6 +102,8 @@ export default {
             const addressInput = document.getElementById('address');
             addressInput.classList.remove('invalid');
 
+            this.deleteError('address');
+
             if (addressInput.value.trim().length === 0) {
                 this.addError('Il campo indirizzo deve essere compilato', 'address');
                 addressInput.classList.add('invalid');
@@ -105,23 +116,27 @@ export default {
             }
         },
 
-        // imageValidation() {
-        //     const fileInput = document.getElementById('image');
-        //     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-        //     fileInput.classList.remove('invalid');
+        imageValidation() {
+            const fileInput = document.getElementById('images');
+            const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            fileInput.classList.remove('invalid');
 
-        //     if (!fileInput.value) {
-        //         this.addError('Devi selezionare un\'immagine', 'image');
-        //         fileInput.classList.add('invalid');
-        //     } else if (!allowedExtensions.exec(fileInput.value)) {
-        //         this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'image');
-        //         fileInput.classList.add('invalid');
-        //     }
-        // },
+            this.deleteError('address');
+
+            if (!fileInput.value) {
+                this.addError('Devi selezionare almeno un\'immagine', 'image');
+                fileInput.classList.add('invalid');
+            } else if (!allowedExtensions.exec(fileInput.value)) {
+                this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'image');
+                fileInput.classList.add('invalid');
+            }
+        },
 
         priceValidation() {
             const priceInput = document.getElementById('price');
             priceInput.classList.remove('invalid');
+
+            this.deleteError('price');
 
             if (priceInput.value.trim().length === 0) {
                 this.addError('Il campo prezzo deve essere compilato', 'price');
@@ -139,6 +154,8 @@ export default {
             const roomsNumberInput = document.getElementById('rooms_number');
             roomsNumberInput.classList.remove('invalid');
 
+            this.deleteError('rooms_number');
+
             if (roomsNumberInput.value.trim().length === 0) {
                 this.addError('Il campo stanze deve essere compilato', 'rooms_number');
                 roomsNumberInput.classList.add('invalid');
@@ -151,9 +168,29 @@ export default {
             }
         },
 
+        bedsNumberValidation() {
+            const bedsNumberInput = document.getElementById('beds_number');
+            bedsNumberInput.classList.remove('invalid');
+
+            this.deleteError('beds_number');
+
+            if (bedsNumberInput.value.trim().length === 0) {
+                this.addError('Il campo posti letto deve essere compilato', 'beds_number');
+                bedsNumberInput.classList.add('invalid');
+            } else if (isNaN(bedsNumberInput.value.trim())) {
+                this.addError('Il campo posti letto deve contenere solo numeri', 'beds_number');
+                bedsNumberInput.classList.add('invalid');
+            } else if (bedsNumberInput.value.trim() <= 0 || bedsNumberInput.value.trim() > 16) {
+                this.addError('Il campo posti letto deve essere compreso tra 1 e 16', 'beds_number');
+                bedsNumberInput.classList.add('invalid');
+            }
+        },
+
         bathroomsNumberValidation() {
             const bathroomsNumberInput = document.getElementById('bathrooms_number');
             bathroomsNumberInput.classList.remove('invalid');
+
+            this.deleteError('bathrooms_number');
 
             if (bathroomsNumberInput.value.trim().length === 0) {
                 this.addError('Il campo numero di bagni deve essere compilato', 'bathrooms_number');
@@ -171,6 +208,8 @@ export default {
             const descriptionInput = document.getElementById('description');
             descriptionInput.classList.remove('invalid');
 
+            this.deleteError('description');
+
             const descriptionValue = descriptionInput.value.trim();
 
             if (descriptionValue.length < 10) {
@@ -185,6 +224,8 @@ export default {
         sizeValidation() {
             const sizeInput = document.getElementById('size');
             sizeInput.classList.remove('invalid');
+
+            this.deleteError('size');
 
             if (sizeInput.value.trim().length === 0) {
                 this.addError('Il campo Inserisci i mq deve essere compilato', 'size');
@@ -205,33 +246,31 @@ export default {
             const visibilityInput = document.getElementById('visibility');
             visibilityInput.classList.remove('invalid');
 
+            this.deleteError('visibility');
+
             if (this.form.visibility !== true && this.form.visibility !== false) {
                 this.addError('Il campo visibilità non è valido', 'visibility');
                 visibilityInput.classList.add('invalid');
             }
         },
 
-        // latValidation() {
-        //     // Latitude Validation
-        //     const latInput = document.getElementById('lat');
-        //     latInput.classList.remove('invalid');
+        servicesValidation() {
+            if (this.form.services.length == 0) {
+                this.addError('Devi selezionare almeno un servizio', 'services');
+            }
+        },
 
-        //     if (isNaN(latInput.value) || latInput.value < -90 || latInput.value > 90) {
-        //         this.addError('Inserisci una latitudine valida', 'lat');
-        //         latInput.classList.add('invalid');
-        //     }
-        // },
-
-        // lngValidation() {
-        //     // Longitude Validation
-        //     const lngInput = document.getElementById('lng');
-        //     lngInput.classList.remove('invalid');
-
-        //     if (isNaN(lngInput.value) || lngInput.value < -180 || lngInput.value > 180) {
-        //         this.addError('Inserisci una longitudine valida', 'lng');
-        //         lngInput.classList.add('invalid');
-        //     }
-        // },
+        // FUNZIONE PER SHAKE ERROR
+        shakeInputs() {
+            if (this.store.errors.length > 0) {
+                this.store.errors.forEach(error => {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                });
+            }
+        },
 
         validateData() {
             // Front End Validation
@@ -239,19 +278,21 @@ export default {
             // Reset Form Validation
             this.store.errors = [];
             this.titleValidation();
-            // this.latValidation();
-            // this.lngValidation();
-            this.addressValidation();
-            // this.imageValidation();
-            this.visibilityValidation();
             this.priceValidation();
+            this.sizeValidation();
+            this.addressValidation();
             this.roomsNumberValidation();
+            this.bedsNumberValidation();
             this.bathroomsNumberValidation();
             this.descriptionValidation();
-            this.sizeValidation();
-            // this.servicesValidation();
+            this.visibilityValidation();
+            this.servicesValidation();
+            this.imageValidation();
+            
+            this.shakeInputs();
 
             // https://api.tomtom.com/search/2/geocode/Piazza del Colosseo, 1, 00184 Roma RM.json?key=Vru3uP06eapOxpYMujwrRlVLMB5Vkqch&typeahead=true&limit=1&radius=500
+            
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) {
                 // async getMap() {
@@ -419,7 +460,8 @@ export default {
                         </div>
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="beds_number">Posti letto: *</label>
-                            <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number">
+                            <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number"
+                            v-on:blur="bedsNumberValidation()">
                             <!-- min="1"
                                 max="16" -->
                         </div>
@@ -462,7 +504,8 @@ export default {
                             </label>
                             <input name="images" id="images" type="file" accept="image/*" multiple
                                 @change="addFiles($event.target.name, $event.target.files)"
-                                :disabled="previewUrls.length >= 3">
+                                :disabled="previewUrls.length >= 3"
+                                v-on:blur="imageValidation()">
                             <!-- <transition name="fade"> -->
                             <div class="previews" v-if="previewUrls.length > 0">
                                 <div class="preview" v-for="url, index in previewUrls">

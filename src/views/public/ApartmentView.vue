@@ -88,9 +88,14 @@ export default {
                 return true;
             }
         },
+
+        // FUNZIONE PER VALIDAZIONI CONTATTI
+
         emailValidation() {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
+
+            this.deleteError('email');
 
             // Email Validation
             if (emailInput.value.trim().length == 0) {
@@ -120,6 +125,8 @@ export default {
             const messageInput = document.getElementById('message');
             messageInput.classList.remove('invalid');
 
+            this.deleteError('message');
+
             const messageValue = messageInput.value.trim();
 
             if (messageValue.length == 0) {
@@ -132,8 +139,7 @@ export default {
             } else if (messageValue.length > 4096) {
                 this.addError('Il messaggio deve essere di massimo 4096 caratteri', 'message');
                 messageInput.classList.add('invalid');
-            }
-            else {
+            } else {
                 const index = this.store.errors.findIndex(error => error.field === "message");
                 this.store.errors.splice(index, 1);
             }
@@ -148,6 +154,7 @@ export default {
                 });
             }
         },
+                
         validateData() {
             // Front End Validation
             console.log('Validazione dati messaggio...');
@@ -161,7 +168,8 @@ export default {
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.sendMessage();
             else console.log('Hai inserito dati non corretti. Riprova.');
-        },
+        }, 
+
         sendMessage() {
             console.log('Invio messaggio...');
 
@@ -486,6 +494,32 @@ section:not(#title-address, section:last-of-type) {
 
     .text {
         font-size: 0.9rem;
+    }
+}
+
+    .maps {
+        border: 1px solid;
+        height: 450px;
+        width: 600px;
+        background-color: antiquewhite;
+    }
+
+
+.services {
+    border: 1px solid;
+    border-radius: 5px;
+    padding-inline: 7px;
+    margin-right: 7px;
+    display: inline-block;
+    margin-bottom: 7px;
+    vertical-align: middle;
+    line-height: 25px;
+
+    // text-transform: capitalize;
+    span {
+        vertical-align: middle;
+        line-height: 25px;
+        font-size: 0.8rem;
     }
 }
 
