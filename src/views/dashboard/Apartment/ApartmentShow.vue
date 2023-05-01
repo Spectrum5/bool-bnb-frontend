@@ -6,6 +6,8 @@ import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
 // Utilities
 import axios from 'axios';
 import { router } from '../../../router';
+import { register } from 'swiper/element/bundle';
+register();
 
 export default {
     name: 'ApartmentShow',
@@ -55,9 +57,14 @@ export default {
 <div class="my-container">
     <div v-if="apartment">
         <!-- SEZIONE IMMAGINI APARTMENT -->
-        <div class="img-container">
-            <img :src="`http://localhost:8000/storage/apartments/${image.url}`" alt="" v-for="image in apartment.images">
-        </div>
+        <section id="imagesSection">
+            <swiper-container id="slider" :navigation="true" :pagination="true" :centered-slides="true"
+                :slides-per-view="2" :space-between="25">
+                <swiper-slide class="slide" v-for="image in apartment.images">
+                    <img :src="`http://localhost:8000/storage/apartments/${image.url}`" :alt="apartment.title">
+                </swiper-slide>
+            </swiper-container>
+        </section>
         <div class="mb">
             <h4>Indirizzo:</h4>
             <p>{{ apartment.address }}</p>
@@ -143,16 +150,34 @@ export default {
     margin-bottom: 15px;
 }
 
-.img-container {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#imagesSection {
+    max-width: 1100px;
 
-    img {
-        max-width: 700px;
-        border-radius: 10px;
+    #slider {
+        width: 100%;
+        padding: 1rem;
+        --swiper-navigation-color: #f39237;
+        --swiper-pagination-color: #ffffff;
+    }
+
+    .slide {
+        @include customShadow;
+        width: calc(100% / 3);
+        height: 400px;
+        overflow: hidden;
+        border-radius: 8px;
+        opacity: 0.6;
+
+        &.swiper-slide-active {
+            opacity: 1;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
     }
 }
 
