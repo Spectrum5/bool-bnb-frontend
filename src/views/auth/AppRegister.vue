@@ -28,7 +28,7 @@ export default {
                 last_name: null,
                 email: null,
                 password: null,
-                password_confirmation: null
+                password_confirmation: null,
             }
         }
     },
@@ -54,9 +54,22 @@ export default {
                 }
             }
         },
+
+        functionDeleteError(fieldName){
+            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+            const index = this.store.errors.findIndex(error => error.field === fieldName);
+            if (index >= 0) {
+                this.store.errors.splice(index, 1);
+            }
+        },
+
+        // FUNZIONI PER VALIDAZIONI SINGOLI INPUT
         firstNameValidation() {
             let firstNameInput = document.getElementById('first_name');
             firstNameInput.classList.remove('invalid');
+
+            this.functionDeleteError('first_name');
+                
 
             // First Name Length
             if (firstNameInput.value.trim().length == 0) {
@@ -80,6 +93,8 @@ export default {
             let lastNameInput = document.getElementById('last_name');
             lastNameInput.classList.remove('invalid');
 
+            this.functionDeleteError('last_name');
+
             // Last Name Length
             if (lastNameInput.value.trim().length == 0) {
                 this.addError('Il campo cognome deve essere compilato', 'last_name');
@@ -101,6 +116,8 @@ export default {
         emailValidation() {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
+
+            this.functionDeleteError('email');
 
             // Email Validation
             if (emailInput.value.trim().length == 0) {
@@ -130,6 +147,8 @@ export default {
             let passwordInput = document.getElementById('password');
             passwordInput.classList.remove('invalid');
 
+            this.functionDeleteError('password');
+
             // Password Lenght
             if (passwordInput.value.length == 0) {
                 this.addError('Il campo password deve essere compilato', 'password');
@@ -153,6 +172,8 @@ export default {
             let passwordInput = document.getElementById('password');
             passwordConfirmationInput.classList.remove('invalid');
 
+            this.functionDeleteError('password_confirmation');
+
             // Password Confirmation
             if (passwordConfirmationInput.value.length == 0) {
                 this.addError('Il campo conferma password deve essere compilato', 'password_confirmation');
@@ -171,6 +192,8 @@ export default {
             let datOfBirthInput = document.getElementById('date_of_birth');
             datOfBirthInput.classList.remove('invalid');
 
+            this.functionDeleteError('date_of_birth');
+
             const [year, month, day] = datOfBirthInput.value.split('-');
             const now = new Date();
 
@@ -183,6 +206,7 @@ export default {
                     this.addError('Devi avere almeno 9 anni per poterti registrare', 'date_of_birth');
                     datOfBirthInput.classList.add('invalid');
                 }
+                
                 if (month < 1 || month > 12) {
                     this.addError('Il mese deve essere compreso tra 1 e 12', 'date_of_birth');
                     datOfBirthInput.classList.add('invalid');
@@ -207,6 +231,19 @@ export default {
                 });
             }
         },
+
+        // FUNZIONE PER SHAKE ERROR
+        shakeInputs() {
+            if (this.store.errors.length > 0) {
+                this.store.errors.forEach(error => {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                });
+            }
+        },
+
         validateData() {
             // Front End Validation
             console.log('Validazione dati registrazione...');

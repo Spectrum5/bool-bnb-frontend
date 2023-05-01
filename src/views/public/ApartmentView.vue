@@ -36,6 +36,7 @@ export default {
                 text: ''
             },
             images: [],
+            requestSent: false,
         }
     },
     methods: {
@@ -86,6 +87,9 @@ export default {
                 return true;
             }
         },
+
+        // FUNZIONE PER VALIDAZIONI CONTATTI
+
         emailValidation() {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
@@ -130,8 +134,7 @@ export default {
             } else if (messageValue.length > 4096) {
                 this.addError('Il messaggio deve essere di massimo 4096 caratteri', 'message');
                 messageInput.classList.add('invalid');
-            }
-            else {
+            } else {
                 const index = this.store.errors.findIndex(error => error.field === "message");
                 this.store.errors.splice(index, 1);
             }
@@ -146,6 +149,7 @@ export default {
                 });
             }
         },
+                
         validateData() {
             // Front End Validation
             console.log('Validazione dati messaggio...');
@@ -159,7 +163,8 @@ export default {
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.sendMessage();
             else console.log('Hai inserito dati non corretti. Riprova.');
-        },
+        }, 
+
         sendMessage() {
             console.log('Invio messaggio...');
 
@@ -365,6 +370,11 @@ export default {
     }
 }
 
+.my-btn-created{
+    background: linear-gradient(90deg, rgba(86, 219, 117, 1) 25%, rgba(40, 167, 69, 1) 75%);
+    border: rgb(40, 167, 69)!important;
+}
+
 section:not(#title-address, section:last-of-type) {
     border-bottom: 1px solid;
     padding: 15px 0;
@@ -454,6 +464,32 @@ section:not(#title-address, section:last-of-type) {
     }
 
     p {
+        font-size: 0.8rem;
+    }
+}
+
+    .maps {
+        border: 1px solid;
+        height: 450px;
+        width: 600px;
+        background-color: antiquewhite;
+    }
+
+
+.services {
+    border: 1px solid;
+    border-radius: 5px;
+    padding-inline: 7px;
+    margin-right: 7px;
+    display: inline-block;
+    margin-bottom: 7px;
+    vertical-align: middle;
+    line-height: 25px;
+
+    // text-transform: capitalize;
+    span {
+        vertical-align: middle;
+        line-height: 25px;
         font-size: 0.8rem;
     }
 }

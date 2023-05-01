@@ -24,6 +24,9 @@ export default {
             selectedServices: [],
             images: [],
             previewUrls: [],
+            //TOM TOM API
+            url_api_tomtom: 'https://api.tomtom.com/search/2/geocode/',
+            api_key_tomtom: 'Vru3uP06eapOxpYMujwrRlVLMB5Vkqch',
 
         }
     },
@@ -44,6 +47,7 @@ export default {
                     console.log('Errore Index Appartamenti', response.data);
                 })
         },
+        // RECUPERO IMMAGINI DEL SINGOLO APPARTAMENTO
         getImages() {
             axios.get(`http://localhost:8000/api/images/${this.form.id}`)
                 .then((response) => {
@@ -54,11 +58,271 @@ export default {
                     console.log('Errore caricamento img dell\'appartamento', response.data);
                 })
         },
-        updateApartment() {
+
+        // FUNZIONI PER ERRORI COMPILAZIONE
+        addError(message, field) {
+            // Check if there are already errors in store.errors with the same field, and if not, add the error
+            if (this.store.errors.length === 0) {
+                this.store.errors.push({
+                    message: message,
+                    field: field,
+                });
+            }
+            else {
+                if (!this.store.errors.some((error) => error.field === field)) {
+                    this.store.errors.push({
+                        message: message,
+                        field: field,
+                    });
+                }
+            }
+        },
+
+        functionDeleteError(fieldName) {
+            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+            const index = this.store.errors.findIndex(error => error.field === fieldName);
+            if (index >= 0) {
+                this.store.errors.splice(index, 1);
+            }
+        },
+
+        titleValidation() {
+            // Title Length
+            const titleInput = document.getElementById('title');
+            titleInput.classList.remove('invalid');
+
+            this.functionDeleteError('title');
+
+            if (titleInput.value.trim().length === 0) {
+                this.addError('Il campo nome deve essere compilato', 'title');
+                titleInput.classList.add('invalid');
+            } else if (titleInput.value.trim().length < 3) {
+                this.addError('Il campo nome deve essere almeno di 3 caratteri', 'title');
+                titleInput.classList.add('invalid');
+            } else if (titleInput.value.trim().length > 50) {
+                this.addError('Il campo nome non deve superare i 128 caratteri', 'title');
+                titleInput.classList.add('invalid');
+            }
+        },
+
+        addressValidation() {
+            const addressInput = document.getElementById('address');
+            addressInput.classList.remove('invalid');
+
+            this.functionDeleteError('address');
+
+            if (addressInput.value.trim().length === 0) {
+                this.addError('Il campo indirizzo deve essere compilato', 'address');
+                addressInput.classList.add('invalid');
+            } else if (addressInput.value.trim().length < 3) {
+                this.addError('Il campo indirizzo deve essere almeno di 3 caratteri', 'address');
+                addressInput.classList.add('invalid');
+            } else if (addressInput.value.trim().length > 512) {
+                this.addError('Il campo indirizzo non deve superare i 512 caratteri', 'address');
+                addressInput.classList.add('invalid');
+            }
+        },
+
+        imageValidation() {
+            const fileInput = document.getElementById('images');
+            const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            fileInput.classList.remove('invalid');
+
+            this.functionDeleteError('address');
+
+            if (!fileInput.value) {
+                this.addError('Devi selezionare almeno un\'immagine', 'images');
+                fileInput.classList.add('invalid');
+            } else if (!allowedExtensions.exec(fileInput.value)) {
+                this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'images');
+                fileInput.classList.add('invalid');
+            }
+        },
+
+        priceValidation() {
+            const priceInput = document.getElementById('price');
+            priceInput.classList.remove('invalid');
+
+            this.functionDeleteError('price');
+
+            if (priceInput.value.trim().length === 0) {
+                this.addError('Il campo prezzo deve essere compilato', 'price');
+                priceInput.classList.add('invalid');
+            } else if (isNaN(priceInput.value.trim())) {
+                this.addError('Il campo prezzo deve contenere solo numeri', 'price');
+                priceInput.classList.add('invalid');
+            } else if (priceInput.value.trim() <= 99 || priceInput.value.trim() > 1500) {
+                this.addError('Il campo prezzo deve essere compreso tra 100 e 1500', 'price');
+                priceInput.classList.add('invalid');
+            }
+        },
+
+        roomsNumberValidation() {
+            const roomsNumberInput = document.getElementById('rooms_number');
+            roomsNumberInput.classList.remove('invalid');
+
+            this.functionDeleteError('rooms_number');
+
+            if (roomsNumberInput.value.trim().length === 0) {
+                this.addError('Il campo stanze deve essere compilato', 'rooms_number');
+                roomsNumberInput.classList.add('invalid');
+            } else if (isNaN(roomsNumberInput.value.trim())) {
+                this.addError('Il campo stanze deve contenere solo numeri', 'rooms_number');
+                roomsNumberInput.classList.add('invalid');
+            } else if (roomsNumberInput.value.trim() <= 0 || roomsNumberInput.value.trim() > 8) {
+                this.addError('Il campo stanze deve essere compreso tra 1 e 8', 'rooms_number');
+                roomsNumberInput.classList.add('invalid');
+            }
+        },
+
+        bedsNumberValidation() {
+            const bedsNumberInput = document.getElementById('beds_number');
+            bedsNumberInput.classList.remove('invalid');
+
+            this.functionDeleteError('beds_number');
+
+            if (bedsNumberInput.value.trim().length === 0) {
+                this.addError('Il campo posti letto deve essere compilato', 'beds_number');
+                bedsNumberInput.classList.add('invalid');
+            } else if (isNaN(bedsNumberInput.value.trim())) {
+                this.addError('Il campo posti letto deve contenere solo numeri', 'beds_number');
+                bedsNumberInput.classList.add('invalid');
+            } else if (bedsNumberInput.value.trim() <= 0 || bedsNumberInput.value.trim() > 16) {
+                this.addError('Il campo posti letto deve essere compreso tra 1 e 16', 'beds_number');
+                bedsNumberInput.classList.add('invalid');
+            }
+        },
+
+        bathroomsNumberValidation() {
+            const bathroomsNumberInput = document.getElementById('bathrooms_number');
+            bathroomsNumberInput.classList.remove('invalid');
+
+            this.functionDeleteError('bathrooms_number');
+
+            if (bathroomsNumberInput.value.trim().length === 0) {
+                this.addError('Il campo numero di bagni deve essere compilato', 'bathrooms_number');
+                bathroomsNumberInput.classList.add('invalid');
+            } else if (isNaN(bathroomsNumberInput.value.trim())) {
+                this.addError('Il campo numero di bagni deve contenere solo numeri', 'bathrooms_number');
+                bathroomsNumberInput.classList.add('invalid');
+            } else if (bathroomsNumberInput.value.trim() <= 0 || bathroomsNumberInput.value.trim() > 8) {
+                this.addError('Il campo numero di bagni deve essere compreso tra 1 e 8', 'bathrooms_number');
+                bathroomsNumberInput.classList.add('invalid');
+            }
+        },
+
+        descriptionValidation() {
+            const descriptionInput = document.getElementById('description');
+            descriptionInput.classList.remove('invalid');
+
+            this.functionDeleteError('description');
+
+            const descriptionValue = descriptionInput.value.trim();
+
+            if (descriptionValue.trim().length === 0) {
+                this.addError('La descrizione deve essere compilata', 'description');
+                descriptionInput.classList.add('invalid');
+            }
+            else if (descriptionValue.trim() < 10) {
+                this.addError('La descrizione deve essere di almeno 10 caratteri', 'description');
+                descriptionInput.classList.add('invalid');
+            } else if (descriptionValue.trim() > 4096) {
+                this.addError('La descrizione deve essere di massimo 4096 caratteri', 'description');
+                descriptionInput.classList.add('invalid');
+            }
+        },
+
+        sizeValidation() {
+            const sizeInput = document.getElementById('size');
+            sizeInput.classList.remove('invalid');
+
+            this.functionDeleteError('size');
+
+            if (sizeInput.value.trim().length === 0) {
+                this.addError('Il campo Inserisci i mq deve essere compilato', 'size');
+                sizeInput.classList.add('invalid');
+            } else if (isNaN(sizeInput.value.trim())) {
+                this.addError('Il campo Inserisci i mq deve essere un numero', 'size');
+                sizeInput.classList.add('invalid');
+            } else if (sizeInput.value.trim() < 50) {
+                this.addError('Il campo Inserisci i mq deve essere maggiore di 50', 'size');
+                sizeInput.classList.add('invalid');
+            } else if (sizeInput.value.trim() > 500) {
+                this.addError('Il campo Inserisci i mq non deve superare i 500 mq', 'size');
+                sizeInput.classList.add('invalid');
+            }
+        },
+
+        visibilityValidation() {
+            const visibilityInput = document.getElementById('visibility');
+            visibilityInput.classList.remove('invalid');
+
+            this.functionDeleteError('visibility');
+
+            if (this.form.visibility !== true && this.form.visibility !== false) {
+                this.addError('Il campo visibilità non è valido', 'visibility');
+                visibilityInput.classList.add('invalid');
+            }
+        },
+
+        servicesValidation() {
+            if (this.form.services.length == 0) {
+                this.addError('Devi selezionare almeno un servizio', 'services');
+            }
+        },
+
+        // FUNZIONE PER SHAKE ERROR
+        shakeInputs() {
+            if (this.store.errors.length > 0) {
+                this.store.errors.forEach(error => {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                });
+            }
+        },
+
+        validateData() {
+            this.store.errors = [];
+            this.titleValidation();
+            this.priceValidation();
+            this.sizeValidation();
+            this.addressValidation();
+            this.roomsNumberValidation();
+            this.bedsNumberValidation();
+            this.bathroomsNumberValidation();
+            this.descriptionValidation();
+            this.visibilityValidation();
+            this.servicesValidation();
+            this.imageValidation();
+
+            this.shakeInputs();
+
+            if (this.store.errors.length == 0) {
+                this.getCoordinates();
+            }
+            else {
+                console.log('Hai inserito dati non corretti. Riprova!');
+            }
+        },
+
+        // PRENDO COORDINATE APPARTAMENTO
+        async getCoordinates() {
+            const coordinates = await fetch(`${this.url_api_tomtom}${this.form.address}.json?key=${this.api_key_tomtom}&typeahead=true&limit=1&radius=500`);
+            // const data = await coordinates.blob();
+            let json = await coordinates.json();
+            console.log('COORDINATE', json.results[0].position);
+            this.form.lat = json.results[0].position.lat;
+            this.form.lng = json.results[0].position.lon;
+            this.updateApartment();
+        },
+        // AGGIORNAMENTO APPARTAMENTO
+        async updateApartment() {
             axios.put(`http://localhost:8000/api/apartments/${this.form.id}`, {
                 title: this.form.title,
-                lat: 37.9312320,
-                lng: -103.6998280,
+                lat: this.form.lat,
+                lng: this.form.lng,
                 address: this.form.address,
                 visibility: !this.form.visibility,
                 price: this.form.price,
@@ -71,6 +335,7 @@ export default {
             })
                 .then((response) => {
                     console.log('Appartamento aggiornato', response);
+                    this.postImages(response.data.apartment_id);
                 })
                 .catch((response) => {
                     console.log('Errore aggiornamento', response.data);
@@ -119,6 +384,7 @@ export default {
                 }
             }
             const formData = new FormData();
+            console.log(id);
             formData.append('apartment_id', id);
             // console.log('FormData', formData);
             for (let i = 0; i < images.length; i++) {
@@ -133,12 +399,33 @@ export default {
         deleteImage(index) {
             this.previewUrls.splice(index, 1);
         },
-        deleteOldImage(index) {
-            this.images.splice(index, 1);
-        }
+        // deleteOldImage(index) {
+        //     this.images.splice(index, 1);
+        // },
+        deleteOldImage(index, i) {
+            this.images.splice(i, 1);
+            axios.delete(`http://localhost:8000/api/images/${index}`)
+                .then((response) => {
+                    console.log('Immagine cancellata con id', index);
+                    // this.getApartments();
+                });
+        },
     },
     created() {
         this.getApartment();
+    },
+    mounted(){
+        document.title = 'Apartment | Edit';
+        const address = document.querySelector('#address');
+        let autocomplete = new google.maps.places.Autocomplete(address);
+        const self = this;
+        autocomplete.addListener('place_changed', function () {
+            let place = autocomplete.getPlace();
+            let address = place.formatted_address;
+            self.form.address = address;
+            // let city = place.address_components.find(component => component.types.includes('locality')).long_name;
+            // aggiorna i campi dell'indirizzo e della città con i dati trovati
+        });
     }
 }
 </script>
@@ -150,7 +437,7 @@ export default {
         <div class="my-container">
              <!-- FORM PER EDIT -->
 
-        <form @submit.prevent="updateApartment()">
+        <form @submit.prevent="validateData()">
             <div class="my-row row">
                 <div class="group small">
                     <label class="d-block mb-2" for="title">Inserisci nome appartamento: *</label>
@@ -159,60 +446,75 @@ export default {
                     type="text"
                     name="title"
                     id="title"
-                    max="255">
+                    v-on:blur="titleValidation()">
                 </div>
                 <div class="my-group">
                     <div class="group small d-inline-block">
                         <label class="d-block mb-2" for="price">Inserisci prezzo a notte: *</label>
-                        <input v-model="form.price" type="number" name="price" id="price">
-                        <!-- max="1500" -->
+                        <input
+                        v-model="form.price"
+                        type="number"
+                        name="price"
+                        id="price"
+                        v-on:blur="priceValidation()">
                     </div>
                     <div class="group small d-inline-block">
                         <label class="d-block mb-2" for="size">Inserisci i mq: *</label>
-                        <input v-model="form.size" type="number" name="size" id="size">
-                        <!-- min="50"
-                            max="500" -->
+                        <input
+                        v-model="form.size"
+                        type="number"
+                        name="size"
+                        id="size"
+                        v-on:blur="sizeValidation()">
                     </div>
                 </div>
                 <div class="group small">
                     <label class="d-block mb-2" for="address">Dove si trova il tuo alloggio? *</label>
-                    <input v-model="form.address" type="text" name="address" id="address">
-                    <!-- maxlength="512" -->
+                    <input
+                    v-model="form.address"
+                    type="text"
+                    name="address"
+                    id="address"
+                    v-on:blur="addressValidation()">
                 </div>
-                <!-- <div>
-                    <label for="lat">Latitudine (**da inserire?** o da mettere in automatico?**)</label>
-                    <input v-model="form.lat" type="text" name="lat" id="lat">
-                </div>
-                <div>
-                    <label for="lng">Longitudine (**da inserire?** o da mettere in automatico?**)</label>
-                    <input v-model="form.lng" type="text" name="lng" id="lng">
-                </div> -->
                 <!-- INFORMAZIONI DI BASE -->
                 <div class="my-group-info-base">
                     <div class="group small d-inline-block">
                         <label class="mb-2 d-block" for="rooms_number">Stanze: *</label>
-                        <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number" required>
-                        <!-- min="1"
-                        max="8" -->
+                        <input
+                        v-model="form.rooms_number"
+                        type="number"
+                        name="rooms_number"
+                        id="rooms_number"
+                        v-on:blur="roomsNumberValidation()">
                     </div>
                     <div class="group small d-inline-block">
                         <label class="mb-2 d-block" for="beds_number">Posti letto: *</label>
-                        <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number" required>
-                        <!-- min="1"
-                            max="16" -->
+                        <input
+                        v-model="form.beds_number"
+                        type="number"
+                        name="beds_number"
+                        id="beds_number" 
+                        v-on:blur="bedsNumberValidation()">
                     </div>
                     <div class="group small d-inline-block">
                         <label class="mb-2 d-block" for="bathrooms_number">Bagni: *</label>
-                        <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
-                        >
-                            <!-- min="1"
-                            max="8" -->
+                        <input
+                        v-model="form.bathrooms_number"
+                        type="number"
+                        name="bathrooms_number"
+                        id="bathrooms_number"
+                        v-on:blur="bathroomsNumberValidation()">
                     </div>
                 </div>
                 <div class="group small">
                     <label class="mb-2 d-block" for="description">Descrizione appartamento: *</label>
-                    <textarea v-model="form.description" name="description" id="description" rows="6"></textarea>
-                    <!-- maxlength="4096"-->
+                    <textarea
+                    v-model="form.description"
+                    name="description"
+                    id="description"
+                    rows="6"
+                    v-on:blur="descriptionValidation()"></textarea>
                 </div>
                 <div>
                     <label class="mb-2 d-block">Indica se il tuo appartamento non sarà subito disponibile</label>
@@ -221,7 +523,7 @@ export default {
                 </div>
 
                 <div>
-                    <label class="mb-2 d-block">Fai conoscere agli utenti tutti i servizi del tuo alloggio</label>
+                    <label class="mb-2 d-block">Fai conoscere agli utenti tutti i servizi del tuo alloggio *</label>
                     <div class="services">
                      <span class="service" v-for="service in allServices">
                         <input
@@ -253,7 +555,7 @@ export default {
                             <div class="previews" v-if="images.length > 0">
                                 <div class="preview" v-for="element, index in images">
                                     <img :src="`http://localhost:8000/storage/apartments/${element.url}`" alt="img">
-                                    <button @click.prevent="deleteOldImage(index)">
+                                    <button @click.prevent="deleteOldImage(element.id, index)">
                                         <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
                                     </button>
                                 </div>

@@ -51,6 +51,8 @@ export default {
                 }
             }
         },
+
+        // FUNZIONI PER VALIDAZIONI SINGOLI INPUT
         emailValidation() {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
@@ -101,6 +103,8 @@ export default {
                 this.store.errors.splice(index, 1);
             }
         },
+
+        // FUNZIONE PER SHAKE ERROR
         shakeInputs() {
             if (this.store.errors.length > 0) {
                 this.store.errors.forEach(error => {
@@ -111,6 +115,8 @@ export default {
                 });
             }
         },
+
+        // VALIDAZIONE DEI DATI
         validateData() {
             // Front End Validation
             console.log('Validazione dati login...');
