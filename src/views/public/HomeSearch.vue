@@ -28,7 +28,8 @@ export default {
             apartments: [],
             currentPage: 1,
             callOk: true,
-            notFound: false
+            notFound: false,
+            lastPage: null
         }
     },
     methods: {
@@ -57,6 +58,7 @@ export default {
                         else if (response.data.apartments.current_page <= response.data.apartments.last_page) {
                             this.apartments = this.apartments.concat(response.data.apartments.data);
                         }
+                        this.lastPage = response.data.apartments.last_page;
                     }
                 })
                 .catch((response) => {
@@ -65,8 +67,11 @@ export default {
                 })
         },
         loadMore() {
-            this.currentPage++;
-            this.getApartments();
+            if (this.currentPage < this.lastPage) {
+                this.currentPage++;
+                console.log('LOAD MORE');
+                this.getApartments();
+            }
         },
         applyInfiniteScroll() {
             const self = this;
@@ -94,7 +99,7 @@ export default {
 
         setTimeout(() => {
             this.applyInfiniteScroll();
-        }, 3500)
+        }, 4500)
     }
 }
 </script>

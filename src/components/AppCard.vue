@@ -43,7 +43,7 @@ export default {
     },
     computed: {
         calcLocation() {
-            return this.apartment.address.replace(/[0-9-]/g, '');
+            // return this.apartment.address.replace(/[0-9-]/g, '');
         }
     },
     mounted() {
@@ -72,7 +72,8 @@ export default {
             </div>
             <div class="row">
                 <div class="cardLocation">
-                    {{ calcLocation }}
+                    <!-- {{ calcLocation }} -->
+                    {{ apartment.address }}
                 </div>
                 <div class="cardPrice">
                     <span>{{ apartment.price }}</span> &euro; a notte
