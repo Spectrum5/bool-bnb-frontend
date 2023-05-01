@@ -9,6 +9,7 @@ import PublicPageLayout from './PublicPageLayout.vue';
 import AppSearch from '../../components/AppSearch.vue';
 import AppCard from '../../components/AppCard.vue';
 import AppButton from '../../components/AppButton.vue';
+import AppLoading from '../../components/AppLoading.vue';
 
 export default {
     name: 'HomeView',
@@ -16,19 +17,21 @@ export default {
         PublicPageLayout,
         AppSearch,
         AppCard,
-        AppButton
+        AppButton,
+        AppLoading
     },
     data() {
         return {
             store,
             apartments: [],
-            apartmentsError: false,
             currentPage: 1,
-            callOk: true
+            callOk: true,
+            notFound: false
         }
     },
     methods: {
         getApartments() {
+            this.notFound = false;
             axios.get('http://localhost:8000/api/apartments', {
                 params: {
                     page: this.currentPage
@@ -36,6 +39,7 @@ export default {
             })
                 .then((response) => {
                     if (response.data.success) {
+                        if (response.data.apartments.data.length == 0) this.notFound = true;
                         if (response.data.apartments.current_page == 1) {
                             this.apartments = response.data.apartments.data;
                         }
@@ -46,6 +50,7 @@ export default {
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti', response.data);
+                    this.notFound = true;
                 })
         },
         loadMore() {
@@ -97,9 +102,11 @@ export default {
             <AppCard v-for="apartment in apartments" :apartment="apartment" />
         </div>
 
-        <div class="message" v-else>
+        <div class="message" v-else-if="notFound">
             <p class="mainTitle">Nessun appartamento trovato</p>
         </div>
+
+        <AppLoading v-else/>
 
         <!-- <div class="btn-container">
             <AppButton :action="loadMore" :type="'line'" :palette="'primary'" :label="'load more'" />

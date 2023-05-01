@@ -129,8 +129,8 @@ export default {
                     this.store.searchForm.lng = data.results[0].position.lon;
 
                 })
-                this.$router.push(this.searchUrl);
-                this.$emit('searchEvent');
+            this.$router.push(this.searchUrl);
+            this.$emit('searchEvent');
         },
         handleSearch() {
             // Se dei parametri sono stati inseriti, rimanda alla pagina di ricerca
@@ -386,5 +386,51 @@ export default {
     padding: 6px;
     border: 1px solid $dark-color-one;
     background-color: $light-color-one;
+}
+
+@media screen and (max-width: 1200px) {
+    .container {
+        margin-bottom: 0 !important;
+    }
+    .searchbar {
+        form {
+            .row {
+                flex-wrap: wrap;
+
+                .group {
+                    &:first-child {
+                        flex-grow: 1;
+                        flex-basis: 100%;
+                        max-width: unset;
+                    }
+
+                    &:last-child {
+                        flex-grow: 1;
+                        flex-basis: 100%;
+                        max-width: unset;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 916px) {
+    .servicesGroup {
+        flex-basis: 100%;
+        .servicesMenu {
+            top: calc(100% + 15px);
+            right: unset;
+            left: 0;
+        }
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .group:not(:first-child),
+    .group:not(:last-child),
+    .group:not(.servicesGroup) {
+        flex-basis: calc(50% - 1rem);
+    }
 }
 </style>

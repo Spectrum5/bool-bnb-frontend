@@ -10,6 +10,7 @@ import PublicPageLayout from './PublicPageLayout.vue';
 import AppSearch from '../../components/AppSearch.vue';
 import AppCard from '../../components/AppCard.vue';
 import AppButton from '../../components/AppButton.vue';
+import AppLoading from '../../components/AppLoading.vue';
 
 export default {
     name: 'HomeSearch',
@@ -17,19 +18,23 @@ export default {
         PublicPageLayout,
         AppSearch,
         AppCard,
-        AppButton
+        AppButton,
+        AppLoading
     },
     data() {
         return {
             router,
             store,
-            currentPage: 1,
             apartments: [],
+            currentPage: 1,
+            callOk: true,
+            notFound: false
         }
     },
     methods: {
         getApartments() {
             // Chiamata API con Filtri
+            this.notFound = false;
             axios.get('http://localhost:8000/api/apartments', {
                 params: {
                     lat: this.store.searchForm.lat,
@@ -43,29 +48,54 @@ export default {
                 }
             })
                 .then((response) => {
-                    console.log('Risposta Appartamenti con Filtri', response);
                     console.log('Index Appartamenti con Filtri', response.data.apartments.data);
                     if (response.data.success) {
+                        if (response.data.apartments.data.length == 0) this.notFound = true;
                         if (response.data.apartments.current_page == 1) {
                             this.apartments = response.data.apartments.data;
                         }
-                        else {
+                        else if (response.data.apartments.current_page <= response.data.apartments.last_page) {
                             this.apartments = this.apartments.concat(response.data.apartments.data);
                         }
                     }
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti con Filtri');
+                    this.notFound = true;
                 })
         },
         loadMore() {
             this.currentPage++;
             this.getApartments();
+        },
+        applyInfiniteScroll() {
+            console.log('INFINITE SCROLL OK')
+            const self = this;
+            window.onscroll = function () {
+                if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 1) {
+                    // sei arrivato alla fine della pagina
+                    // console.log('SCROLL',window.innerHeight + window.pageYOffset)
+
+                    if (self.callOk) {
+                        self.loadMore();
+                        self.callOk = false;
+                        setTimeout(() => {
+                            self.callOk = true;
+                        }, 1500)
+                    }
+                }
+            };
         }
     },
     mounted() {
         document.title = 'Boolbnb | Search'
         this.getApartments();
+
+        this.$nextTick(this.store.clear());
+
+        setTimeout(() => {
+            this.applyInfiniteScroll();
+        }, 3500)
     }
 }
 </script>
@@ -83,13 +113,15 @@ export default {
             <AppCard v-for="apartment in apartments" :apartment="apartment" />
         </div>
 
-        <div class="message" v-else>
+        <div class="message" v-else-if="notFound">
             <p class="mainTitle">Nessun appartamento trovato</p>
         </div>
 
-        <div class="btn-container">
+        <AppLoading v-else />
+
+        <!-- <div class="btn-container">
             <AppButton :action="loadmore" :type="'line'" :palette="'primary'" :label="'load more'" />
-        </div>
+        </div> -->
     </PublicPageLayout>
 </template>
 
@@ -124,4 +156,24 @@ export default {
     background-size: cover;
     background-position: center;
 }
+
+@media screen and (max-width: 1200px) {
+    .hero-section {
+        // height: 40vh;
+        height: unset;
+        padding: 1.5rem 0;
+    }
+}
+
+// @media screen and (max-width: 920px) {
+//     .hero-section {
+//         height: 50vh;
+//     }
+// }
+
+// @media screen and (max-width: 750px) {
+//     .hero-section {
+//         height: 60vh;
+//     }
+// }
 </style>
