@@ -20,9 +20,6 @@ export default {
                 .then((response) => {
                     console.log('User', response.data)
                     this.store.user = response.data;
-
-                    console.log('DO REDIRECT', doRedirect);
-
                     if (doRedirect != null && doRedirect == true) router.push('/dashboard/apartments');
                 })
                 .catch((response) => {
