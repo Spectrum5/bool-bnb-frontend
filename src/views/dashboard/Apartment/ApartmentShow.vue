@@ -16,10 +16,6 @@ export default {
         return {
             router,
             apartment: null,
-            images: [],
-            // form: {},
-            // allServices: [],
-            // selectedServices: []
         }
     },
     methods: {
@@ -33,13 +29,7 @@ export default {
                     console.log('Errore Ottenimento Appartamento', response.data);
                 })
         },
-         getImages() {
-            axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
-                .then((response) => {
-                    this.images = response.data.images;
-                    console.log('Immagini appartamento', response.data);
-                })
-        },
+
         goBackToDashboard() {
             console.log('GO TO DASHBOARD');
             this.$router.push('/dashboard/apartments');
@@ -65,7 +55,7 @@ export default {
 <div class="my-container">
     <div v-if="apartment">
         <!-- SEZIONE IMMAGINI APARTMENT -->
-        <div class="img-container" v-if="images.length > 0">
+        <div class="img-container">
             <img :src="`http://localhost:8000/storage/apartments/${image.url}`" alt="" v-for="image in apartment.images">
         </div>
         <div class="mb">
