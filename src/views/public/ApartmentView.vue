@@ -61,6 +61,15 @@ export default {
                 }
             }
         },
+
+        deleteError(fieldName) {
+            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+            const index = this.store.errors.findIndex(error => error.field === fieldName);
+            if (index >= 0) {
+                this.store.errors.splice(index, 1);
+            }
+        },
+
         getApartment() {
             // Richiesta dell'appartamento corrispondente allo slug passato come parametro
             axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}`)
@@ -94,6 +103,8 @@ export default {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
 
+            this.deleteError('email');
+
             // Email Validation
             if (emailInput.value.trim().length == 0) {
                 this.addError('Il campo email deve essere compilato', 'email');
@@ -121,6 +132,8 @@ export default {
         messageValidation() {
             const messageInput = document.getElementById('message');
             messageInput.classList.remove('invalid');
+
+            this.deleteError('message');
 
             const messageValue = messageInput.value.trim();
 
