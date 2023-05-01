@@ -27,13 +27,10 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-// @use '../styles/partials/variables.scss' as *;
-// @use '../styles/partials/mixins.scss' as *;
 .icon {
     margin-right: 5px;
 }
 .label {
     text-transform: capitalize;
 }
-
 </style>
