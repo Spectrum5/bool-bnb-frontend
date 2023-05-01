@@ -55,7 +55,7 @@ export default {
             }
         },
 
-        functionDeleteError(fieldName){
+        deleteError(fieldName){
             // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
             const index = this.store.errors.findIndex(error => error.field === fieldName);
             if (index >= 0) {
@@ -68,7 +68,7 @@ export default {
             let firstNameInput = document.getElementById('first_name');
             firstNameInput.classList.remove('invalid');
 
-            this.functionDeleteError('first_name');
+            this.deleteError('first_name');
                 
 
             // First Name Length
@@ -84,16 +84,16 @@ export default {
                 this.addError('Il campo nome non deve superare i 128 caratteri', 'first_name');
                 firstNameInput.classList.add('invalid');
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "first_name");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "first_name");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         lastNameValidation() {
             let lastNameInput = document.getElementById('last_name');
             lastNameInput.classList.remove('invalid');
 
-            this.functionDeleteError('last_name');
+            this.deleteError('last_name');
 
             // Last Name Length
             if (lastNameInput.value.trim().length == 0) {
@@ -108,16 +108,16 @@ export default {
                 this.addError('Il campo cognome non deve superare i 128 caratteri', 'last_name');
                 lastNameInput.classList.add('invalid');
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "last_name");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "last_name");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         emailValidation() {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
 
-            this.functionDeleteError('email');
+            this.deleteError('email');
 
             // Email Validation
             if (emailInput.value.trim().length == 0) {
@@ -138,16 +138,16 @@ export default {
                 this.addError('La tua email contiene caratteri non permessi', 'email');
                 emailInput.classList.add('invalid');
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "email");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "email");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         passwordValidation() {
             let passwordInput = document.getElementById('password');
             passwordInput.classList.remove('invalid');
 
-            this.functionDeleteError('password');
+            this.deleteError('password');
 
             // Password Lenght
             if (passwordInput.value.length == 0) {
@@ -162,17 +162,17 @@ export default {
                 this.addError('La password non deve superare i 64 caratteri', 'password');
                 passwordInput.classList.add('invalid');
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "password");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "password");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         passwordConfirmationValidation() {
             let passwordConfirmationInput = document.getElementById('password_confirmation');
             let passwordInput = document.getElementById('password');
             passwordConfirmationInput.classList.remove('invalid');
 
-            this.functionDeleteError('password_confirmation');
+            this.deleteError('password_confirmation');
 
             // Password Confirmation
             if (passwordConfirmationInput.value.length == 0) {
@@ -183,16 +183,16 @@ export default {
                 this.addError('Le password inserite non coincidono', 'password_confirmation');
                 passwordConfirmationInput.classList.add('invalid');
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "password_confirmation");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "password_confirmation");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         dateOfBirthValidation() {
             let datOfBirthInput = document.getElementById('date_of_birth');
             datOfBirthInput.classList.remove('invalid');
 
-            this.functionDeleteError('date_of_birth');
+            this.deleteError('date_of_birth');
 
             const [year, month, day] = datOfBirthInput.value.split('-');
             const now = new Date();
@@ -216,10 +216,10 @@ export default {
                     datOfBirthInput.classList.add('invalid');
                 }
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "date_of_birth");
-                this.store.errors.splice(index, 1);
-            }
+            // else {
+            //     const index = this.store.errors.findIndex(error => error.field === "date_of_birth");
+            //     this.store.errors.splice(index, 1);
+            // }
         },
         shakeInputs() {
             if (this.store.errors.length > 0) {

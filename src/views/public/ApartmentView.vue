@@ -61,6 +61,15 @@ export default {
                 }
             }
         },
+
+        deleteError(fieldName) {
+            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+            const index = this.store.errors.findIndex(error => error.field === fieldName);
+            if (index >= 0) {
+                this.store.errors.splice(index, 1);
+            }
+        },
+
         getApartment() {
             // Richiesta dell'appartamento corrispondente allo slug passato come parametro
             axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}`)
@@ -94,6 +103,8 @@ export default {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
 
+            this.deleteError('email');
+
             // Email Validation
             if (emailInput.value.trim().length == 0) {
                 this.addError('Il campo email deve essere compilato', 'email');
@@ -121,6 +132,8 @@ export default {
         messageValidation() {
             const messageInput = document.getElementById('message');
             messageInput.classList.remove('invalid');
+
+            this.deleteError('message');
 
             const messageValue = messageInput.value.trim();
 
@@ -179,6 +192,11 @@ export default {
                 .catch((response) => {
                     console.log('Errore Messaggio', response.data);
                 })
+                this.requestSent = true;
+                setTimeout(() => {
+                    this.requestSent = false;
+                    this.message.text = '';
+            }, 2000);
         }
     },
     mounted() {
@@ -282,7 +300,7 @@ export default {
                                         <font-awesome-icon icon="fa-solid fa-bed" />
                                     </span>
                                     <p v-if="i == apartment.rooms_number">
-                                        {{ Math.floor(apartment.beds_number / apartment.rooms_number) - 1 }} letto
+                                        {{ Math.floor(apartment.beds_number / apartment.rooms_number)}} letto
                                         matrimoniale
                                         + 1 letto singolo
                                     </p>
@@ -332,7 +350,8 @@ export default {
                             </div>
 
                             <div class="row">
-                                <AppButton :label="'Invia messaggio'" :type="'solid'" :palette="'primary'" />
+                                <AppButton v-if="!this.requestSent" :label="'Invia messaggio'" :type="'solid'" :palette="'primary'" />
+                                <AppButton v-if="this.requestSent" :label="'Messaggio inviato!'" :type="'solid'" :palette="'success'" />
                             </div>
                         </form>
                         <AppErrorForm />

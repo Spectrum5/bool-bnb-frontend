@@ -33,6 +33,14 @@ export default {
         handleLogin() {
             this.validateData();
         },
+
+        deleteError(fieldName) {
+            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+            const index = this.store.errors.findIndex(error => error.field === fieldName);
+            if (index >= 0) {
+                this.store.errors.splice(index, 1);
+            }
+        },
         addError(message, field) {
             // Controlla se in store.errors sono presenti errori con lo stesso campo di quello passato
             // e se non ci sono aggiunge l'errore passato come argomento, altrimenti no
@@ -57,6 +65,8 @@ export default {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
 
+            this.deleteError('email');
+
             // Email Validation
             if (emailInput.value.trim().length == 0) {
                 this.addError('Il campo email deve essere compilato', 'email');
@@ -76,14 +86,12 @@ export default {
                 this.addError('La tua email contiene caratteri non permessi', 'email');
                 emailInput.classList.add('invalid');
             }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "email");
-                this.store.errors.splice(index, 1);
-            }
         },
         passwordValidation() {
             let passwordInput = document.getElementById('password');
             passwordInput.classList.remove('invalid');
+
+            this.deleteError('password');
 
             // Password Lenght
             if (passwordInput.value.length == 0) {
@@ -97,10 +105,6 @@ export default {
             else if (passwordInput.value.length > 64) {
                 this.addError('La password non deve superare i 64 caratteri', 'password');
                 passwordInput.classList.add('invalid');
-            }
-            else {
-                const index = this.store.errors.findIndex(error => error.field === "password");
-                this.store.errors.splice(index, 1);
             }
         },
 
