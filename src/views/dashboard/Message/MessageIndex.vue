@@ -25,7 +25,7 @@ export default {
             // console.log('USER ID', store.user.id);
             axios.get('http://localhost:8000/api/messages',)
                 .then((response) => {
-                    console.log('Index Messaggi', response.data.messages);
+                    console.log('Index Messaggi', response.data.messages[0].apartment.title);
                     this.messages = response.data.messages;
                 })
                 .catch((response) => {
@@ -58,6 +58,7 @@ export default {
             <main>
                 <div class="messages" v-if="messages">
                     <div class="message" v-for="message in messages">
+                        <div class="email">{{ message.apartment.title }}</div>
                         <div class="email">{{ message.email }}</div>
                         <div class="text">{{ message.message }}</div>
                     </div>

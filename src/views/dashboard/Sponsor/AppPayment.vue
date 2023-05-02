@@ -2,47 +2,102 @@
 
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
-import AppPayment from './AppPayment.vue';
-
+import braintree from 'braintree-web';
 // Utilities
 import axios from 'axios';
-import { router } from '../../../router';
-
 
 export default {
     name: 'SponsorIndex',
     components: {
-        AppDashboardLayoutVue,
-        AppPayment
+        AppDashboardLayoutVue
     },
     data() {
         return {
-            router,
-            sponsorData: [],
+            cardNumber: '',
+            expirationDate: '',
+            cvv: '',
+            amount: '',
+            nonce: '',
         };
     },
     methods: {
         getData() {
             axios.get('http://localhost:8000/api/sponsors')
-            .then(response => {
-                console.log('Index Sponsor', response.data)
-            })
+                .then(response => {
+                    console.log('Index Sponsor', response.data)
+                })
         },
+        getToken() {
+            axios.get('http://localhost:8000/api/sponsors/token', {
+                params: {
+                    apartment_id: 1,
+                    sponsor_id: 2,
+                }
+            })
+                .then(response => {
+                    console.log('Token Sponsor', response.data.token);
+                    this.nonce = response.data.token;
+                })
+        },
+        async createPaymentMethod() {
+            const client = await braintree.client.create({
+                // authorization: `${process.env.VUE_APP_BRAINTREE_PUBLIC_KEY}`
+                // authorization: `${import.meta.env.VUE_APP_BRAINTREE_PUBLIC_KEY}`
+                authorization: `8fnxpxwcb38jym5v`
+            });
+            console.log('CLIENT', client);
+
+            const { nonce } = await client.request({
+                endpoint: 'http://localhost:8000/api/sponsors/token',
+                method: 'post',
+                data: {
+                    creditCard: {
+                        number: this.cardNumber,
+                        expirationDate: this.expirationDate,
+                        cvv: this.cvv
+                    },
+                    apartment_id: 1,
+                    sponsor_id: 2
+                }
+            });
+
+            this.nonce = nonce;
+        },
+        async submitPayment() {
+            const response = await fetch('http://localhost:8000/api/sponsors/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nonce: this.nonce,
+                    amount: this.amount,
+                    creditCard: {
+                        number: this.cardNumber,
+                        expirationDate: this.expirationDate,
+                        cvv: this.cvv
+                    },
+                    apartment_id: 1,
+                    sponsor_id: 2
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Payment processed successfully!');
+            } else {
+                alert('Payment processing failed. Please try again.');
+            }
+
+        }
     },
-    // async created() {
-    //     document.title = 'Dashboard | Sponsor Plans';
-    //     try {
-    //         const response = await axios.get('http://localhost:8000/api/sponsor');
-    //         this.sponsorData = response.data;
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // },
+
     mounted() {
         document.title = 'Dashboard | Sponsor Plans';
 
         this.getData();
-    
+        this.getToken();
         // try {
         //     const response = await axios.get('http://localhost:8000/api/sponsor');
         //     this.sponsorData = response.data;
@@ -54,43 +109,24 @@ export default {
 </script>
 
 <template>
-    <AppDashboardLayoutVue :title="'Piani di Sponsor'">
+    <AppDashboardLayoutVue :title="'Sponsorizzazione'">
         <main>
 
             <div class="container">
-                <div class="cards">
-                    <div class="card shadow">
-                        <ul>
-                            <li class="pack">standard</li>
-                            <li id="standard" class="price bottom-bar">&euro;2<sup>99</sup></li>
-                            <li class="bottom-bar">Time: 24 ore</li>
-                            <li class="bottom-bar">2 case</li>
-                            <li class="bottom-bar">no support</li>
-                            <li><button class="btn" @click="router.push('/dashboard/sponsors/create')">Attiva</button></li>
-                        </ul>
-                    </div>
-                    <div class="card active">
-                        <ul>
-                            <li class="pack">premium</li>
-                            <li id="plus" class="price bottom-bar">&euro;9<sup>99</sup></li>
-                            <li class="bottom-bar">Time: 72 ore</li>
-                            <li class="bottom-bar">case infinite</li>
-                            <li class="bottom-bar">Support 24/7 (non è vero)</li>
-                            <li><button class="btn active-btn">Attiva</button></li>
-                        </ul>
-                    </div>
-                    <div class="card shadow">
-                        <ul>
-                            <li class="pack">plus</li>
-                            <li id="premium" class="price bottom-bar">&euro;5<sup>99</sup></li>
-                            <li class="bottom-bar">Time: 48 ore</li>
-                            <li class="bottom-bar">case non infinite</li>
-                            <li class="bottom-bar">support 9-12</li>
-                            <li><button class="btn">Attiva</button></li>
-                        </ul>
-                    </div>
+                <div>
+                    <form>
+                        <label for="card-number">Card Number:</label>
+                        <input id="card-number" v-model="cardNumber" type="text">
+                        <label for="expiration-date">Expiration Date:</label>
+                        <input id="expiration-date" v-model="expirationDate" type="text">
+                        <label for="cvv">CVV:</label>
+                        <input id="cvv" v-model="cvv" type="text">
+                        <label for="amount">Amount:</label>
+                        <input id="amount" v-model="amount" type="text">
+                    </form>
+                    <button @click="createPaymentMethod">Generate Payment Method</button>
+                    <button @click="submitPayment">Submit Payment</button>
                 </div>
-                <!-- <AppPayment /> -->
             </div>
         </main>
 
@@ -210,9 +246,10 @@ main {
 
 @media (min-width: 320px) and (max-width: 768px) {
     main {
-    max-width: 100vw;
+        max-width: 100vw;
 
     }
+
     .cards {
         display: flex;
         flex-direction: column;
@@ -232,7 +269,7 @@ main {
         .card {
             margin: 5px;
         }
-        
+
     }
 }
 

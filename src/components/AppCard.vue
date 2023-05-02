@@ -48,9 +48,9 @@ export default {
 
         <button class="cardFavorites" @click.stop="addToFavorites()" ref="btn"></button>
 
-        <div v-if="apartment.sponsors.length > 0" class="sponsorized">
+        <!-- <div v-if="apartment.sponsors.length > 0" class="sponsorized">
             <font-awesome-icon icon="fa-solid fa-medal" />
-        </div>
+        </div> -->
 
         <div class="imageContainer">
             <AppSlider :images="this.apartment.images" v-if="this.apartment.images" @goShowEvent="goShow()" />

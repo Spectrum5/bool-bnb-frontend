@@ -22,6 +22,7 @@ import MessageIndex from './views/dashboard/Message/MessageIndex.vue';
 
 // Dashboard - Sponsors
 import SponsorIndex from './views/dashboard/Sponsor/SponsorIndex.vue';
+import AppPayment from './views/dashboard/Sponsor/AppPayment.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -106,6 +107,14 @@ const router = createRouter({
             path: '/dashboard/sponsors',
             name: 'sponsor-index',
             component: SponsorIndex,
+            beforeEnter: (to, from) => {
+                if (store.user == null) return { name: 'login' }
+            },
+        },
+        {
+            path: '/dashboard/sponsors/create',
+            name: 'sponsor-create',
+            component: AppPayment,
             beforeEnter: (to, from) => {
                 if (store.user == null) return { name: 'login' }
             },

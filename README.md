@@ -5,7 +5,8 @@
 - Far vedere le case sponsorizzate per prime
 - Info appartamento dei messaggi
 - Slider nella show crud e show apartment
-
+- Fix Services
+- Fix pulsante messaggio inviato
 - Eliminare immagini dallo storage quando si elimina appartamento
 - Caricamento immagini cards
 - Index mostrare solo quelli con visibility = 1
