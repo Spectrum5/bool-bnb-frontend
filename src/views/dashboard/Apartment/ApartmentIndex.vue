@@ -93,10 +93,6 @@ export default {
                         <font-awesome-icon icon="fa-solid fa-chart-simple" />
                         Vedi Statistiche
                     </button>
-                    <button class="btn btn-sponsor hover-effect">
-                        <font-awesome-icon icon="fa-solid fa-rocket" />
-                        Sponsorizza
-                    </button>
                 </div>
             </div>
         </main>
