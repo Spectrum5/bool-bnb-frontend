@@ -6,8 +6,14 @@ axios.defaults.withCredentials = true;
 import { store } from './store';
 import { router } from './router';
 
+// Components
+import AppLoadingBar from './components/AppLoadingBar.vue';
+
 export default {
     name: 'App',
+    components: {
+        AppLoadingBar
+    },
     data() {
         return {
             store,
@@ -20,6 +26,7 @@ export default {
                 .then((response) => {
                     console.log('User', response.data)
                     this.store.user = response.data;
+                    this.store.loadingWidth = 100;
                     if (doRedirect != null && doRedirect == true) router.push('/dashboard/apartments');
                 })
                 .catch((response) => {
@@ -41,6 +48,10 @@ export default {
 </script>
 
 <template>
+    <transition name="fade">
+        <AppLoadingBar v-if="store.loadingWidth > 0" />
+    </transition>
+
     <router-view @[calcEvent]="doRedirect => getUser(doRedirect)"></router-view>
 </template>
 

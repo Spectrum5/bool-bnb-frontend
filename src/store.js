@@ -21,6 +21,8 @@ export const store = reactive({
         services: []
     },
 
+    loadingWidth: 0,
+
     // modale giada
     showModal: false,
     editedApartment: false,

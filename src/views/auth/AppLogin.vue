@@ -32,10 +32,10 @@ export default {
     methods: {
         handleLogin() {
             this.validateData();
+            this.store.loadingWidth = 10;
         },
-
         deleteError(fieldName) {
-            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+            // Toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
             const index = this.store.errors.findIndex(error => error.field === fieldName);
             if (index >= 0) {
                 this.store.errors.splice(index, 1);
@@ -59,7 +59,6 @@ export default {
                 }
             }
         },
-
         // FUNZIONI PER VALIDAZIONI SINGOLI INPUT
         emailValidation() {
             let emailInput = document.getElementById('email');
@@ -107,7 +106,6 @@ export default {
                 passwordInput.classList.add('invalid');
             }
         },
-
         // FUNZIONE PER SHAKE ERROR
         shakeInputs() {
             if (this.store.errors.length > 0) {
@@ -119,32 +117,40 @@ export default {
                 });
             }
         },
-
         // VALIDAZIONE DEI DATI
         validateData() {
             // Front End Validation
             console.log('Validazione dati login...');
             this.store.errors = [];
+            this.store.loadingWidth = 20;
 
             this.emailValidation();
             this.passwordValidation();
+
+            this.store.loadingWidth = 50;
 
             this.shakeInputs();
 
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.getCookie();
-            else console.log('Hai inserito dati non corretti. Riprova.');
+            else {
+                console.log('Hai inserito dati non corretti. Riprova.');
+                this.store.loadingWidth = 100;
+            }
         },
         getCookie() {
+            this.store.loadingWidth = 75;
             // Richiesta Cookie CSRF
             axios.get('http://localhost:8000/sanctum/csrf-cookie')
                 .then((response) => {
                     console.log('Cookie CSRF ottenuto', response);
+                    this.store.loadingWidth = 85;
                     this.postLoginData()
                 })
                 .catch((response) => {
                     console.log('Errore ottenimento Cookie CSRF', response);
                     this.store.errors = response.data;
+                    this.store.loadingWidth = 100;
                 })
         },
         postLoginData() {
@@ -154,6 +160,8 @@ export default {
             })
                 .then((response) => {
                     console.log('Risposta Login', response);
+                    this.store.loadingWidth = 90;
+
 
                     // Emette ad App.vue l'evento per richiedere l'utente autenticato
                     this.$emit('getUserEvent', true);
@@ -161,6 +169,7 @@ export default {
                 )
                 .catch((response) => {
                     console.log('Errore Invio Dati Login', response);
+                    this.store.loadingWidth = 100;
                     this.addError('Errore del server. Riprovare piú tardi', 'server_error');
                 })
         }
