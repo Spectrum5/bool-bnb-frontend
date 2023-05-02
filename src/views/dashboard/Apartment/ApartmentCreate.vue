@@ -140,23 +140,23 @@ export default {
             const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
             fileInput.classList.remove('invalid');
 
-            // console.log
-            console.log('immagini da inviare', this.form.images, 'tipo', typeof(this.form.images));
+            // console.log per imgs da inviare al backend
+            console.log('immagini da inviare', this.form.images);
 
-            this.deleteError('image');
+            this.deleteError('images');
             this.errorsMessages.image = '';
 
             if (!fileInput.value) {
-                this.addError('image');
+                this.addError('images');
                 this.errorsMessages.image = 'Devi selezionare almeno un\'immagine';
                 fileInput.classList.add('invalid');
             } else if (!allowedExtensions.exec(fileInput.value)) {
-                this.addError('image');
+                this.addError('images');
                 this.errorsMessages.image = 'L\'immagine deve essere in formato JPG, JPEG o PNG';
                 fileInput.classList.add('invalid');
             }
             else if(this.previewUrls.length > 3){
-                this.addError('image');
+                this.addError('images');
                 this.errorsMessages.image = 'Puoi selezionare fino a un massimo di tre immagini';
                 fileInput.classList.add('invalid');
             }
