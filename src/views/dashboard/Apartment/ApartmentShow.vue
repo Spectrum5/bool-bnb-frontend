@@ -154,7 +154,7 @@ export default {
     max-width: 1100px;
 
     #slider {
-        width: 100%;
+        width: 100vw;
         padding: 1rem;
         --swiper-navigation-color: #f39237;
         --swiper-pagination-color: #ffffff;
@@ -175,7 +175,7 @@ export default {
         img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: fill;
             display: block;
         }
     }
