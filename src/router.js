@@ -111,6 +111,14 @@ const router = createRouter({
             },
         },
         // {
+        //     path: '/dashboard/sponsors/:slug',
+        //     name: 'sponsor-index',
+        //     component: SponsorIndex,
+        //     beforeEnter: (to, from) => {
+        //         if (store.user == null) return { name: 'login' }
+        //     },
+        // },
+        // {
         //     path: '/apartments/search/',
         //     name: 'apartment-search',
         //     component: HomeSearch

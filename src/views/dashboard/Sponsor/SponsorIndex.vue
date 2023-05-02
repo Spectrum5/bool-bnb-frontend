@@ -1,148 +1,119 @@
 <script>
 
-// Components
-import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
-
 // Utilities
 import axios from 'axios';
+
+// Components
+import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppButton from '../../../components/AppButton.vue';
 
 export default {
     name: 'SponsorIndex',
     components: {
-        AppDashboardLayoutVue
+        AppDashboardLayoutVue,
+        AppButton
     },
     data() {
         return {
-            sponsorData: [],
-            selectedApartment: null,
-            selectedSponsor: null,
-            paymentError: null,
-            sponsors: []
+            sponsorsData: [],
+            chooseApartment: false,
+            apartments: []
         };
     },
-    // async created() {
-    //     document.title = 'Dashboard | Sponsor Plans';
-    //     try {
-    //         const response = await axios.get('http://localhost:8000/api/sponsors');
-    //         console.log('index',response.data)
-    //         this.sponsorData = response.data;
-    //         this.sponsors = response.data.sponsors;
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // },
+
     methods: {
-        sponsorizeApartment() {
-            if (!this.selectedApartment || !this.selectedSponsor) {
-                return;
-            }
 
-            axios.post('http://localhost:8000/api/sponsors', {
-                apartment_id: 5,
-                sponsor_id: 3
-            })
+        getSponsorsData() {
+            axios.get('http://localhost:8000/api/sponsors')
                 .then(response => {
-                    // TODO: handle success
+                    console.log('index', response.data.sponsors);
+                    this.sponsorsData = response.data.sponsors;
                 })
-                .catch(error => {
-                    this.paymentError = error.response.data.message || 'Unknown error';
-                });
         },
-        getSponsors() {
-            axios.get('http://localhost:8000/api/sponsors').then(response => {
-                    console.log('index', response.data)
+        getApartments() {
+            axios.get('http://localhost:8000/api/apartments/indexUser')
+                .then((response) => {
+                    console.log('Index Appartamenti Personali', response.data);
+                    this.apartments = response.data.apartments;
                 })
+                .catch((response) => {
+                    console.log('Errore Index Appartamenti Personali', response.data);
+                })
+        },
+        handleSponsor() {
+            this.chooseApartment = true;
+            this.getApartments();
         }
-    },
-    computed: {
-        sponsorPrice() {
-            if (!this.selectedSponsor) {
-                return 0;
-            }
-
-            return this.selectedSponsor.price;
-        }
+        // calcDuration() {
+        //     if (sponsor.title == 'standard') return 
+        // }
     },
     mounted() {
-        this.getSponsors()
+        this.getSponsorsData()
     }
-
 };
 </script>
 
 <template>
     <AppDashboardLayoutVue :title="'Piani di Sponsor'">
 
-        <template>
-            <div class="apartment-sponsorship">
-                <h2>Sponsorizza appartamento</h2>
-
-                <div v-if="!selectedApartment">
-                    Seleziona un appartamento per continuare.
+        <main>
+            <div class="container">
+                <div class="cards" v-if="!chooseApartment">
+                    <div class="card" v-for="sponsor in sponsorsData"
+                        :class="sponsor.title == 'premium' ? 'active' : 'shadow'">
+                        <ul>
+                            <li class="pack">{{ sponsor.title }}</li>
+                            <li id="standard" class="price bottom-bar">&euro;{{ sponsor.price }}</li>
+                            <li class="bottom-bar">{{ sponsor.duration }} ore</li>
+                            <li>
+                                <AppButton :action="handleSponsor" :label="'Sponsorizza'" :type="'solid'" :palette="'secondary'" />
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- <div class="card active">
+                            <ul>
+                                <li class="pack">premium</li>
+                                <li id="plus" class="price bottom-bar">&euro;9<sup>99</sup></li>
+                                <li class="bottom-bar">Time: 72 ore</li>
+                                <li class="bottom-bar">case infinite</li>
+                                <li class="bottom-bar">Support 24/7 (non è vero)</li>
+                                <li><button class="btn active-btn">Attiva</button></li>
+                            </ul>
+                        </div>
+                        <div class="card shadow">
+                            <ul>
+                                <li class="pack">plus</li>
+                                <li id="premium" class="price bottom-bar">&euro;5<sup>99</sup></li>
+                                <li class="bottom-bar">Time: 48 ore</li>
+                                <li class="bottom-bar">case non infinite</li>
+                                <li class="bottom-bar">support 9-12</li>
+                                <li><button class="btn">Attiva</button></li>
+                            </ul>
+                        </div> -->
                 </div>
-
-                <div v-if="selectedApartment">
-                    <h3>{{ selectedApartment.title }}</h3>
-
-                    <div class="sponsors">
-                        <div class="sponsor" v-for="pkg in sponsors" :key="pkg.id"
-                            :class="{ 'selected': pkg === selectedSponsor }" @click="selectedSponsor = pkg">
-                            <h4>{{ pkg.name }}</h4>
-                            <p>{{ pkg.description }}</p>
-                            <div class="price">{{ pkg.price }} €</div>
+                <div v-else>
+                    <div class="row-my-partm my-container" v-for="apartment in apartments " :key="apartment.id"
+                        v-if="apartments != null">
+                        <AppModaleDelete :action="deleteApartment" :id="selectedApartmentId">
+                        </AppModaleDelete>
+                        <div>
+                            <p> {{ apartment.title }}</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-stats">
+                                <font-awesome-icon icon="fa-solid fa-chart-simple" />
+                                Vedi Statistiche
+                            </button>
+                            <button class="btn btn-sponsor hover-effect">
+                                <font-awesome-icon icon="fa-solid fa-rocket" />
+                                Sponsorizza
+                            </button>
                         </div>
                     </div>
-
-                    <div class="total" v-if="selectedSponsor">
-                        <div class="label">Totale:</div>
-                        <div class="price">{{ sponsorPrice }} €</div>
-                    </div>
-
-                    <button class="btn btn-primary" @click="sponsorizeApartment">Paga ora</button>
-
-                    <div class="error" v-if="paymentError">{{ paymentError }}</div>
                 </div>
             </div>
-        </template>
-
-
-        <!-- <main>
-
-            <div class="container">
-                <div class="cards">
-                    <div class="card shadow">
-                        <ul>
-                            <li class="pack">standard</li>
-                            <li id="standard" class="price bottom-bar">&euro;2<sup>99</sup></li>
-                            <li class="bottom-bar">Time: 24 ore</li>
-                            <li class="bottom-bar">2 case</li>
-                            <li class="bottom-bar">no support</li>
-                            <li><button class="btn">Attiva</button></li>
-                        </ul>
-                    </div>
-                    <div class="card active">
-                        <ul>
-                            <li class="pack">premium</li>
-                            <li id="plus" class="price bottom-bar">&euro;9<sup>99</sup></li>
-                            <li class="bottom-bar">Time: 72 ore</li>
-                            <li class="bottom-bar">case infinite</li>
-                            <li class="bottom-bar">Support 24/7 (non è vero)</li>
-                            <li><button class="btn active-btn">Attiva</button></li>
-                        </ul>
-                    </div>
-                    <div class="card shadow">
-                        <ul>
-                            <li class="pack">plus</li>
-                            <li id="premium" class="price bottom-bar">&euro;5<sup>99</sup></li>
-                            <li class="bottom-bar">Time: 48 ore</li>
-                            <li class="bottom-bar">case non infinite</li>
-                            <li class="bottom-bar">support 9-12</li>
-                            <li><button class="btn">Attiva</button></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </main> -->
+        </main>
 
     </AppDashboardLayoutVue>
 </template>
@@ -160,6 +131,30 @@ main {
     align-items: center;
 }
 
+.my-container {
+    @include flexSpaceBtwn ($gap: 0);
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.445);
+
+    .lato-sx {
+        height: 100vh;
+        width: 15vw;
+        border: 1px solid;
+    }
+
+    .lato-dx {
+        height: 100vh;
+        width: 85vw;
+        border: 1px solid;
+        padding: 15px 30px;
+
+        >div {
+            @include flexSpaceBtwn ($gap: 0);
+            margin-bottom: 40px;
+        }
+    }
+}
+
 .container {
 
     .cards {
@@ -170,6 +165,7 @@ main {
             background: #fff;
             color: hsl(233, 13%, 49%);
             border-radius: 0.8rem;
+            transition: all 0.05s;
 
             ul {
                 margin: 2.6rem;
@@ -185,7 +181,7 @@ main {
             }
 
             &:hover {
-                transform: scale(1.2);
+                transform: scale(1.1);
             }
         }
 
@@ -219,8 +215,8 @@ main {
             align-items: center;
             border-radius: 4px;
             background: linear-gradient(135deg,
-                    rgba(163, 168, 240, 1) 0%,
-                    rgb(105, 217, 221) 100%);
+                    #a3a8f0 0%,
+                    #69d9dd 100%);
             color: #fff;
             border: none;
             font-weight: bold;
@@ -228,8 +224,8 @@ main {
 
             &:hover {
                 background: linear-gradient(135deg,
-                        rgba(105, 217, 221) 0%,
-                        rgb(163, 168, 240, 1) 100%);
+                        #69d9dd 0%,
+                        #a3a8f0 100%);
             }
         }
     }

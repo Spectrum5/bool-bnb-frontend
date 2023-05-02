@@ -127,6 +127,11 @@ $layout-breakpoint-medium: 768px;
         $colorC: $color-two-dark;
     }
 
+    @else if $palette == secondary {
+        $colorB: $secondary-color-one-light;
+        $colorC: $secondary-color-two-light;
+    }
+
     @else if $palette == success {
         $colorB: $success-color-dark;
         $colorC: $success-color-light;

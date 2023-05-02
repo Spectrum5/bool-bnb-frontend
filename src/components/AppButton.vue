@@ -73,6 +73,10 @@ button {
     @include customButton (primary);
   }
 
+  &[palette=secondary] {
+    @include customButton (secondary);
+  }
+
   &[palette=success] {
     @include customButton (success);
   }

@@ -139,7 +139,10 @@ export default {
     gap: 2.5rem 3rem;
     flex-wrap: wrap;
 
+    min-height: 40vh;
+
     padding: 0 1rem;
+    padding-bottom: 3rem;
 
     >h2 {
         flex-basis: 100%;
