@@ -2,6 +2,8 @@
 
 // Utilities
 import axios from 'axios';
+import { router } from '../../../router';
+import { store } from '../../../store';
 
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
@@ -15,9 +17,12 @@ export default {
     },
     data() {
         return {
+            store,
+            router,
             sponsorsData: [],
             chooseApartment: false,
-            apartments: []
+            apartments: [],
+            sponsorPlan: null
         };
     },
 
@@ -40,15 +45,20 @@ export default {
                     console.log('Errore Index Appartamenti Personali', response.data);
                 })
         },
-        handleSponsor() {
+        selectSponsor(sponsor_id) {
+            this.sponsorPlan = sponsor_id;
             this.chooseApartment = true;
+            this.store.sponsor_id = sponsor_id;
             this.getApartments();
+        },
+        selectApartment(apartment_id, apartment_slug) {
+            this.apartment_id = apartment_id;
+            this.store.apartment_id = apartment_id;
+            router.push(`/dashboard/sponsors/${this.sponsorPlan}/${apartment_slug}`)
         }
-        // calcDuration() {
-        //     if (sponsor.title == 'standard') return 
-        // }
     },
     mounted() {
+        document.title = 'Dashboard | Sponsor';
         this.getSponsorsData()
     }
 };
@@ -66,50 +76,19 @@ export default {
                             <li class="pack">{{ sponsor.title }}</li>
                             <li id="standard" class="price bottom-bar">&euro;{{ sponsor.price }}</li>
                             <li class="bottom-bar">{{ sponsor.duration }} ore</li>
-                            <li>
-                                <AppButton :action="handleSponsor" :label="'Sponsorizza'" :type="'solid'" :palette="'secondary'" />
+                            <li @click="selectSponsor(sponsor.id)">
+                                <AppButton :label="'Sponsorizza'" :type="'solid'" :palette="'secondary'" />
                             </li>
                         </ul>
                     </div>
-                    <!-- <div class="card active">
-                            <ul>
-                                <li class="pack">premium</li>
-                                <li id="plus" class="price bottom-bar">&euro;9<sup>99</sup></li>
-                                <li class="bottom-bar">Time: 72 ore</li>
-                                <li class="bottom-bar">case infinite</li>
-                                <li class="bottom-bar">Support 24/7 (non è vero)</li>
-                                <li><button class="btn active-btn">Attiva</button></li>
-                            </ul>
-                        </div>
-                        <div class="card shadow">
-                            <ul>
-                                <li class="pack">plus</li>
-                                <li id="premium" class="price bottom-bar">&euro;5<sup>99</sup></li>
-                                <li class="bottom-bar">Time: 48 ore</li>
-                                <li class="bottom-bar">case non infinite</li>
-                                <li class="bottom-bar">support 9-12</li>
-                                <li><button class="btn">Attiva</button></li>
-                            </ul>
-                        </div> -->
                 </div>
-                <div v-else>
-                    <div class="row-my-partm my-container" v-for="apartment in apartments " :key="apartment.id"
-                        v-if="apartments != null">
-                        <AppModaleDelete :action="deleteApartment" :id="selectedApartmentId">
-                        </AppModaleDelete>
+                <div class="apartments" v-else>
+                    <div class="apartment" v-for="apartment in apartments " :key="apartment.id" v-if="apartments != null"
+                        @click="selectApartment(apartment.id, apartment.slug)">
                         <div>
                             <p> {{ apartment.title }}</p>
                         </div>
-                        <div>
-                            <button class="btn btn-stats">
-                                <font-awesome-icon icon="fa-solid fa-chart-simple" />
-                                Vedi Statistiche
-                            </button>
-                            <button class="btn btn-sponsor hover-effect">
-                                <font-awesome-icon icon="fa-solid fa-rocket" />
-                                Sponsorizza
-                            </button>
-                        </div>
+                        <font-awesome-icon icon="fa-solid fa-chevron-right" />
                     </div>
                 </div>
             </div>
@@ -119,6 +98,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+@use '../../../styles/partials/variables.scss' as *;
 @use '../../../styles/partials/mixins.scss' as *;
 
 main {
@@ -129,12 +109,19 @@ main {
     padding: 1rem;
     justify-content: center;
     align-items: center;
+    // background-color: red;
 }
 
-.my-container {
+.apartment {
     @include flexSpaceBtwn ($gap: 0);
+    // background-color: red;
     padding: 10px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.445);
+    cursor: pointer;
+
+    &:hover {
+        background-color: $light-color-one;
+    }
 
     .lato-sx {
         height: 100vh;
@@ -156,9 +143,14 @@ main {
 }
 
 .container {
+    // background-color: #a3a8f0;
+    height: 100%;
+    flex-grow: 1;
+    // @include flexRowCenter;
 
     .cards {
         @include flexRowCenter;
+        height: 100%;
         flex-wrap: wrap;
 
         .card {

@@ -20,6 +20,8 @@ export const store = reactive({
         bathrooms_number: null,
         services: []
     },
+    apartment_id: null,
+    sponsor_id: null,
 
     // modale giada
     showModal: false,
