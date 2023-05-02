@@ -35,6 +35,7 @@ export default {
     methods: {
         handleRegister() {
             this.validateData();
+            this.store.loadingWidth = 10;
         },
         addError(message, field) {
             // Controlla se in store.errors sono presenti errori con lo stesso campo di quello passato
@@ -54,22 +55,20 @@ export default {
                 }
             }
         },
-
-        deleteError(fieldName){
-            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+        deleteError(fieldName) {
+            // Toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
             const index = this.store.errors.findIndex(error => error.field === fieldName);
             if (index >= 0) {
                 this.store.errors.splice(index, 1);
             }
         },
-
         // FUNZIONI PER VALIDAZIONI SINGOLI INPUT
         firstNameValidation() {
             let firstNameInput = document.getElementById('first_name');
             firstNameInput.classList.remove('invalid');
 
             this.deleteError('first_name');
-                
+
 
             // First Name Length
             if (firstNameInput.value.trim().length == 0) {
@@ -206,7 +205,7 @@ export default {
                     this.addError('Devi avere almeno 9 anni per poterti registrare', 'date_of_birth');
                     datOfBirthInput.classList.add('invalid');
                 }
-                
+
                 if (month < 1 || month > 12) {
                     this.addError('Il mese deve essere compreso tra 1 e 12', 'date_of_birth');
                     datOfBirthInput.classList.add('invalid');
@@ -236,6 +235,7 @@ export default {
             // Front End Validation
             console.log('Validazione dati registrazione...');
             this.store.errors = [];
+            this.store.loadingWidth = 20;
 
             this.firstNameValidation();
             this.lastNameValidation();
@@ -244,13 +244,19 @@ export default {
             this.passwordConfirmationValidation();
             this.dateOfBirthValidation();
 
+            this.store.loadingWidth = 60;
+
             this.shakeInputs();
 
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.postRegisterData();
-            else console.log('Hai inserito dati non corretti. Riprova.');
+            else {
+                console.log('Hai inserito dati non corretti. Riprova.');
+                this.store.loadingWidth = 100;
+            }
         },
         postRegisterData() {
+            this.store.loadingWidth = 75;
             // Crea un istanza di FormData e ci inserisce delle coppie chiave: valore
             // corrispondenti alle coppie dell'oggetto form
             const formData = new FormData();
@@ -271,6 +277,7 @@ export default {
                 .catch((response) => {
                     this.addError('Errore del server. Riprovare piú tardi', 'server_error');
                     console.log('Errore Invio dati Register:', response.response);
+                    this.store.loadingWidth = 100;
                 })
         }
     },

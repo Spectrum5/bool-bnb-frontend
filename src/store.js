@@ -23,6 +23,8 @@ export const store = reactive({
     apartment_id: null,
     sponsor_id: null,
 
+    loadingWidth: 0,
+
     // modale giada
     showModal: false,
     editedApartment: false,

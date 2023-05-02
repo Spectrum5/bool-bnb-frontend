@@ -18,12 +18,12 @@ export default {
             router,
             pages: [
                 {
-                    label: 'apartments',
+                    label: 'appartamenti',
                     icon: 'house-chimney',
                     link: '/dashboard/apartments'
                 },
                 {
-                    label: 'messages',
+                    label: 'messaggi',
                     icon: 'envelope',
                     link: '/dashboard/messages'
                 },
