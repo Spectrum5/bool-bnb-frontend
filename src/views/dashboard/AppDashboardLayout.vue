@@ -76,6 +76,7 @@ export default {
 
 .wrapper {
     height: 100vh;
+    width: 100vw;
     @include flexRowCenter;
     overflow: hidden;
 }

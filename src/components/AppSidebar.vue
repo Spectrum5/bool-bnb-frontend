@@ -69,6 +69,7 @@ export default {
 aside {
     width: 260px;
     height: 100vh;
+    flex-shrink: 0;
     border-right: 2px solid $dark-color-one;
 
     header {
