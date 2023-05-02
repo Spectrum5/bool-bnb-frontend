@@ -21,7 +21,7 @@ export default {
         return {
             router,
             store,
-            // apartments: null,
+            apartments: null,
             selectedApartmentId: null
         }
     },
