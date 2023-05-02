@@ -1,6 +1,4 @@
 ## PRIORITA'
-- Gestione Pagamento
-- Sponsorizzazioni
 - Far vedere le case sponsorizzate per prime
 
 - Eliminare immagini dallo storage quando si elimina appartamento
