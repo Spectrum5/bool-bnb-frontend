@@ -58,6 +58,11 @@ export default {
             <main>
                 <div class="messages" v-if="messages">
                     <div class="message" v-for="message in messages">
+                        <div class="title">
+                            <strong>
+                                {{ message.apartment.title }}
+                            </strong>
+                        </div>
                         <div class="email">{{ message.email }}</div>
                         <div class="text">{{ message.message }}</div>
                     </div>
@@ -82,6 +87,10 @@ export default {
 .message {
     padding: 10px 0;
     border-bottom: 1px solid $dark-color-one;
+}
+
+.title{
+    text-transform: uppercase;
 }
 
 .email {

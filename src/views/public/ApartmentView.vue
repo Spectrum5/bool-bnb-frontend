@@ -77,11 +77,21 @@ export default {
                 }
             }
         },
+
+        deleteError(fieldName) {
+            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+            const index = this.store.errors.findIndex(error => error.field === fieldName);
+            if (index >= 0) {
+                this.store.errors.splice(index, 1);
+            }
+        },
+
         async getMap() {
             const map = await fetch(`${this.url_api_tomtom}/1/staticimage?key=${this.api_key_tomtom}&zoom=15&center=${this.apartment.lng},${this.apartment.lat}&format=png&layer=basic&style=main&width=1305&height=748&view=Unified&language=it-IT`);
             const data = await map.blob();
             this.mapUrl = URL.createObjectURL(data);
         },
+
         setContactEmail() {
             if (store.user != null) {
                 this.message.contactEmail = this.store.user.email;
@@ -180,7 +190,14 @@ export default {
             })
                 .then((response) => {
                     console.log('Messaggio Inviato', response);
+
+                    // Cambio del button
                     this.messageSent = true;
+
+                    setTimeout(() => {
+                        this.messageSent = false;
+                        this.message.text ='';
+                    }, 2000);
                 })
                 .catch((response) => {
                     console.log('Errore Messaggio', response.data);
