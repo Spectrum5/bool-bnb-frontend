@@ -21,7 +21,7 @@ export default {
         return {
             router,
             store,
-            apartments: null,
+            // apartments: null,
             selectedApartmentId: null
         }
     },
@@ -67,8 +67,10 @@ export default {
         }">
 
         <main>
-            <div class="row-my-partm my-container" v-for="apartment in apartments " :key="apartment.id"
-                v-if="apartments != null">
+            <div class="row-my-partm my-container"
+            v-for="apartment in apartments "
+            :key="apartment.id"
+            v-if="apartments != null">
                 <AppModaleDelete :action="deleteApartment" :id="selectedApartmentId">
                 </AppModaleDelete>
                 <div>
@@ -95,6 +97,9 @@ export default {
                     </button>
                 </div>
             </div>
+            <div class="no-apartment" v-else>
+                <h2>Non sono presenti appartamenti</h2>
+            </div>
         </main>
 
     </AppDashboardLayoutVue>
@@ -110,6 +115,11 @@ main {
     flex-grow: 1;
     overflow: auto;
     padding: 1rem;
+}
+
+.no-apartment{
+    text-align: center;
+    margin-top: 35px;
 }
 
 .my-container {
