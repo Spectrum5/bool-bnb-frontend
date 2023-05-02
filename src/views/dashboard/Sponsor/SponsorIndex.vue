@@ -14,23 +14,99 @@ export default {
     data() {
         return {
             sponsorData: [],
+            selectedApartment: null,
+            selectedSponsor: null,
+            paymentError: null,
+            sponsors: []
         };
     },
-    async created() {
-        document.title = 'Dashboard | Sponsor Plans';
-        try {
-            const response = await axios.get('http://localhost:8000/api/sponsor');
-            this.sponsorData = response.data;
-        } catch (error) {
-            console.log(error);
+    // async created() {
+    //     document.title = 'Dashboard | Sponsor Plans';
+    //     try {
+    //         const response = await axios.get('http://localhost:8000/api/sponsors');
+    //         console.log('index',response.data)
+    //         this.sponsorData = response.data;
+    //         this.sponsors = response.data.sponsors;
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // },
+    methods: {
+        sponsorizeApartment() {
+            if (!this.selectedApartment || !this.selectedSponsor) {
+                return;
+            }
+
+            axios.post('http://localhost:8000/api/sponsors', {
+                apartment_id: 5,
+                sponsor_id: 3
+            })
+                .then(response => {
+                    // TODO: handle success
+                })
+                .catch(error => {
+                    this.paymentError = error.response.data.message || 'Unknown error';
+                });
+        },
+        getSponsors() {
+            axios.get('http://localhost:8000/api/sponsors').then(response => {
+                    console.log('index', response.data)
+                })
         }
     },
+    computed: {
+        sponsorPrice() {
+            if (!this.selectedSponsor) {
+                return 0;
+            }
+
+            return this.selectedSponsor.price;
+        }
+    },
+    mounted() {
+        this.getSponsors()
+    }
+
 };
 </script>
 
 <template>
     <AppDashboardLayoutVue :title="'Piani di Sponsor'">
-        <main>
+
+        <template>
+            <div class="apartment-sponsorship">
+                <h2>Sponsorizza appartamento</h2>
+
+                <div v-if="!selectedApartment">
+                    Seleziona un appartamento per continuare.
+                </div>
+
+                <div v-if="selectedApartment">
+                    <h3>{{ selectedApartment.title }}</h3>
+
+                    <div class="sponsors">
+                        <div class="sponsor" v-for="pkg in sponsors" :key="pkg.id"
+                            :class="{ 'selected': pkg === selectedSponsor }" @click="selectedSponsor = pkg">
+                            <h4>{{ pkg.name }}</h4>
+                            <p>{{ pkg.description }}</p>
+                            <div class="price">{{ pkg.price }} €</div>
+                        </div>
+                    </div>
+
+                    <div class="total" v-if="selectedSponsor">
+                        <div class="label">Totale:</div>
+                        <div class="price">{{ sponsorPrice }} €</div>
+                    </div>
+
+                    <button class="btn btn-primary" @click="sponsorizeApartment">Paga ora</button>
+
+                    <div class="error" v-if="paymentError">{{ paymentError }}</div>
+                </div>
+            </div>
+        </template>
+
+
+        <!-- <main>
 
             <div class="container">
                 <div class="cards">
@@ -66,7 +142,7 @@ export default {
                     </div>
                 </div>
             </div>
-        </main>
+        </main> -->
 
     </AppDashboardLayoutVue>
 </template>
@@ -184,9 +260,10 @@ main {
 
 @media (min-width: 320px) and (max-width: 768px) {
     main {
-    max-width: 100vw;
+        max-width: 100vw;
 
     }
+
     .cards {
         display: flex;
         flex-direction: column;
@@ -206,7 +283,7 @@ main {
         .card {
             margin: 5px;
         }
-        
+
     }
 }
 
