@@ -44,6 +44,7 @@ export default {
             color: $dark-color-one;
             padding: 8px 6px;
             cursor: pointer;
+            white-space: nowrap;
             
             .label {
                 text-transform: capitalize;
