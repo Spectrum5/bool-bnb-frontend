@@ -217,6 +217,7 @@ export default {
                 <router-link to="/register" class="customLink">Non hai un account? Creane uno.</router-link>
                 <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
             </div>
+            <!-- <img src="../../assets/logo_per_auth.png" alt=""> -->
         </div>
     </main>
 

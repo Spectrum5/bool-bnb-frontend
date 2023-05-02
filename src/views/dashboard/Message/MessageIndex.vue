@@ -2,6 +2,7 @@
 
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppButton from '../../../components/AppButton.vue';
 
 // Utilities
 import axios from 'axios';
@@ -11,7 +12,8 @@ import { store } from '../../../store';
 export default {
     name: 'MessageIndex',
     components: {
-        AppDashboardLayoutVue
+        AppDashboardLayoutVue,
+        AppButton
     },
     data() {
         return {
@@ -58,22 +60,19 @@ export default {
             <main>
                 <div class="messages" v-if="messages">
                     <div class="message" v-for="message in messages">
-                        <div class="title">
-                            <strong>
-                                {{ message.apartment.title }}
-                            </strong>
+                        <div>
+                            <div class="title">
+                                <strong>
+                                    {{ message.apartment.title }}
+                                </strong>
+                            </div>
+                            <div class="email">{{ message.email }}</div>
+                            <div class="text">{{ message.message }}</div>
                         </div>
-                        <div class="email">{{ message.email }}</div>
-                        <div class="text">{{ message.message }}</div>
+                        <AppButton :label="'Rispondi'" :icon="'share'"/>
                     </div>
-
-
-                    <!-- <div class="email">
-                        <p></p>
+                    <div>
                     </div>
-                    <div class="text">
-                        <p class="message" v-for="message in messages">{{ message.message }}</p>
-                    </div> -->
                 </div>
             </main>
 

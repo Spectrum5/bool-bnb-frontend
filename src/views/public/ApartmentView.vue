@@ -397,7 +397,7 @@ export default {
     justify-content: space-between;
 
     .leftColumn {
-        flex-basis: 50%;
+        flex-basis: 40%;
     }
 
     .rightColumn {
