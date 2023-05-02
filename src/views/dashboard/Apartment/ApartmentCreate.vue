@@ -622,6 +622,7 @@ label {
     color: #dc3545;
     font-size: 0.8rem;
     padding-top: 3px;
+    max-width: fit-content;
 }
 
 .previews {
