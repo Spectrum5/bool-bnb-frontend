@@ -36,6 +36,19 @@ export default {
                 visibility: false,
                 services: []
             },
+            errorsMessages: {
+                title: '',
+                price: '',
+                size: '',
+                address: '',
+                rooms_number: '',
+                beds_number: '',
+                bathrooms_number: '',
+                description: '',
+                visibility: '',
+                services: '',
+                image: '',
+            },
             previewUrls: [],
             url_api_tomtom: 'https://api.tomtom.com/search/2/geocode/',
             api_key_tomtom: 'Vru3uP06eapOxpYMujwrRlVLMB5Vkqch',
@@ -53,18 +66,16 @@ export default {
         handleCreateApartment() {
             this.validateData();
         },
-        addError(message, field) {
+        addError(field) {
             // Check if there are already errors in store.errors with the same field, and if not, add the error
             if (this.store.errors.length === 0) {
                 this.store.errors.push({
-                    message: message,
                     field: field,
                 });
             }
             else {
                 if (!this.store.errors.some((error) => error.field === field)) {
                     this.store.errors.push({
-                        message: message,
                         field: field,
                     });
                 }
@@ -85,15 +96,19 @@ export default {
             titleInput.classList.remove('invalid');
 
             this.deleteError('title');
+            this.errorsMessages.title = '';
 
             if (titleInput.value.trim().length === 0) {
-                this.addError('Il campo nome deve essere compilato', 'title');
+                this.addError('title');
+                this.errorsMessages.title = 'Il campo nome deve essere compilato';
                 titleInput.classList.add('invalid');
             } else if (titleInput.value.trim().length < 3) {
-                this.addError('Il campo nome deve essere almeno di 3 caratteri', 'title');
+                this.addError('title');
+                this.errorsMessages.title = 'Il campo nome deve essere almeno di 3 caratteri';
                 titleInput.classList.add('invalid');
             } else if (titleInput.value.trim().length > 50) {
-                this.addError('Il campo nome non deve superare i 128 caratteri', 'title');
+                this.addError('title');
+                this.errorsMessages.title = 'Il campo nome non deve superare i 128 caratteri';
                 titleInput.classList.add('invalid');
             }
         },
@@ -103,15 +118,19 @@ export default {
             addressInput.classList.remove('invalid');
 
             this.deleteError('address');
+            this.errorsMessages.address = '';
 
             if (addressInput.value.trim().length === 0) {
-                this.addError('Il campo indirizzo deve essere compilato', 'address');
+                this.addError('address');
+                this.errorsMessages.address = 'Il campo indirizzo deve essere compilato';
                 addressInput.classList.add('invalid');
             } else if (addressInput.value.trim().length < 3) {
-                this.addError('Il campo indirizzo deve essere almeno di 3 caratteri', 'address');
+                this.addError('address');
+                this.errorsMessages.address = 'Il campo indirizzo deve essere almeno di 3 caratteri';
                 addressInput.classList.add('invalid');
             } else if (addressInput.value.trim().length > 512) {
-                this.addError('Il campo indirizzo non deve superare i 512 caratteri', 'address');
+                this.addError('address');
+                this.errorsMessages.address = 'Il campo indirizzo non deve superare i 512 caratteri';
                 addressInput.classList.add('invalid');
             }
         },
@@ -121,13 +140,24 @@ export default {
             const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
             fileInput.classList.remove('invalid');
 
-            this.deleteError('address');
+            // console.log per imgs da inviare al backend
+            console.log('immagini da inviare', this.form.images);
+
+            this.deleteError('images');
+            this.errorsMessages.image = '';
 
             if (!fileInput.value) {
-                this.addError('Devi selezionare almeno un\'immagine', 'image');
+                this.addError('images');
+                this.errorsMessages.image = 'Devi selezionare almeno un\'immagine';
                 fileInput.classList.add('invalid');
             } else if (!allowedExtensions.exec(fileInput.value)) {
-                this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'image');
+                this.addError('images');
+                this.errorsMessages.image = 'L\'immagine deve essere in formato JPG, JPEG o PNG';
+                fileInput.classList.add('invalid');
+            }
+            else if(this.previewUrls.length > 3){
+                this.addError('images');
+                this.errorsMessages.image = 'Puoi selezionare fino a un massimo di tre immagini';
                 fileInput.classList.add('invalid');
             }
         },
@@ -137,15 +167,19 @@ export default {
             priceInput.classList.remove('invalid');
 
             this.deleteError('price');
+            this.errorsMessages.price = '';
 
             if (priceInput.value.trim().length === 0) {
-                this.addError('Il campo prezzo deve essere compilato', 'price');
+                this.addError('price');
+                this.errorsMessages.price = 'Il campo prezzo deve essere compilato';
                 priceInput.classList.add('invalid');
             } else if (isNaN(priceInput.value.trim())) {
-                this.addError('Il campo prezzo deve contenere solo numeri', 'price');
+                this.addError('price');
+                this.errorsMessages.price = 'Il campo prezzo deve contenere solo numeri';
                 priceInput.classList.add('invalid');
             } else if (priceInput.value.trim() <= 99 || priceInput.value.trim() > 1500) {
-                this.addError('Il campo prezzo deve essere compreso tra 100 e 1500', 'price');
+                this.addError('price');
+                this.errorsMessages.price = 'Il campo prezzo deve essere compreso tra 100 e 1500';
                 priceInput.classList.add('invalid');
             }
         },
@@ -155,15 +189,19 @@ export default {
             roomsNumberInput.classList.remove('invalid');
 
             this.deleteError('rooms_number');
+            this.errorsMessages.rooms_number = '';
 
             if (roomsNumberInput.value.trim().length === 0) {
-                this.addError('Il campo stanze deve essere compilato', 'rooms_number');
+                this.addError('rooms_number');
+                this.errorsMessages.rooms_number = 'Il campo stanze deve essere compilato';
                 roomsNumberInput.classList.add('invalid');
             } else if (isNaN(roomsNumberInput.value.trim())) {
-                this.addError('Il campo stanze deve contenere solo numeri', 'rooms_number');
+                this.addError('rooms_number');
+                this.errorsMessages.rooms_number = 'Il campo stanze deve contenere solo numeri';
                 roomsNumberInput.classList.add('invalid');
             } else if (roomsNumberInput.value.trim() <= 0 || roomsNumberInput.value.trim() > 8) {
-                this.addError('Il campo stanze deve essere compreso tra 1 e 8', 'rooms_number');
+                this.addError('rooms_number');
+                this.errorsMessages.rooms_number = 'Il campo stanze deve essere compreso tra 1 e 8';
                 roomsNumberInput.classList.add('invalid');
             }
         },
@@ -173,15 +211,19 @@ export default {
             bedsNumberInput.classList.remove('invalid');
 
             this.deleteError('beds_number');
+            this.errorsMessages.beds_number = '';
 
             if (bedsNumberInput.value.trim().length === 0) {
-                this.addError('Il campo posti letto deve essere compilato', 'beds_number');
+                this.addError('beds_number');
+                this.errorsMessages.beds_number = 'Il campo posti letto deve essere compilato';
                 bedsNumberInput.classList.add('invalid');
             } else if (isNaN(bedsNumberInput.value.trim())) {
-                this.addError('Il campo posti letto deve contenere solo numeri', 'beds_number');
+                this.addError('beds_number');
+                this.errorsMessages.beds_number = 'Il campo posti letto deve contenere solo numeri';
                 bedsNumberInput.classList.add('invalid');
             } else if (bedsNumberInput.value.trim() <= 0 || bedsNumberInput.value.trim() > 16) {
-                this.addError('Il campo posti letto deve essere compreso tra 1 e 16', 'beds_number');
+                this.addError('beds_number');
+                this.errorsMessages.beds_number = 'Il campo posti letto deve essere compreso tra 1 e 16';
                 bedsNumberInput.classList.add('invalid');
             }
         },
@@ -191,15 +233,19 @@ export default {
             bathroomsNumberInput.classList.remove('invalid');
 
             this.deleteError('bathrooms_number');
+            this.errorsMessages.bathrooms_number = '';
 
             if (bathroomsNumberInput.value.trim().length === 0) {
-                this.addError('Il campo numero di bagni deve essere compilato', 'bathrooms_number');
+                this.addError('bathrooms_number');
+                this.errorsMessages.bathrooms_number = 'Il campo numero di bagni deve essere compilato';
                 bathroomsNumberInput.classList.add('invalid');
             } else if (isNaN(bathroomsNumberInput.value.trim())) {
-                this.addError('Il campo numero di bagni deve contenere solo numeri', 'bathrooms_number');
+                this.addError('bathrooms_number');
+                this.errorsMessages.bathrooms_number = 'Il campo numero di bagni deve contenere solo numeri';
                 bathroomsNumberInput.classList.add('invalid');
             } else if (bathroomsNumberInput.value.trim() <= 0 || bathroomsNumberInput.value.trim() > 8) {
-                this.addError('Il campo numero di bagni deve essere compreso tra 1 e 8', 'bathrooms_number');
+                this.addError('bathrooms_number');
+                this.errorsMessages.bathrooms_number = 'Il campo numero di bagni deve essere compreso tra 1 e 8';
                 bathroomsNumberInput.classList.add('invalid');
             }
         },
@@ -209,14 +255,22 @@ export default {
             descriptionInput.classList.remove('invalid');
 
             this.deleteError('description');
+            this.errorsMessages.description = '';
 
             const descriptionValue = descriptionInput.value.trim();
 
-            if (descriptionValue.length < 10) {
-                this.addError('La descrizione deve essere di almeno 10 caratteri', 'description');
+            if (descriptionValue.length == 0) {
+                this.addError('description');
+                this.errorsMessages.description = 'La descrizione deve essere compilata';
+                descriptionInput.classList.add('invalid');
+            }
+            else if (descriptionValue.length < 10) {
+                this.addError('description');
+                this.errorsMessages.description = 'La descrizione deve essere di almeno 10 caratteri';
                 descriptionInput.classList.add('invalid');
             } else if (descriptionValue.length > 4096) {
-                this.addError('La descrizione deve essere di massimo 4096 caratteri', 'description');
+                this.addError('description');
+                this.errorsMessages.description = 'La descrizione deve essere di massimo 4096 caratteri';
                 descriptionInput.classList.add('invalid');
             }
         },
@@ -226,18 +280,23 @@ export default {
             sizeInput.classList.remove('invalid');
 
             this.deleteError('size');
+            this.errorsMessages.size = '';
 
             if (sizeInput.value.trim().length === 0) {
-                this.addError('Il campo Inserisci i mq deve essere compilato', 'size');
+                this.addError('size');
+                this.errorsMessages.size = 'Il campo mq deve essere compilato';
                 sizeInput.classList.add('invalid');
             } else if (isNaN(sizeInput.value.trim())) {
-                this.addError('Il campo Inserisci i mq deve essere un numero', 'size');
+                this.addError('size');
+                this.errorsMessages.size = 'Il campo mq deve essere un numero';
                 sizeInput.classList.add('invalid');
             } else if (sizeInput.value.trim() < 50) {
-                this.addError('Il campo Inserisci i mq deve essere maggiore di 50', 'size');
+                this.addError('size');
+                this.errorsMessages.size = 'Il campo mq deve essere maggiore di 50';
                 sizeInput.classList.add('invalid');
             } else if (sizeInput.value.trim() > 500) {
-                this.addError('Il campo Inserisci i mq non deve superare i 500 mq', 'size');
+                this.addError('size');
+                this.errorsMessages.size = 'Il campo mq non deve superare i 500 mq';
                 sizeInput.classList.add('invalid');
             }
         },
@@ -247,16 +306,22 @@ export default {
             visibilityInput.classList.remove('invalid');
 
             this.deleteError('visibility');
+            this.errorsMessages.visibility = '';
 
             if (this.form.visibility !== true && this.form.visibility !== false) {
-                this.addError('Il campo visibilità non è valido', 'visibility');
+                this.addError('visibility');
+                this.errorsMessages.visibility = 'Il campo visibilità non è valido';
                 visibilityInput.classList.add('invalid');
             }
         },
 
         servicesValidation() {
+            this.deleteError('services');
+            this.errorsMessages.services = '';
+
             if (this.form.services.length == 0) {
-                this.addError('Devi selezionare almeno un servizio', 'services');
+                this.addError('services');
+                this.errorsMessages.services = 'Devi selezionare almeno un servizio';
             }
         },
 
@@ -351,7 +416,7 @@ export default {
                     this.postImages(response.data.apartment_id);
                 })
                 .catch((response) => {
-                    this.addError('Errore del server. Riprovare piú tardi', 'server_error');
+                    this.addError('server_error');
                     console.log('Errore Invio dati Register:', response.response);
                 })
             this.ApartmentCreated = true;
@@ -360,6 +425,7 @@ export default {
                 router.push('/dashboard/apartments');
             }, 1000);
         },
+
         addFiles(fieldName, fileList) {
             this.form.images = fileList;
             for (let i = 0; i < fileList.length; i++) {
@@ -390,6 +456,17 @@ export default {
         },
         deleteImage(index) {
             this.previewUrls.splice(index, 1);
+
+            const images = [...this.form.images]; // crea una copia dell'oggetto images
+            images.splice(index, 1); // rimuove il secondo elemento dell'oggetto
+            const dataTransfer = new DataTransfer();
+            for (let i = 0; i < this.form.images.length; i++) {
+                if (i !== 1) { // salta il secondo elemento
+                    dataTransfer.items.add(this.form.images.item(i));
+                }
+            }
+            this.form.images = dataTransfer.files;
+
         }
     },
     mounted() {
@@ -420,34 +497,26 @@ export default {
                         <label class="d-block mb-2" for="title">Inserisci nome appartamento: *</label>
                         <input v-model="form.title" type="text" name="title" id="title" max="255"
                             v-on:blur="titleValidation()">
+                            <p v-if="errorsMessages.title.length > 0" class="error">{{ errorsMessages.title }}</p>
                     </div>
                     <div class="my-group">
                         <div class="group small d-inline-block">
                             <label class="d-block mb-2" for="price">Inserisci prezzo a notte: *</label>
                             <input v-model="form.price" type="number" name="price" id="price" v-on:blur="priceValidation()">
-                            <!-- max="1500" -->
+                            <p v-if="errorsMessages.price.length > 0" class="error">{{ errorsMessages.price }}</p>
                         </div>
                         <div class="group small d-inline-block">
                             <label class="d-block mb-2" for="size">Inserisci i mq: *</label>
                             <input v-model="form.size" type="number" name="size" id="size" v-on:blur="sizeValidation()">
-                            <!-- min="50"
-                                max="500" -->
+                            <p v-if="errorsMessages.size.length > 0" class="error">{{ errorsMessages.size }}</p>
                         </div>
                     </div>
                     <div class="group small">
                         <label class="d-block mb-2" for="address">Dove si trova il tuo alloggio? *</label>
                         <input v-model="form.address" type="text" name="address" id="address"
                             v-on:blur="addressValidation()">
-                        <!-- maxlength="512" -->
+                        <p v-if="errorsMessages.address.length > 0" class="error">{{ errorsMessages.address }}</p>
                     </div>
-                    <!-- <div>
-                        <label for="lat">Latitudine (**da inserire?** o da mettere in automatico?**)</label>
-                        <input v-model="form.lat" type="text" name="lat" id="lat" required>
-                    </div>
-                    <div>
-                        <label for="lng">Longitudine (**da inserire?** o da mettere in automatico?**)</label>
-                        <input v-model="form.lng" type="text" name="lng" id="lng" required>
-                    </div> -->
 
                     <!-- INFORMAZIONI DI BASE -->
                     <div class="my-group-info-base">
@@ -455,34 +524,32 @@ export default {
                             <label class="mb-2 d-block" for="rooms_number">Stanze: *</label>
                             <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number"
                                 v-on:blur="roomsNumberValidation()">
-                            <!-- min="1"
-                            max="8" -->
+                            <p v-if="errorsMessages.rooms_number.length > 0" class="error">{{ errorsMessages.rooms_number }}</p>
                         </div>
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="beds_number">Posti letto: *</label>
                             <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number"
                             v-on:blur="bedsNumberValidation()">
-                            <!-- min="1"
-                                max="16" -->
+                            <p v-if="errorsMessages.beds_number.length > 0" class="error">{{ errorsMessages.beds_number }}</p>
                         </div>
                         <div class="group small d-inline-block">
                             <label class="mb-2 d-block" for="bathrooms_number">Bagni: *</label>
                             <input v-model="form.bathrooms_number" type="number" name="bathrooms_number"
                                 id="bathrooms_number" v-on:blur="bathroomsNumberValidation()">
-                            <!-- min="1"
-                                max="8" -->
+                            <p v-if="errorsMessages.bathrooms_number.length > 0" class="error">{{ errorsMessages.bathrooms_number }}</p>
                         </div>
                     </div>
                     <div class="group small">
                         <label class="mb-2 d-block" for="description">Descrizione appartamento: *</label>
                         <textarea v-model="form.description" name="description" id="description" rows="6"
                             v-on:blur="descriptionValidation()"></textarea>
-                        <!-- maxlength="4096"-->
+                            <p v-if="errorsMessages.description.length > 0" class="error">{{ errorsMessages.description }}</p>
                     </div>
                     <div>
                         <label class="mb-2 d-block">Indica se il tuo appartamento non sarà subito disponibile</label>
                         <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility">
                         <label for="visibility">Al momento non disponibile</label>
+                        <p v-if="errorsMessages.visibility.length > 0" class="error">{{ errorsMessages.visibility }}</p>
                     </div>
                     <div>
                         <label class="mb-2 d-block">Fai conoscere agli utenti tutti i servizi del tuo alloggio *</label>
@@ -493,6 +560,7 @@ export default {
                                 <label :for="service.name" class="text-capitalize">{{ service.name }}</label>
                             </span>
                         </div>
+                        <p v-if="errorsMessages.services.length > 0" class="error">{{ errorsMessages.services }}</p>
                     </div>
 
                     <div class="group small">
@@ -517,6 +585,7 @@ export default {
                             </div>
                             <!-- </transition> -->
                         </div>
+                        <p v-if="errorsMessages.image.length > 0" class="error">{{ errorsMessages.image }}</p>
                     </div>
                 </div>
                 <button v-if="!this.ApartmentCreated" type="submit" class="btn my-btn">Crea appartamento</button>
@@ -524,7 +593,6 @@ export default {
                     <font-awesome-icon icon="fa-solid fa-check" />
                 </button>
                 <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
-                <AppErrorForm />
             </form>
         </div>
     </AppDashboardLayoutVue>
@@ -546,6 +614,13 @@ label {
 
 #images {
     display: none;
+}
+
+.error{
+    color: #dc3545;
+    font-size: 0.8rem;
+    padding-top: 3px;
+    max-width: fit-content;
 }
 
 .previews {

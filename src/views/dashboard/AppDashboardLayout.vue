@@ -9,18 +9,33 @@ import { router } from '../../router';
 import AppLogo from '../../components/AppLogo.vue';
 import AppButton from '../../components/AppButton.vue';
 import AppSidebar from '../../components/AppSidebar.vue';
+import AppMenu from '../../components/AppMenu.vue';
 
 export default {
     name: 'AppDashboardLayout',
     components: {
         AppLogo,
         AppButton,
-        AppSidebar
+        AppSidebar,
+        AppMenu
     },
     data() {
         return {
             store,
-            router
+            router,
+            menuDesktopOpen: false,
+            userMenu: [
+                {
+                    label: 'impostazioni',
+                    icon: 'gear',
+                    onClick: ''
+                },
+                {
+                    label: 'logout',
+                    icon: 'right-from-bracket',
+                    onClick: this.handleLogout
+                }
+            ]
         }
     },
     props: {
@@ -34,7 +49,7 @@ export default {
         handleLogout() {
             axios.post('http://localhost:8000/logout');
             this.store.user = null;
-            console.log('Logged Out');
+            // console.log('Logged Out');
             router.push('/');
         }
     },
@@ -54,13 +69,28 @@ export default {
             <header>
                 <!-- Searchbar -->
                 <!-- Menu Utente -->
-                <button @click="handleLogout()">logout</button>
+                <!-- <button @click="handleLogout()">logout</button> -->
+                <!-- Pulsanti Utente Autenticato -->
+                <div class="group">
+                    <!-- <AppButton :to="'/dashboard/apartments'" :label="'dashboard'" :type="'line'" :palette="'primary'" /> -->
+
+                    <div class="userMenu" @click="menuDesktopOpen = !menuDesktopOpen">
+                        <p>{{ store.user.first_name }} {{ store.user.last_name }}</p>
+                        <font-awesome-icon icon="fa-solid fa-chevron-down" class="icon"
+                            :class="menuDesktopOpen ? 'rotated' : ''" />
+                    </div>
+
+                    <transition name="fade-slide-top">
+                        <AppMenu :menuData="userMenu" :isLastDanger="true" v-if="menuDesktopOpen" />
+                    </transition>
+                </div>
             </header>
 
             <div class="content">
                 <header>
                     <h2 class="mainTitle">{{ this.title }}</h2>
-                    <AppButton v-if="button" :to="button.link ?? null" :action="button.action ?? null" :label="button.label" :icon="button.icon ?? null" :type="'solid'" :palette="'primary'"/>
+                    <AppButton v-if="button" :to="button.link ?? null" :action="button.action ?? null" :label="button.label"
+                        :icon="button.icon ?? null" :type="'solid'" :palette="'primary'" />
                 </header>
 
                 <slot></slot>
@@ -73,9 +103,11 @@ export default {
 <style scoped lang="scss">
 @use '../../styles/partials/variables.scss' as *;
 @use '../../styles/partials/mixins.scss' as *;
+@use '../../styles/partials/transitions.scss' as *;
 
 .wrapper {
     height: 100vh;
+    width: 100vw;
     @include flexRowCenter;
     overflow: hidden;
 }
@@ -91,7 +123,15 @@ export default {
 
     >header {
         height: 80px;
+        padding: 0 1rem;
         border-bottom: 2px solid $dark-color-one;
+
+        @include flexSpaceBtwn;
+        justify-content: flex-end;
+
+        .group {
+            position: relative;
+        }
     }
 
     .content {
@@ -113,32 +153,10 @@ export default {
     }
 }
 
-.btn {
-    padding: 7px 10px;
-    border-radius: 10px;
-    margin-right: 5px;
-    cursor: pointer;
-}
-
-.btn-show {
-    background-color: #f5f5f5;
-    border: 2px solid #141414;
-}
-
-.btn-create {
-    background-color: #59DCC0;
-    border: 2px solid #59DCC0;
-    color: white;
+.userMenu {
+    @include flexRowCenter (0.5rem);
+    text-transform: capitalize;
     font-weight: 600;
-}
-
-.btn-edit {
-    background-color: #f5d679;
-    border: 2px solid #f5d679;
-}
-
-.btn-delete {
-    background-color: #f56372;
-    border: 2px solid #f56372;
+    cursor: pointer;
 }
 </style>

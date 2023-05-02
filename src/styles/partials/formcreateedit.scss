@@ -10,7 +10,7 @@
     // margin-inline: auto;
 
     .my-group {
-        @include flexSpaceBtwn($gap: 100px);
+        @include flexSpaceBtwnFlexStart($gap: 100px);
 
         div {
             flex-grow: 1 !important;
@@ -18,7 +18,7 @@
     }
 
     .my-group-info-base {
-        @include flexSpaceBtwn($gap: 50px);
+        @include flexSpaceBtwnFlexStart($gap: 50px);
 
         div {
             flex-grow: 1 !important;

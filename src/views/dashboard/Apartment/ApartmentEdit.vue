@@ -3,17 +3,19 @@
 // Utilities
 import axios from 'axios';
 import { router } from '../../../router';
-import {store} from '../../../store';
+import { store } from '../../../store';
 
 // Components
 import AppErrorForm from '../../../components/AppErrorForm.vue';
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppButton from '../../../components/AppButton.vue';
 
 export default {
     name: 'ApartmentEdit',
-    components: { 
+    components: {
         AppErrorForm,
-        AppDashboardLayoutVue
+        AppDashboardLayoutVue,
+        AppButton
     },
     data() {
         return {
@@ -22,6 +24,8 @@ export default {
             form: {},
             allServices: [],
             selectedServices: [],
+
+            apartmentUpdated: false,
             images: [],
             previewUrls: [],
             //TOM TOM API
@@ -37,28 +41,36 @@ export default {
                 .then((response) => {
                     console.log('Dati Appartamento', response.data.apartment);
                     this.form = response.data.apartment;
-                    this.allServices = response.data.services;
-                    this.setCheckboxes();
-                    this.setVisibility();
 
-                    this.getImages();
+                    this.getServices();
+                    this.setVisibility();
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti', response.data);
                 })
         },
-        // RECUPERO IMMAGINI DEL SINGOLO APPARTAMENTO
-        getImages() {
-            axios.get(`http://localhost:8000/api/images/${this.form.id}`)
-                .then((response) => {
-                    this.images = response.data.images;
-                    console.log('Images', response.data);
-                })
-                .catch((response) => {
-                    console.log('Errore caricamento img dell\'appartamento', response.data);
+        getServices() {
+            axios.get('http://localhost:8000/api/services')
+                .then(response => {
+                    this.allServices = response.data.services;
+                    this.setCheckboxes();
                 })
         },
-
+        setCheckboxes() {
+            this.allServices.forEach(service => {
+                if (this.form.services.some(e => e.id == service.id)) {
+                    this.selectedServices.push(service.id);
+                }
+            });
+        },
+        setVisibility() {
+            if (this.form.visibility == 0) {
+                return this.form.visibility = true;
+            }
+            else {
+                return this.form.visibility = false;
+            }
+        },
         // FUNZIONI PER ERRORI COMPILAZIONE
         addError(message, field) {
             // Check if there are already errors in store.errors with the same field, and if not, add the error
@@ -77,15 +89,23 @@ export default {
                 }
             }
         },
-
         deleteError(fieldName) {
-            // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
+            // Toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
             const index = this.store.errors.findIndex(error => error.field === fieldName);
             if (index >= 0) {
                 this.store.errors.splice(index, 1);
             }
         },
-
+        shakeInputs() {
+            if (this.store.errors.length > 0) {
+                this.store.errors.forEach(error => {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                });
+            }
+        },
         titleValidation() {
             // Title Length
             const titleInput = document.getElementById('title');
@@ -104,7 +124,6 @@ export default {
                 titleInput.classList.add('invalid');
             }
         },
-
         addressValidation() {
             const addressInput = document.getElementById('address');
             addressInput.classList.remove('invalid');
@@ -122,7 +141,6 @@ export default {
                 addressInput.classList.add('invalid');
             }
         },
-
         imageValidation() {
             const fileInput = document.getElementById('images');
             const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
@@ -138,7 +156,6 @@ export default {
                 fileInput.classList.add('invalid');
             }
         },
-
         priceValidation() {
             const priceInput = document.getElementById('price');
             priceInput.classList.remove('invalid');
@@ -156,7 +173,6 @@ export default {
                 priceInput.classList.add('invalid');
             }
         },
-
         roomsNumberValidation() {
             const roomsNumberInput = document.getElementById('rooms_number');
             roomsNumberInput.classList.remove('invalid');
@@ -174,7 +190,6 @@ export default {
                 roomsNumberInput.classList.add('invalid');
             }
         },
-
         bedsNumberValidation() {
             const bedsNumberInput = document.getElementById('beds_number');
             bedsNumberInput.classList.remove('invalid');
@@ -192,7 +207,6 @@ export default {
                 bedsNumberInput.classList.add('invalid');
             }
         },
-
         bathroomsNumberValidation() {
             const bathroomsNumberInput = document.getElementById('bathrooms_number');
             bathroomsNumberInput.classList.remove('invalid');
@@ -210,7 +224,6 @@ export default {
                 bathroomsNumberInput.classList.add('invalid');
             }
         },
-
         descriptionValidation() {
             const descriptionInput = document.getElementById('description');
             descriptionInput.classList.remove('invalid');
@@ -231,7 +244,6 @@ export default {
                 descriptionInput.classList.add('invalid');
             }
         },
-
         sizeValidation() {
             const sizeInput = document.getElementById('size');
             sizeInput.classList.remove('invalid');
@@ -252,7 +264,6 @@ export default {
                 sizeInput.classList.add('invalid');
             }
         },
-
         visibilityValidation() {
             const visibilityInput = document.getElementById('visibility');
             visibilityInput.classList.remove('invalid');
@@ -264,25 +275,11 @@ export default {
                 visibilityInput.classList.add('invalid');
             }
         },
-
         servicesValidation() {
             if (this.form.services.length == 0) {
                 this.addError('Devi selezionare almeno un servizio', 'services');
             }
         },
-
-        // FUNZIONE PER SHAKE ERROR
-        shakeInputs() {
-            if (this.store.errors.length > 0) {
-                this.store.errors.forEach(error => {
-                    document.querySelector(`#${error.field}`).classList.add('shake');
-                    setTimeout(() => {
-                        document.querySelector(`#${error.field}`).classList.remove('shake');
-                    }, 300)
-                });
-            }
-        },
-
         validateData() {
             this.store.errors = [];
             this.titleValidation();
@@ -306,11 +303,9 @@ export default {
                 console.log('Hai inserito dati non corretti. Riprova!');
             }
         },
-
         // PRENDO COORDINATE APPARTAMENTO
         async getCoordinates() {
             const coordinates = await fetch(`${this.url_api_tomtom}${this.form.address}.json?key=${this.api_key_tomtom}&typeahead=true&limit=1&radius=500`);
-            // const data = await coordinates.blob();
             let json = await coordinates.json();
             console.log('COORDINATE', json.results[0].position);
             this.form.lat = json.results[0].position.lat;
@@ -335,37 +330,22 @@ export default {
             })
                 .then((response) => {
                     console.log('Appartamento aggiornato', response);
+                    this.apartmentUpdated = true;
                     this.postImages(response.data.apartment_id);
                 })
                 .catch((response) => {
                     console.log('Errore aggiornamento', response.data);
                 })
-                this.store.editedApartment = true;
-                
-                // redirect
-                if (this.store.editedApartment) {
-                    setTimeout(() => {
-                        this.editedApartment = false;
-                        router.push('/dashboard/apartments');
-                    }, 1000);
-                }
-        },
-        setCheckboxes() {
-            this.allServices.forEach(service => {
-                if (this.form.services.some(e => e.id == service.id)) {
-                    this.selectedServices.push(service.id);
-                }
-            });
-        },
-        setVisibility(){
-            if (this.form.visibility == 0) {
-                return this.form.visibility = true;
-            }
-            else{
-                return this.form.visibility = false;
-            }
-        },
+            this.store.editedApartment = true;
 
+            // redirect
+            if (this.store.editedApartment) {
+                setTimeout(() => {
+                    this.editedApartment = false;
+                    router.push('/dashboard/apartments');
+                }, 1000);
+            }
+        },
         // sezione immagini
         addFiles(fieldName, fileList) {
             this.form.images = fileList;
@@ -399,9 +379,6 @@ export default {
         deleteImage(index) {
             this.previewUrls.splice(index, 1);
         },
-        // deleteOldImage(index) {
-        //     this.images.splice(index, 1);
-        // },
         deleteOldImage(index, i) {
             this.images.splice(i, 1);
             axios.delete(`http://localhost:8000/api/images/${index}`)
@@ -411,11 +388,11 @@ export default {
                 });
         },
     },
-    created() {
+    mounted() {
         this.getApartment();
-    },
-    mounted(){
-        document.title = 'Apartment | Edit';
+
+        document.title = 'Dashboard | Apartment Edit';
+
         const address = document.querySelector('#address');
         let autocomplete = new google.maps.places.Autocomplete(address);
         const self = this;
@@ -424,142 +401,121 @@ export default {
             let address = place.formatted_address;
             self.form.address = address;
             // let city = place.address_components.find(component => component.types.includes('locality')).long_name;
-            // aggiorna i campi dell'indirizzo e della città con i dati trovati
         });
     }
 }
 </script>
 
 <template>
-    <AppDashboardLayoutVue
-        :title= "'Aggiorna il tuo appartmento'">
+    <AppDashboardLayoutVue :title="`Aggiorna ${form.title ?? ''}`">
 
-        <div class="my-container">
-             <!-- FORM PER EDIT -->
-
-        <form @submit.prevent="validateData()">
-            <div class="my-row row">
-                <div class="group small">
-                    <label class="d-block mb-2" for="title">Inserisci nome appartamento: *</label>
-                    <input
-                    v-model="form.title"
-                    type="text"
-                    name="title"
-                    id="title"
-                    v-on:blur="titleValidation()">
-                </div>
-                <div class="my-group">
-                    <div class="group small d-inline-block">
-                        <label class="d-block mb-2" for="price">Inserisci prezzo a notte: *</label>
-                        <input
-                        v-model="form.price"
-                        type="number"
-                        name="price"
-                        id="price"
-                        v-on:blur="priceValidation()">
+        <main>
+            <form @submit.prevent="validateData()" v-if="form">
+                <!-- Titolo -->
+                <div class="row">
+                    <div class="group large">
+                        <label for="title">Inserisci nome appartamento: *</label>
+                        <input v-model="form.title" type="text" name="title" id="title" v-on:blur="titleValidation()">
                     </div>
-                    <div class="group small d-inline-block">
-                        <label class="d-block mb-2" for="size">Inserisci i mq: *</label>
-                        <input
-                        v-model="form.size"
-                        type="number"
-                        name="size"
-                        id="size"
-                        v-on:blur="sizeValidation()">
-                    </div>
-                </div>
-                <div class="group small">
-                    <label class="d-block mb-2" for="address">Dove si trova il tuo alloggio? *</label>
-                    <input
-                    v-model="form.address"
-                    type="text"
-                    name="address"
-                    id="address"
-                    v-on:blur="addressValidation()">
-                </div>
-                <!-- INFORMAZIONI DI BASE -->
-                <div class="my-group-info-base">
-                    <div class="group small d-inline-block">
-                        <label class="mb-2 d-block" for="rooms_number">Stanze: *</label>
-                        <input
-                        v-model="form.rooms_number"
-                        type="number"
-                        name="rooms_number"
-                        id="rooms_number"
-                        v-on:blur="roomsNumberValidation()">
-                    </div>
-                    <div class="group small d-inline-block">
-                        <label class="mb-2 d-block" for="beds_number">Posti letto: *</label>
-                        <input
-                        v-model="form.beds_number"
-                        type="number"
-                        name="beds_number"
-                        id="beds_number" 
-                        v-on:blur="bedsNumberValidation()">
-                    </div>
-                    <div class="group small d-inline-block">
-                        <label class="mb-2 d-block" for="bathrooms_number">Bagni: *</label>
-                        <input
-                        v-model="form.bathrooms_number"
-                        type="number"
-                        name="bathrooms_number"
-                        id="bathrooms_number"
-                        v-on:blur="bathroomsNumberValidation()">
-                    </div>
-                </div>
-                <div class="group small">
-                    <label class="mb-2 d-block" for="description">Descrizione appartamento: *</label>
-                    <textarea
-                    v-model="form.description"
-                    name="description"
-                    id="description"
-                    rows="6"
-                    v-on:blur="descriptionValidation()"></textarea>
-                </div>
-                <div>
-                    <label class="mb-2 d-block">Indica se il tuo appartamento non sarà subito disponibile</label>
-                    <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility" >
-                    <label for="visibility">Al momento non disponibile</label>
                 </div>
 
-                <div>
-                    <label class="mb-2 d-block">Fai conoscere agli utenti tutti i servizi del tuo alloggio *</label>
-                    <div class="services">
-                     <span class="service" v-for="service in allServices">
-                        <input
-                        v-model="selectedServices"
-                        type="checkbox"
-                        :name="service.name"
-                        :id="service.name"
-                        :value="service.id">
-                        <label :for="service.name">{{ service.name }}</label>
-                    </span>
-                   </div>
+                <!-- Prezzo | Metri Quadri -->
+                <div class="row inline-center">
+                    <div class="group small">
+                        <label for="price">Inserisci prezzo a notte: *</label>
+                        <input v-model="form.price" type="number" name="price" id="price" v-on:blur="priceValidation()">
+                    </div>
+                    <div class="group small">
+                        <label for="size">Inserisci i mq: *</label>
+                        <input v-model="form.size" type="number" name="size" id="size" v-on:blur="sizeValidation()">
+                    </div>
                 </div>
-                <div class="group small">
-                    <label for="images">
-                        <strong>Immagini</strong>
-                        <!-- 
-                            
-                         -->
-                    </label>
-                    <div class="container">
-                        <label for="images" class="fakeInput" :class="(previewUrls.length + images.length) >= 3 ? 'disabled' : ''">
+
+                <!-- Indirizzo -->
+                <div class="row">
+                    <div class="group large">
+                        <label for="address">Dove si trova il tuo alloggio? *</label>
+                        <input v-model="form.address" type="text" name="address" id="address"
+                            v-on:blur="addressValidation()">
+                    </div>
+                </div>
+
+                <!-- Stanze | Letti | Bagni -->
+                <div class="row inline-center">
+                    <div class="group small">
+                        <label for="rooms_number">Stanze: *</label>
+                        <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number"
+                            v-on:blur="roomsNumberValidation()">
+                    </div>
+                    <div class="group small">
+                        <label for="beds_number">Posti letto: *</label>
+                        <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number"
+                            v-on:blur="bedsNumberValidation()">
+                    </div>
+                    <div class="group small">
+                        <label for="bathrooms_number">Bagni: *</label>
+                        <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
+                            v-on:blur="bathroomsNumberValidation()">
+                    </div>
+                </div>
+
+                <!-- Descrizione -->
+                <div class="row">
+                    <div class="group large">
+                        <label for="description">Descrizione appartamento: *</label>
+                        <textarea v-model="form.description" name="description" id="description" rows="6"
+                            v-on:blur="descriptionValidation()"></textarea>
+                    </div>
+                </div>
+
+                <!-- Visibilita' -->
+                <div class="row visibility">
+                    <div class="group large">
+                        <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility">
+                        <label for="visibility">Al momento non disponibile</label>
+                    </div>
+                </div>
+
+                <!-- Servizi -->
+                <div class="row">
+                    <div class="group large">
+                        <label>Fai conoscere agli utenti tutti i servizi del tuo alloggio *</label>
+                        <div class="services">
+                            <span class="service" v-for="service in allServices">
+                                <input v-model="selectedServices" type="checkbox" :name="service.name" :id="service.name"
+                                    :value="service.id">
+                                <label :for="service.name">{{ service.name }}</label>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Immagini -->
+                <div class="row" v-if="form.images">
+                    <div class="group large">
+                        <label for="images"><strong>Immagini</strong></label>
+                        <!-- <div class="container"> -->
+
+                        <label for="images" class="fakeInput"
+                            :class="(previewUrls.length + form.images.length) >= 3 ? 'disabled' : ''">
                             <font-awesome-icon icon="fa-solid fa-plus" class="icon" />
                             add images
                         </label>
+
                         <input name="images" id="images" type="file" accept="image/*" multiple
                             @change="addFiles($event.target.name, $event.target.files)"
-                            :disabled="(previewUrls.length + images.length) >= 3">
+                            :disabled="(previewUrls.length + form.images.length) >= 3">
+
                         <!-- <transition name="fade"> -->
-                            <div class="previews" v-if="images.length > 0">
-                                <div class="preview" v-for="element, index in images">
-                                    <img :src="`http://localhost:8000/storage/apartments/${element.url}`" alt="img">
-                                    <button @click.prevent="deleteOldImage(element.id, index)">
-                                        <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
-                                    </button>
-                                </div>
+                        <div class="previews" v-if="form.images.length > 0">
+                            <div class="preview" v-for="element, index in form.images">
+                                <img :src="`http://localhost:8000/storage/apartments/${element.url}`" alt="img">
+                                <button @click.prevent="deleteOldImage(element.id, index)">
+                                    <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
+                                </button>
                             </div>
+                        </div>
+
                         <div class="previews" v-if="previewUrls.length > 0">
                             <div class="preview" v-for="url, index in previewUrls">
                                 <img :src="url" alt="Preview">
@@ -569,16 +525,18 @@ export default {
                             </div>
                         </div>
                         <!-- </transition> -->
+                        <!-- </div> -->
                     </div>
                 </div>
-            </div>
-            <button v-if="!this.store.editedApartment" type="submit" class="btn my-btn">Aggiorna appartamento</button>
-            <button v-if="this.store.editedApartment" class="btn my-btn-created">Appartamento aggiornato 
-                <font-awesome-icon icon="fa-solid fa-check" />
-            </button>
-            <AppErrorForm/>
-        </form>
-        </div>
+
+                <!-- Submit -->
+                <div class="row">
+                    <AppButton :label="'appartamento aggiornato'" :icon="'check'" :type="'solid'" :palette="'success'"
+                        :disabled="true" v-if="apartmentUpdated" />
+                    <AppButton :label="'aggiorna appartamento'" :type="'solid'" :palette="'primary'" v-else />
+                </div>
+            </form>
+        </main>
     </AppDashboardLayoutVue>
 </template>
 
@@ -586,18 +544,77 @@ export default {
 @use '../../../styles/partials/mixins.scss' as *;
 @use '../../../styles/partials/form.scss' as *;
 @use '../../../styles/partials/variables.scss' as *;
-@use '../../../styles/partials/formcreateedit.scss' as *;
 
-label{
-    text-transform: none !important;
+main {
+    height: 100%;
+    flex-grow: 0;
+    overflow: auto;
+    padding: 1rem;
+    border-radius: $small-border-radius;
 }
-label.fakeinput,
-input#images{
-    margin-bottom: 10px;
+
+form {
+    margin: 0 auto;
+    max-width: 1100px;
+    width: 100%;
+}
+
+.row.visibility .group {
+    @include flexRowCenter (0.5rem);
+    justify-content: flex-start;
+
+    input {
+        width: unset !important;
+    }
+}
+
+.row.inline-center {
+    gap: 1rem;
+}
+
+.group.small {
+    flex-grow: 1;
+}
+
+label {
+    font-weight: 500;
+}
+
+.row:last-child {
+    &:deep button {
+
+        width: 100%;
+    }
 }
 
 #images {
     display: none;
+}
+
+.services {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    max-height: 280px;
+    flex-wrap: wrap;
+
+    input {
+        // flex-grow: 0;
+        width: unset !important;
+    }
+
+    .service {
+        // flex-basis: 33%;
+        flex-basis: calc((100% - 3rem) / 4);
+        // flex-grow: 1;
+        // border: 2px solid red;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 5px;
+    }
 }
 
 .previews {
@@ -615,6 +632,7 @@ input#images{
         border: 1px solid $dark-color-one;
         position: relative;
         padding: 0;
+        cursor: pointer;
 
         >img {
             width: 100%;
@@ -651,5 +669,4 @@ input#images{
         }
     }
 }
-
 </style>
