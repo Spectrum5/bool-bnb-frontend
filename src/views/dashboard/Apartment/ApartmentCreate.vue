@@ -142,6 +142,9 @@ export default {
             const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
             fileInput.classList.remove('invalid');
 
+            // console.log
+            console.log('immagini da inviare', this.form.images, 'tipo', typeof(this.form.images));
+
             this.deleteError('image');
             this.errorsMessages.image = '';
 
@@ -152,6 +155,11 @@ export default {
             } else if (!allowedExtensions.exec(fileInput.value)) {
                 this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'image');
                 this.errorsMessages.image = 'L\'immagine deve essere in formato JPG, JPEG o PNG';
+                fileInput.classList.add('invalid');
+            }
+            else if(this.previewUrls.length > 3){
+                this.addError('Puoi selezionare fino a un massimo di tre immagini', 'image');
+                this.errorsMessages.image = 'Puoi selezionare fino a un massimo di tre immagini';
                 fileInput.classList.add('invalid');
             }
         },
@@ -419,6 +427,7 @@ export default {
                 router.push('/dashboard/apartments');
             }, 1000);
         },
+
         addFiles(fieldName, fileList) {
             this.form.images = fileList;
             for (let i = 0; i < fileList.length; i++) {
@@ -449,6 +458,17 @@ export default {
         },
         deleteImage(index) {
             this.previewUrls.splice(index, 1);
+
+            const images = [...this.form.images]; // crea una copia dell'oggetto images
+            images.splice(index, 1); // rimuove il secondo elemento dell'oggetto
+            const dataTransfer = new DataTransfer();
+            for (let i = 0; i < this.form.images.length; i++) {
+                if (i !== 1) { // salta il secondo elemento
+                    dataTransfer.items.add(this.form.images.item(i));
+                }
+            }
+            this.form.images = dataTransfer.files;
+
         }
     },
     mounted() {
