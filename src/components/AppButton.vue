@@ -21,6 +21,7 @@ export default {
   },
   props: {
     to: String,
+    // param: undefined,
     action: Function,
     label: String,
     icon: String,
@@ -71,6 +72,10 @@ button {
 
   &[palette=primary] {
     @include customButton (primary);
+  }
+
+  &[palette=secondary] {
+    @include customButton (secondary);
   }
 
   &[palette=success] {

@@ -44,6 +44,7 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { faMinus } from '@fortawesome/free-solid-svg-icons'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { faMedal } from '@fortawesome/free-solid-svg-icons'
@@ -87,6 +88,7 @@ library.add(faBars,
   faMinus,
   faChevronDown,
   faChevronLeft,
+  faChevronRight,
   faGear,
   faRightFromBracket,
   faMedal)

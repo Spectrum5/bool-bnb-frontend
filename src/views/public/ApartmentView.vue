@@ -377,10 +377,10 @@ export default {
     width: 100%;
     // gap: 0.5rem;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
 
     .leftColumn {
-        flex-basis: 75%;
+        flex-basis: 50%;
     }
 
     .rightColumn {
