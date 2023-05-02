@@ -78,6 +78,11 @@ form .row {
             width: 150px;
             text-transform: capitalize;
 
+            &.disabled{
+                color: gray;
+                outline: transparent;
+            }
+
             .icon {
                 margin-right: 10px;
             }

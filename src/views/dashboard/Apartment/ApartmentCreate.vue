@@ -253,7 +253,12 @@ export default {
 
             const descriptionValue = descriptionInput.value.trim();
 
-            if (descriptionValue.length < 10) {
+            if (descriptionValue.length == 0) {
+                this.addError('La descrizione deve essere compilata', 'description');
+                this.errorsMessages.description = 'La descrizione deve essere compilata';
+                descriptionInput.classList.add('invalid');
+            }
+            else if (descriptionValue.length < 10) {
                 this.addError('La descrizione deve essere di almeno 10 caratteri', 'description');
                 this.errorsMessages.description = 'La descrizione deve essere di almeno 10 caratteri';
                 descriptionInput.classList.add('invalid');
@@ -536,8 +541,8 @@ export default {
                                     :value="service.id">
                                 <label :for="service.name" class="text-capitalize">{{ service.name }}</label>
                             </span>
-                            <p v-if="errorsMessages.services.length > 0" class="error">{{ errorsMessages.services }}</p>
                         </div>
+                        <p v-if="errorsMessages.services.length > 0" class="error">{{ errorsMessages.services }}</p>
                     </div>
 
                     <div class="group small">
@@ -560,9 +565,9 @@ export default {
                                     </button>
                                 </div>
                             </div>
-                            <p v-if="errorsMessages.image.length > 0" class="error">{{ errorsMessages.image }}</p>
                             <!-- </transition> -->
                         </div>
+                        <p v-if="errorsMessages.image.length > 0" class="error">{{ errorsMessages.image }}</p>
                     </div>
                 </div>
                 <button v-if="!this.ApartmentCreated" type="submit" class="btn my-btn">Crea appartamento</button>
