@@ -8,7 +8,7 @@ import { store } from '../../store';
 import PublicPageLayout from './PublicPageLayout.vue';
 import AppSearch from '../../components/AppSearch.vue';
 import AppCard from '../../components/AppCard.vue';
-import AppButton from '../../components/AppButton.vue';
+// import AppButton from '../../components/AppButton.vue';
 import AppLoading from '../../components/AppLoading.vue';
 
 export default {
@@ -17,21 +17,25 @@ export default {
         PublicPageLayout,
         AppSearch,
         AppCard,
-        AppButton,
+        // AppButton,
         AppLoading
     },
     data() {
         return {
             store,
             apartments: [],
+            sponsoredApartments: [],
             currentPage: 1,
+            lastPage: null,
             callOk: true,
-            notFound: false,
-            lastPage: null
+            loading: false,             //True quando viene inviata la richiesta e false appena torna la risposta
+            notFound: false,            //True se la ricerca non restituisce risultati
+            searchCompleted: false      //True quando le pagine finiscono
         }
     },
     methods: {
         getApartments() {
+            this.loading = true;
             this.notFound = false;
             axios.get('http://localhost:8000/api/apartments', {
                 params: {
@@ -40,6 +44,10 @@ export default {
             })
                 .then((response) => {
                     if (response.data.success) {
+                        this.loading = false;
+
+                        console.log('Index Appartamenti', response.data);
+
                         if (response.data.apartments.data.length == 0) this.notFound = true;
                         if (response.data.apartments.current_page == 1) {
                             this.apartments = response.data.apartments.data;
@@ -48,11 +56,34 @@ export default {
                             this.apartments = this.apartments.concat(response.data.apartments.data);
                         }
                         this.lastPage = response.data.apartments.last_page;
+                        if (this.currentPage == this.lastPage) this.searchCompleted = true;
                     }
                 })
                 .catch((response) => {
-                    console.log('Errore Index Appartamenti', response.data);
+                    this.loading = false;
                     this.notFound = true;
+                    console.log('Errore Index Appartamenti', response.data);
+                })
+        },
+        getSponsoredApartments() {
+            axios.get('http://localhost:8000/api/apartments/indexSponsored')
+                .then((response) => {
+                    // if (response.data.success) {
+                    console.log('Index Appartamenti Sponsorizzati', response.data);
+
+                    // if (response.data.apartments.data.length == 0) this.notFound = true;
+                    // if (response.data.apartments.current_page == 1) {
+                    this.sponsoredApartments = response.data.apartments.data;
+                    // }
+                    // else if (response.data.apartments.current_page <= response.data.apartments.last_page) {
+                    //     this.apartments = this.apartments.concat(response.data.apartments.data);
+                    // }
+                    // this.lastPage = response.data.apartments.last_page;
+                    // }
+                })
+                .catch((response) => {
+                    console.log('Errore Index Appartamenti Sponsorizzati', response.data);
+                    // this.notFound = true;
                 })
         },
         loadMore() {
@@ -80,8 +111,8 @@ export default {
     },
     mounted() {
         document.title = 'Boolbnb | Home'
+        this.getSponsoredApartments();
         this.getApartments();
-        // this.getSponsoredApartments();
         this.$nextTick(this.store.clear());
 
         setTimeout(() => {
@@ -99,21 +130,31 @@ export default {
             </div>
         </template>
 
-        <!-- <div class="container cards" id="cardsContainer" v-if="apartments.length > 0">
-            <h2 class="mainTitle">sponsorizzati</h2>
-            <AppCard v-for="apartment in apartments" :apartment="apartment" />
-        </div> -->
+        <div class="container cards" id="cardsContainer" v-if="sponsoredApartments.length > 0">
+            <h2 class="mainTitle">appartamenti in evidenza</h2>
+            <AppCard v-for="apartment in sponsoredApartments" :apartment="apartment" />
+        </div>
 
         <div class="container cards" id="cardsContainer" v-if="apartments.length > 0">
             <h2 class="mainTitle">esplora</h2>
             <AppCard v-for="apartment in apartments" :apartment="apartment" />
         </div>
 
-        <div class="message" v-else-if="notFound">
-            <p class="mainTitle">Nessun appartamento trovato</p>
+        <div class="container" v-else-if="notFound">
+            <div class="warningMessage">
+                <p class="mainTitle">Nessun appartamento trovato</p>
+            </div>
         </div>
 
-        <AppLoading v-else />
+        <div class="container" v-if="searchCompleted == true && lastPage != null && currentPage == lastPage">
+            <p class="warningMessage">
+                Non ci sono altri risultati da mostrare.
+                <br>
+                Aggiungi dei filtri per una ricerca più dettagliata.
+            </p>
+        </div>
+
+        <AppLoading v-if="loading == true" />
 
         <!-- <div class="btn-container">
             <AppButton :action="loadMore" :type="'line'" :palette="'primary'" :label="'load more'" />
@@ -125,6 +166,10 @@ export default {
 @import '../../styles/partials/mixins.scss';
 @import '../../styles/partials/grid.scss';
 
+.container {
+    padding: 0 1rem;
+}
+
 .container.cards {
     @include flexRowCenter;
     @include largeContainer;
@@ -133,17 +178,12 @@ export default {
 
     min-height: 40vh;
 
-    padding: 0 1rem;
-    padding-bottom: 3rem;
+    margin-bottom: 3rem;
 
     >h2 {
         flex-basis: 100%;
         text-align: center;
     }
-}
-
-.message {
-    text-align: center;
 }
 
 .hero-section {

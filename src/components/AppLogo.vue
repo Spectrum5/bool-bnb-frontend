@@ -19,7 +19,8 @@ export default {
 <template>
     <router-link to="/">
         <div class="logoContainer">
-            <img src="../assets/logo_full.png" alt="boolbnb">
+            <img src="../assets/logo_full.png" alt="boolbnb" class="logoLarge">
+            <img src="../assets/logo.png" alt="boolbnb" class="logoSmall">
         </div>
     </router-link>
 </template>
@@ -37,5 +38,21 @@ export default {
         object-fit: contain;
         display: block;
     }
+
+    .logoSmall {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 840px) {
+    .logoContainer {
+        .logoSmall {
+            display: block;
+        }
+        .logoLarge {
+            display: none;
+        }
+    }
+
 }
 </style>

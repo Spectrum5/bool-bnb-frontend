@@ -29,12 +29,16 @@ export default {
             currentPage: 1,
             callOk: true,
             notFound: false,
-            lastPage: null
+            lastPage: null,
+            loading: false,             //True quando viene inviata la richiesta e false appena torna la risposta
+            notFound: false,            //True se la ricerca non restituisce risultati
+            searchCompleted: false      //True quando le pagine finiscono
         }
     },
     methods: {
         getApartments() {
             // Chiamata API con Filtri
+            this.loading = true;
             this.notFound = false;
             axios.get('http://localhost:8000/api/apartments/indexFilter', {
                 params: {
@@ -49,6 +53,7 @@ export default {
                 }
             })
                 .then((response) => {
+                    this.loading = false;
                     console.log('Index Appartamenti con Filtri', response.data);
                     if (response.data.success) {
                         if (response.data.apartments.data.length == 0) this.notFound = true;
@@ -59,11 +64,13 @@ export default {
                             this.apartments = this.apartments.concat(response.data.apartments.data);
                         }
                         this.lastPage = response.data.apartments.last_page;
+                        if (this.currentPage == this.lastPage) this.searchCompleted = true;
                     }
                 })
                 .catch((response) => {
-                    console.log('Errore Index Appartamenti con Filtri');
+                    this.loading = false;
                     this.notFound = true;
+                    console.log('Errore Index Appartamenti con Filtri');
                 })
         },
         loadMore() {
@@ -94,7 +101,6 @@ export default {
     mounted() {
         document.title = 'Boolbnb | Search'
         this.getApartments();
-
         this.$nextTick(this.store.clear());
 
         setTimeout(() => {
@@ -121,7 +127,15 @@ export default {
             <p class="mainTitle">Nessun appartamento trovato</p>
         </div>
 
-        <AppLoading v-else />
+        <div class="container" v-if="searchCompleted == true && lastPage != null && currentPage == lastPage">
+            <p class="warningMessage">
+                Non ci sono altri risultati da mostrare.
+                <br>
+                Modifica i filtri per risutati diversi.
+            </p>
+        </div>
+
+        <AppLoading v-if="loading == true" />
 
         <!-- <div class="btn-container">
             <AppButton :action="loadmore" :type="'line'" :palette="'primary'" :label="'load more'" />

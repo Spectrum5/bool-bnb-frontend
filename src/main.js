@@ -49,6 +49,7 @@ import { faGear } from '@fortawesome/free-solid-svg-icons'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { faMedal } from '@fortawesome/free-solid-svg-icons'
 import { faShare } from '@fortawesome/free-solid-svg-icons'
+import { faAward } from '@fortawesome/free-solid-svg-icons'
 
 import GoogleMapsAutocomplete from "./components/GoogleMapsAutocomplete.vue";
 
@@ -93,7 +94,8 @@ library.add(faBars,
   faGear,
   faRightFromBracket,
   faMedal,
-  faShare)
+  faShare,
+  faAward)
 
 createApp(App)
   .use(router)
