@@ -35,7 +35,7 @@ export default {
                     if (response.data.messages.length == 0) this.notFound = true;
                     this.loading = false;
                     this.messages = response.data.messages;
-                    // console.log('Index Messaggi', response.data.messages);
+                    console.log('Index Messaggi', response.data.messages);
                 })
                 .catch((response) => {
                     console.log('Errore Index Messaggi', response);
@@ -54,6 +54,14 @@ export default {
         //     console.log('GO TO');
         //     this.$router.push('/dashboard/apartments/create');
         // }
+        formatDate(date) {
+            // return new Date(date).toLocaleDateString('it')
+            const dateToFormat = new Date(date);
+            const day = dateToFormat.getDate().toString().padStart(2, '0');
+            const month = (dateToFormat.getMonth() + 1).toString().padStart(2, '0');
+            const year = dateToFormat.getFullYear();
+            return `${day}-${month}-${year}`;
+        },
     },
     mounted() {
         document.title = 'Dashboard | My Messages'
@@ -76,8 +84,9 @@ export default {
                             </strong>
                         </div>
                         <div class="info-message">
-                            <div class="email">Mittente: {{ message.email }}</div>
-                            <div class="text">{{ message.message }}</div>
+                            <p class="email">Ricevuto il: {{ formatDate(message.created_at) }}</p>
+                            <p class="email">Mittente: {{ message.email }}</p>
+                            <p class="text">{{ message.message }}</p>
                         </div>
                     </div>
                     <AppButton :label="'Rispondi'" :icon="'share'" :palette="'secondary'" />
