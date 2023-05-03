@@ -217,6 +217,12 @@ export default {
                     })
                     tot_beds = tot_beds - 1;
                 }
+                else if (tot_beds == 1) {
+                    this.rooms.push({
+                        bed: 'small'
+                    })
+                    tot_beds = 0;
+                }
             }
         },
         async getIp() {
@@ -582,13 +588,16 @@ section:not(#title-address, section:last-of-type) {
 }
 
 #map {
-    height: 450px;
-    max-width: 600px;
+    // width: 50%;
+    // height: 450px;
+    // max-width: 600px;
     width: 100%;
     background-color: bisque;
-    border: 1px dashed;
+    // border: 1px dashed;
+    // border: 1px solid $dark-color-one;
 
     >img {
+        display: block;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -630,6 +639,10 @@ section:not(#title-address, section:last-of-type) {
         .card {
             width: calc(50% - 0.5rem);
         }
+    }
+
+    #map {
+        height: 450px;
     }
 }
 </style>

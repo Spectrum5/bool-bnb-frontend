@@ -207,11 +207,11 @@ export default {
         height: 400px;
         overflow: hidden;
         border-radius: 8px;
-        opacity: 0.6;
+        // opacity: 0.6;
 
-        &.swiper-slide-active {
-            opacity: 1;
-        }
+        // &.swiper-slide-active {
+        //     opacity: 1;
+        // }
 
         img {
             width: 100%;
