@@ -177,9 +177,9 @@ export default {
                 this.addError('price');
                 this.errorsMessages.price = 'Il campo prezzo deve contenere solo numeri';
                 priceInput.classList.add('invalid');
-            } else if (priceInput.value.trim() <= 99 || priceInput.value.trim() > 1500) {
+            } else if (priceInput.value.trim() <= 59 || priceInput.value.trim() > 1500) {
                 this.addError('price');
-                this.errorsMessages.price = 'Il campo prezzo deve essere compreso tra 100 e 1500';
+                this.errorsMessages.price = 'Il campo prezzo deve essere compreso tra 60 e 1500';
                 priceInput.classList.add('invalid');
             }
         },
