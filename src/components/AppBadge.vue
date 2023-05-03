@@ -12,7 +12,6 @@
 // type -> string | solid o line
 // palette -> string | primary, success, warning o danger
 
-
 export default {
   name: 'AppBadge',
   data() {
@@ -105,8 +104,7 @@ export default {
   padding: 2px 4px;
   text-transform: uppercase;
   user-select: none;
-
-  // @include flexRowCenter (0.5rem);
+  white-space: nowrap;
 
   &[palette=primary] {
     @include setColor (primary);

@@ -325,7 +325,7 @@ export default {
                         <div class="group large">
                             <label for="card_number">card number</label>
                             <input type="text" id="card_number" maxlength="19" placeholder="0000 0000 0000 0000"
-                                v-model="cardNumber" pattern="[0-9]{-}" @keydown="checkInput(event)"
+                                v-model="cardNumber" @keydown="checkInput(event)"
                                 v-on:blur="cardNumberValidation()" :disabled="paymentDone">
                         </div>
                     </div>
@@ -400,7 +400,7 @@ export default {
             </div> <!-- /container-->
 
             <div class="price">
-                <span>Importo: <strong>10.00 $</strong></span>
+                <span>Importo: <strong>{{ store.sponsor_price }} €</strong></span>
             </div>
         </main>
     </AppDashboardLayoutVue>

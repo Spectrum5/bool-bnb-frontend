@@ -173,8 +173,8 @@ export default {
             <form @submit.prevent="handleSearch()">
                 <div class="row">
                     <div class="group">
-                        <label for="address">dove vuoi andare?</label>
-                        <input type="text" id="address" name="address" placeholder="Digita l'indirizzo"
+                        <label for="address" v-if="allFields">dove vuoi andare?</label>
+                        <input type="text" id="address" name="address" placeholder="Dove vuoi andare?"
                             v-model="form.address">
                     </div>
 

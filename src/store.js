@@ -22,6 +22,7 @@ export const store = reactive({
     },
     apartment_id: null,
     sponsor_id: null,
+    sponsor_price: null,
 
     loadingWidth: 0,
 

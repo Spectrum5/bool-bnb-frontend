@@ -79,40 +79,40 @@ export default {
         <!-- <main> -->
         <!-- <main> -->
         <AppLoading v-if="loading == true" />
-            <div class="row-my-partm my-container" v-for="apartment in apartments " :key="apartment.id"
-                v-if="apartments != null" >
-                <!-- v-if="apartments != null" @click="$router.push(`/dashboard/apartments/${apartment.slug}`)"> -->
-                <AppModaleDelete :action="deleteApartment" :id="selectedApartmentId">
-                </AppModaleDelete>
-                <div>
-                    <p> {{ apartment.title }}</p>
-                </div>
-                <div>
-                    <!-- <button class="btn btn-show" @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)">
+        <div class="row-my-partm my-container" v-for="apartment in apartments " :key="apartment.id"
+            v-if="apartments != null" @click="$router.push(`/dashboard/apartments/${apartment.slug}`)">
+
+            <AppModaleDelete :action="deleteApartment" :id="selectedApartmentId">
+            </AppModaleDelete>
+            <div>
+                <p> {{ apartment.title }}</p>
+            </div>
+            <div>
+                <!-- <button class="btn btn-show" @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)">
                         <font-awesome-icon icon="fa-solid fa-eye" />
                         Vedi dettagli
                     </button> -->
-                    <button class="btn btn-edit" @click="$router.push(`/dashboard/apartments/${apartment.slug}/edit`)">
-                        <font-awesome-icon icon="fa-solid fa-pencil" />
-                        Modifica
-                    </button>
-                    <!-- <AppButton :label="'elimina'" :icon="'trash-can'" :type="'solid'" :palette="'danger'" :action="testFunction"/> -->
-                    <!-- @click="deleteApartment(apartment.id)" -->
-                    <!-- <button id="myBtn" class="btn btn-delete" @click="showDeleteModal(apartment.id)">
+                <button class="btn btn-edit" @click="$router.push(`/dashboard/apartments/${apartment.slug}/edit`)">
+                    <font-awesome-icon icon="fa-solid fa-pencil" />
+                    Modifica
+                </button>
+                <!-- <AppButton :label="'elimina'" :icon="'trash-can'" :type="'solid'" :palette="'danger'" :action="testFunction"/> -->
+                <!-- @click="deleteApartment(apartment.id)" -->
+                <!-- <button id="myBtn" class="btn btn-delete" @click="showDeleteModal(apartment.id)">
                         <font-awesome-icon icon="fa-solid fa-trash-can" />
                         Elimina
                     </button> -->
-                    <!-- <button class="btn btn-stats">
+                <!-- <button class="btn btn-stats">
                         <font-awesome-icon icon="fa-solid fa-chart-simple" />
                         Vedi Statistiche
                     </button> -->
-                    
-                    <font-awesome-icon icon="fa-solid fa-chevron-right" />
-                </div>
+
+                <font-awesome-icon icon="fa-solid fa-chevron-right" />
             </div>
-            <div class="no-apartment" v-else-if="notFound">
-                <h2>Non sono presenti appartamenti</h2>
-            </div>
+        </div>
+        <div class="no-apartment" v-else-if="notFound">
+            <h2>Non sono presenti appartamenti</h2>
+        </div>
         <!-- </main> -->
 
     </AppDashboardLayoutVue>
@@ -131,7 +131,7 @@ export default {
 //     padding: 1rem;
 // }
 
-.no-apartment{
+.no-apartment {
     text-align: center;
     margin-top: 35px;
 }
@@ -141,7 +141,7 @@ export default {
     padding: 10px;
     cursor: pointer;
     text-transform: capitalize;
-    
+
     &:not(:last-child) {
         border-bottom: 1px solid rgba(0, 0, 0, 0.445);
     }

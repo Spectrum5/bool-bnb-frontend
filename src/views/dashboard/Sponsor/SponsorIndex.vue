@@ -45,10 +45,11 @@ export default {
                     console.log('Errore Index Appartamenti Personali', response.data);
                 })
         },
-        selectSponsor(sponsor_id) {
+        selectSponsor(sponsor_id, price) {
             this.sponsorPlan = sponsor_id;
             this.chooseApartment = true;
             this.store.sponsor_id = sponsor_id;
+            this.store.sponsor_price = price;
             this.getApartments();
         },
         selectApartment(apartment_id, apartment_slug) {
@@ -76,7 +77,7 @@ export default {
                             <li class="pack">{{ sponsor.title }}</li>
                             <li id="standard" class="price bottom-bar">&euro;{{ sponsor.price }}</li>
                             <li class="bottom-bar">{{ sponsor.duration }} ore</li>
-                            <li @click="selectSponsor(sponsor.id)">
+                            <li @click="selectSponsor(sponsor.id, sponsor.price)">
                                 <AppButton :label="'Sponsorizza'" :type="'solid'" :palette="'secondary'" />
                             </li>
                         </ul>
