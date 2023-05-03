@@ -181,20 +181,17 @@ export default {
 
             console.log('immagini da inviare', this.form.images);
 
-            if (this.imagesToAdd.length + this.previewUrls == 0) {
+            if ((this.imagesToAdd.length + this.form.images.length) == 0) {
                 this.addError('images');
                 this.errorsMessages.image = 'Devi selezionare almeno un\'immagine';
                 fileInput.classList.add('invalid');
             }
-            else if ((this.imagesToAdd.length == 0) && (!fileInput.value)) {
-                this.addError('images');
-                this.errorsMessages.image = 'Devi selezionare almeno un\'immagine';
-                fileInput.classList.add('invalid');
-            }
-            else if ((this.imagesToAdd.length == 0) && (!allowedExtensions.exec(fileInput.value))) {
-                this.addError('images');
-                this.errorsMessages.image = 'L\'immagine deve essere in formato JPG, JPEG o PNG';
-                fileInput.classList.add('invalid');
+            else if (this.imagesToAdd.length > 0) {
+                if (!allowedExtensions.exec(fileInput.value)) {
+                    this.addError('images');
+                    this.errorsMessages.image = 'L\'immagine deve essere in formato JPG, JPEG o PNG';
+                    fileInput.classList.add('invalid');
+                }
             }
             else if ((this.previewUrls.length + this.imagesToAdd.length) > 3) {
                 this.addError('images');
@@ -485,145 +482,144 @@ export default {
     <AppDashboardLayoutVue :title="`Aggiorna ${form.title ?? ''}`">
 
         <!-- <main> -->
-            <form @submit.prevent="validateData()" v-if="form">
-                <!-- Titolo -->
-                <div class="row">
-                    <div class="group large">
-                        <label for="title">Inserisci nome appartamento: *</label>
-                        <input v-model="form.title" type="text" name="title" id="title" v-on:blur="titleValidation()">
-                        <p v-if="errorsMessages.title.length > 0" class="error">{{ errorsMessages.title }}</p>
-                    </div>
+        <form @submit.prevent="validateData()" v-if="form">
+            <!-- Titolo -->
+            <div class="row">
+                <div class="group large">
+                    <label for="title">Inserisci nome appartamento: *</label>
+                    <input v-model="form.title" type="text" name="title" id="title" v-on:blur="titleValidation()">
+                    <p v-if="errorsMessages.title.length > 0" class="error">{{ errorsMessages.title }}</p>
                 </div>
+            </div>
 
-                <!-- Prezzo | Metri Quadri -->
-                <div class="row inline-center">
-                    <div class="group small">
-                        <label for="price">Inserisci prezzo a notte: *</label>
-                        <input v-model="form.price" type="number" name="price" id="price" v-on:blur="priceValidation()">
-                        <p v-if="errorsMessages.price.length > 0" class="error">{{ errorsMessages.price }}</p>
-                    </div>
-                    <div class="group small">
-                        <label for="size">Inserisci i mq: *</label>
-                        <input v-model="form.size" type="number" name="size" id="size" v-on:blur="sizeValidation()">
-                        <p v-if="errorsMessages.size.length > 0" class="error">{{ errorsMessages.size }}</p>
-                    </div>
+            <!-- Prezzo | Metri Quadri -->
+            <div class="row inline-center">
+                <div class="group small">
+                    <label for="price">Inserisci prezzo a notte: *</label>
+                    <input v-model="form.price" type="number" name="price" id="price" v-on:blur="priceValidation()">
+                    <p v-if="errorsMessages.price.length > 0" class="error">{{ errorsMessages.price }}</p>
                 </div>
-
-                <!-- Indirizzo -->
-                <div class="row">
-                    <div class="group large">
-                        <label for="address">Dove si trova il tuo alloggio? *</label>
-                        <input v-model="form.address" type="text" name="address" id="address"
-                            v-on:blur="addressValidation()">
-                        <p v-if="errorsMessages.address.length > 0" class="error">{{ errorsMessages.address }}</p>
-                    </div>
+                <div class="group small">
+                    <label for="size">Inserisci i mq: *</label>
+                    <input v-model="form.size" type="number" name="size" id="size" v-on:blur="sizeValidation()">
+                    <p v-if="errorsMessages.size.length > 0" class="error">{{ errorsMessages.size }}</p>
                 </div>
+            </div>
 
-                <!-- Stanze | Letti | Bagni -->
-                <div class="row inline-center">
-                    <div class="group small">
-                        <label for="rooms_number">Stanze: *</label>
-                        <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number"
-                            v-on:blur="roomsNumberValidation()">
-                        <p v-if="errorsMessages.rooms_number.length > 0" class="error">{{ errorsMessages.rooms_number }}</p>
-                    </div>
-                    <div class="group small">
-                        <label for="beds_number">Posti letto: *</label>
-                        <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number"
-                            v-on:blur="bedsNumberValidation()">
-                        <p v-if="errorsMessages.beds_number.length > 0" class="error">{{ errorsMessages.beds_number }}</p>
-                    </div>
-                    <div class="group small">
-                        <label for="bathrooms_number">Bagni: *</label>
-                        <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
-                            v-on:blur="bathroomsNumberValidation()">
-                        <p v-if="errorsMessages.bathrooms_number.length > 0" class="error">{{
-                            errorsMessages.bathrooms_number }}</p>
-                    </div>
+            <!-- Indirizzo -->
+            <div class="row">
+                <div class="group large">
+                    <label for="address">Dove si trova il tuo alloggio? *</label>
+                    <input v-model="form.address" type="text" name="address" id="address" v-on:blur="addressValidation()">
+                    <p v-if="errorsMessages.address.length > 0" class="error">{{ errorsMessages.address }}</p>
                 </div>
+            </div>
 
-                <!-- Descrizione -->
-                <div class="row">
-                    <div class="group large">
-                        <label for="description">Descrizione appartamento: *</label>
-                        <textarea v-model="form.description" name="description" id="description" rows="6"
-                            v-on:blur="descriptionValidation()"></textarea>
-                        <p v-if="errorsMessages.description.length > 0" class="error">{{ errorsMessages.description }}</p>
-                    </div>
+            <!-- Stanze | Letti | Bagni -->
+            <div class="row inline-center">
+                <div class="group small">
+                    <label for="rooms_number">Stanze: *</label>
+                    <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number"
+                        v-on:blur="roomsNumberValidation()">
+                    <p v-if="errorsMessages.rooms_number.length > 0" class="error">{{ errorsMessages.rooms_number }}</p>
                 </div>
-
-                <!-- Visibilita' -->
-                <div class="row visibility">
-                    <div class="group large">
-                        <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility">
-                        <label for="visibility">Al momento non disponibile</label>
-                        <p v-if="errorsMessages.visibility.length > 0" class="error">{{ errorsMessages.visibility }}</p>
-                    </div>
+                <div class="group small">
+                    <label for="beds_number">Posti letto: *</label>
+                    <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number"
+                        v-on:blur="bedsNumberValidation()">
+                    <p v-if="errorsMessages.beds_number.length > 0" class="error">{{ errorsMessages.beds_number }}</p>
                 </div>
-
-                <!-- Servizi -->
-                <div class="row">
-                    <div class="group large">
-                        <label>Fai conoscere agli utenti tutti i servizi del tuo alloggio *</label>
-                        <div class="services">
-                            <span class="service" v-for="service in allServices">
-                                <input v-model="selectedServices" type="checkbox" :name="service.name" :id="service.name"
-                                    :value="service.id">
-                                <label :for="service.name">{{ service.name }}</label>
-                            </span>
-                        </div>
-                        <p v-if="errorsMessages.services.length > 0" class="error">{{ errorsMessages.services }}</p>
-                    </div>
+                <div class="group small">
+                    <label for="bathrooms_number">Bagni: *</label>
+                    <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
+                        v-on:blur="bathroomsNumberValidation()">
+                    <p v-if="errorsMessages.bathrooms_number.length > 0" class="error">{{
+                        errorsMessages.bathrooms_number }}</p>
                 </div>
+            </div>
 
-                <!-- Immagini -->
-                <div class="row" v-if="form.images">
-                    <div class="group large">
-                        <label for="images"><strong>Immagini</strong></label>
-                        <!-- <div class="container"> -->
+            <!-- Descrizione -->
+            <div class="row">
+                <div class="group large">
+                    <label for="description">Descrizione appartamento: *</label>
+                    <textarea v-model="form.description" name="description" id="description" rows="6"
+                        v-on:blur="descriptionValidation()"></textarea>
+                    <p v-if="errorsMessages.description.length > 0" class="error">{{ errorsMessages.description }}</p>
+                </div>
+            </div>
 
-                        <label for="images" class="fakeInput"
-                            :class="(previewUrls.length + form.images.length) >= 3 ? 'disabled' : ''">
-                            <font-awesome-icon icon="fa-solid fa-plus" class="icon" />
-                            add images
-                        </label>
+            <!-- Visibilita' -->
+            <div class="row visibility">
+                <div class="group large">
+                    <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility">
+                    <label for="visibility">Al momento non disponibile</label>
+                    <p v-if="errorsMessages.visibility.length > 0" class="error">{{ errorsMessages.visibility }}</p>
+                </div>
+            </div>
 
-                        <input name="images" id="images" type="file" accept="image/*" multiple
-                            @change="addFiles($event.target.name, $event.target.files)"
-                            :disabled="(previewUrls.length + form.images.length) >= 4">
+            <!-- Servizi -->
+            <div class="row">
+                <div class="group large">
+                    <label>Fai conoscere agli utenti tutti i servizi del tuo alloggio *</label>
+                    <div class="services">
+                        <span class="service" v-for="service in allServices">
+                            <input v-model="selectedServices" type="checkbox" :name="service.name" :id="service.name"
+                                :value="service.id">
+                            <label :for="service.name">{{ service.name }}</label>
+                        </span>
+                    </div>
+                    <p v-if="errorsMessages.services.length > 0" class="error">{{ errorsMessages.services }}</p>
+                </div>
+            </div>
 
-                        <transition name="fade">
-                            <div class="previews" v-if="form.images.length > 0 || previewUrls.length > 0">
-                                <div class="preview" v-for="element, index in form.images">
-                                    <img :src="`http://localhost:8000/storage/apartments/${element.url}`" alt="img">
-                                    <button @click.prevent="deleteOldImage(element.id, index)">
-                                        <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
-                                    </button>
-                                </div>
+            <!-- Immagini -->
+            <div class="row" v-if="form.images">
+                <div class="group large">
+                    <label for="images"><strong>Immagini</strong></label>
+                    <!-- <div class="container"> -->
 
-                                <!-- </div>
+                    <label for="images" class="fakeInput"
+                        :class="(previewUrls.length + form.images.length) >= 4 ? 'disabled' : ''">
+                        <font-awesome-icon icon="fa-solid fa-plus" class="icon" />
+                        add images
+                    </label>
+
+                    <input name="images" id="images" type="file" accept="image/*" multiple
+                        @change="addFiles($event.target.name, $event.target.files)"
+                        :disabled="(previewUrls.length + form.images.length) >= 4">
+
+                    <transition name="fade">
+                        <div class="previews" v-if="form.images.length > 0 || previewUrls.length > 0">
+                            <div class="preview" v-for="element, index in form.images">
+                                <img :src="`http://localhost:8000/storage/apartments/${element.url}`" alt="img">
+                                <button @click.prevent="deleteOldImage(element.id, index)">
+                                    <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
+                                </button>
+                            </div>
+
+                            <!-- </div>
 
                         <div class="previews" v-if="previewUrls.length > 0"> -->
-                                <div class="preview" v-for="url, index in previewUrls">
-                                    <img :src="url" alt="Preview">
-                                    <button @click.prevent="deleteImage(index)">
-                                        <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
-                                    </button>
-                                </div>
+                            <div class="preview" v-for="url, index in previewUrls">
+                                <img :src="url" alt="Preview">
+                                <button @click.prevent="deleteImage(index)">
+                                    <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
+                                </button>
                             </div>
-                        </transition>
-                        <!-- </div> -->
-                    </div>
-                    <p v-if="errorsMessages.image.length > 0" class="error">{{ errorsMessages.image }}</p>
+                        </div>
+                    </transition>
+                    <!-- </div> -->
                 </div>
+                <p v-if="errorsMessages.image.length > 0" class="error">{{ errorsMessages.image }}</p>
+            </div>
 
-                <!-- Submit -->
-                <div class="row">
-                    <AppButton :label="'appartamento aggiornato'" :icon="'check'" :type="'solid'" :palette="'success'"
-                        :disabled="true" v-if="apartmentUpdated" />
-                    <AppButton :label="'aggiorna appartamento'" :type="'solid'" :palette="'primary'" v-else />
-                </div>
-            </form>
+            <!-- Submit -->
+            <div class="row">
+                <AppButton :label="'appartamento aggiornato'" :icon="'check'" :type="'solid'" :palette="'success'"
+                    :disabled="true" v-if="apartmentUpdated" />
+                <AppButton :label="'aggiorna appartamento'" :type="'solid'" :palette="'primary'" v-else />
+            </div>
+        </form>
         <!-- </main> -->
     </AppDashboardLayoutVue>
 </template>
@@ -679,6 +675,13 @@ label {
     display: none;
 }
 
+.error {
+    color: $danger-color-dark;
+    font-size: 0.8rem;
+    padding-top: 3px;
+    max-width: fit-content;
+}
+
 .services {
     display: flex;
     flex-direction: row;
@@ -724,14 +727,14 @@ label {
         border: 1px solid $dark-color-one;
         position: relative;
         padding: 0;
-        
+
         >img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 4px;
         }
-        
+
         >button {
             position: absolute;
             top: 0px;

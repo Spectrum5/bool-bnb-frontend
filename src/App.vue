@@ -32,7 +32,7 @@ export default {
                 .catch((response) => {
                     console.log('Ottenimento user fallito');
                 })
-        }
+        },
     },
     computed: {
         calcEvent() {

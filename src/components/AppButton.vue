@@ -67,6 +67,7 @@ export default {
 
 a,
 button {
+  white-space: nowrap;
 
   @include flexRowCenter (0.5rem);
 
