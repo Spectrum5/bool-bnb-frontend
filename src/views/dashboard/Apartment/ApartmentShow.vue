@@ -2,6 +2,7 @@
 
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppButton from '../../../components/AppButton.vue';
 
 // Utilities
 import axios from 'axios';
@@ -12,7 +13,8 @@ register();
 export default {
     name: 'ApartmentShow',
     components: {
-        AppDashboardLayoutVue
+        AppDashboardLayoutVue,
+        AppButton
     },
     data() {
         return {
@@ -51,7 +53,8 @@ export default {
     <AppDashboardLayoutVue :title="apartment.title" :button="{
             label: 'Torna alla dashboard',
             // icon: 'plus',
-            action: goBackToDashboard
+            action: goBackToDashboar
+
         }">
 
 <div class="my-container">
@@ -121,7 +124,7 @@ export default {
                     <p>{{ apartment.rooms_number }} camere</p>
                 </div>
                 <div class="mb">
-                    <h4>Dimensioni</h4>
+                    <h4>Dimensioni:</h4>
                     <p>{{ apartment.size }} mq</p>
                 </div>
             </div>
@@ -138,33 +141,39 @@ export default {
                 </div>
                 <div v-else> -->
                 <div>
-                    <p class="mb-2">Al momento non hai nessuna sponsorizzazione!</p>
-                    <p>Vuoi sponsorizzare il tuo appartamento? Clicca sul bottone in basso</p>
-                    <button class="btn btn-sponsor">
+                    <p class="mb-1">Al momento non hai nessuna sponsorizzazione!</p>
+                    <p class="mb-2">Clicca sul bottone in basso per vedere i piani</p>
+                    <AppButton
+                    :label="'Sponsorizza'"
+                    :icon="'rocket'"
+                    :palette="'secondary'"
+                    :to="'/dashboard/sponsors'" />
+                    <!-- <button class="btn btn-sponsor">
                         <font-awesome-icon icon="fa-solid fa-rocket" />
                         Sponsorizza
-                    </button>
+                    </button> -->
                 </div>
             </div>
             <!-- FINE SPONSOR -->
             <!-- MESSAGGI -->
             <div class="my-3">
                 <h3 class="mb">I tuoi messaggi</h3>
-                <div class="mb-2" v-if="apartment.messages.length > 0">
-                    <span>Hai {{ apartment.messages.length }} messaggi ricevuti</span>
-                    <div class="row" v-for="message in apartment.messages">
+                <div v-if="apartment.messages.length > 0">
+                    <span class="mb-2">Hai {{ apartment.messages.length == 1 ? `${apartment.messages.length} messaggio ricevuto` : `${apartment.messages.length} messaggi ricevuti` }}</span>
+                    <!-- <div class="row" v-for="message in apartment.messages">
                         <p class="mb-1">Mittente: {{ message.email }}</p>
                         <p class="mb-2">{{ message.message }}</p>
-                    </div>
+                    </div> -->
+                    <p class="mb-2">Clicca sul bottone in basso per vederli tutti</p>
+                    <AppButton
+                        :label="'Messaggi'"
+                        :icon="'envelope'"
+                        :palette="'secondary'"
+                        :to="'/dashboard/messages'" />
                 </div>
                 <div v-else>
                     <div>
                         <p class="mb-1">Al momento non hai nessun messaggio!</p>
-                        <p class="mb-2">Sponsorizza il tuo appartamento per avere maggiore visibilità! Clicca il bottone in basso</p>
-                        <button class="btn btn-sponsor">
-                            <font-awesome-icon icon="fa-solid fa-rocket" />
-                            Sponsorizza
-                        </button>
                     </div>
                 </div>
             </div>
@@ -250,7 +259,7 @@ export default {
 }
 .info-2{
     >div{
-        width: calc((100% - 60px) / 2);
+        width: calc((100% - 30px) / 2);
         // flex-grow: 1;
     }
 }
