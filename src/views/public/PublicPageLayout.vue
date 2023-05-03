@@ -37,7 +37,9 @@ export default {
 
     <slot name="hero-section"></slot>
 
-    <slot></slot>
+    <main>
+        <slot></slot>
+    </main>
 
     <AppFooter />
 
@@ -45,7 +47,11 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import '../../styles/partials/mixins.scss';
-@import '../../styles/partials/variables.scss';
-@import '../../styles/partials/grid.scss';
+@use '../../styles/partials/mixins.scss' as *;
+@use '../../styles/partials/variables.scss' as *;
+@use '../../styles/partials/grid.scss' as *;
+
+main {
+    min-height: 60vh;
+}
 </style>

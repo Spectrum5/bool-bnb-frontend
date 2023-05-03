@@ -91,4 +91,19 @@ li:deep a {
     width: 100%;
     padding: 24px 16px !important;
 }
+
+@media screen and (max-width: 840px) {
+    aside {
+        width: auto;
+    }
+
+    li:deep a {
+        .icon {
+            margin-right: 0 !important;
+        }
+        span {
+            display: none;
+        }
+    }
+}
 </style>

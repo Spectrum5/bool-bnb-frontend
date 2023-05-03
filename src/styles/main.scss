@@ -31,8 +31,16 @@ button {
     margin-bottom: 1rem;
     text-transform: capitalize;
     font-size: clamp(2rem, 5vw, 2.5rem);
+    font-weight: 600;
     user-select: none;
     color: $dark-color-one;
+}
+
+.warningMessage {
+    text-align: center;
+    font-weight: 500;
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    margin-bottom: 1.5rem;
 }
 
 .customLink {

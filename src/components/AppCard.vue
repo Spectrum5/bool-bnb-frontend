@@ -153,6 +153,7 @@ button {
         flex-grow: 1;
         flex-shrink: 0;
         font-size: 0.8rem;
+        text-transform: capitalize;
         margin-bottom: 2px;
 
         h3 {

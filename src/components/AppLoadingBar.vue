@@ -35,9 +35,8 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    height: 5px;
+    height: 6px;
     width: var(--loadingWidth);
-    // background-color: $color-one-dark;
     background: linear-gradient(45deg, $color-one-dark, $color-two-dark);
     transition: width 0.15s;
 }

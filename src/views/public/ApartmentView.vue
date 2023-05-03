@@ -13,6 +13,7 @@ import AppErrorForm from '../../components/AppErrorForm.vue';
 import AppGoBack from '../../components/AppGoBack.vue';
 import AppButton from '../../components/AppButton.vue';
 import AppLoading from '../../components/AppLoading.vue';
+import AppBadge from '../../components/AppBadge.vue';
 
 export default {
     name: 'ApartmentView',
@@ -21,7 +22,8 @@ export default {
         AppErrorForm,
         AppGoBack,
         AppButton,
-        AppLoading
+        AppLoading,
+        AppBadge
     },
     data() {
         return {
@@ -77,7 +79,6 @@ export default {
                 }
             }
         },
-
         deleteError(fieldName) {
             // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
             const index = this.store.errors.findIndex(error => error.field === fieldName);
@@ -85,22 +86,18 @@ export default {
                 this.store.errors.splice(index, 1);
             }
         },
-
         async getMap() {
             const map = await fetch(`${this.url_api_tomtom}/1/staticimage?key=${this.api_key_tomtom}&zoom=15&center=${this.apartment.lng},${this.apartment.lat}&format=png&layer=basic&style=main&width=1305&height=748&view=Unified&language=it-IT`);
             const data = await map.blob();
             this.mapUrl = URL.createObjectURL(data);
         },
-
         setContactEmail() {
             if (store.user != null) {
                 this.message.contactEmail = this.store.user.email;
                 return true;
             }
         },
-
         // FUNZIONE PER VALIDAZIONI CONTATTI
-
         emailValidation() {
             let emailInput = document.getElementById('email');
             emailInput.classList.remove('invalid');
@@ -163,8 +160,7 @@ export default {
                     }, 300)
                 });
             }
-        },
-                
+        },    
         validateData() {
             // Front End Validation
             console.log('Validazione dati messaggio...');
@@ -179,7 +175,6 @@ export default {
             if (this.store.errors.length == 0) this.sendMessage();
             else console.log('Hai inserito dati non corretti. Riprova.');
         }, 
-
         sendMessage() {
             console.log('Invio messaggio...');
 
@@ -205,7 +200,6 @@ export default {
         },
         defineRoomsStructure() {
             let tot_beds = this.apartment.beds_number;
-            console.log('TEST');
 
             for (let i = 0; i <= this.apartment.rooms_number; i++) {
 
@@ -242,12 +236,17 @@ export default {
                 <div class="leftColumn">
                     <!-- TITOLO E INDIRIZZO -->
                     <section id="title-address">
-                        <h1 class="mainTitle">{{ apartment.title }}</h1>
-                        <h4 class="address">Dove si trova:
-                            <strong>
-                                <a href="#map">{{ apartment.address }}</a>
-                            </strong>
-                        </h4>
+                        <div class="row">
+                            <h1 class="mainTitle">{{ apartment.title }}</h1>
+                            <AppBadge :label="`${apartment.sponsors[0].title}`" :palette="`${apartment.sponsors[0].title}`" :icon="'award'" v-if="apartment.sponsors.length > 0"/>
+                        </div>
+                        <div class="row">
+                            <h4 class="address">Dove si trova:
+                                <strong>
+                                    <a href="#map">{{ apartment.address }}</a>
+                                </strong>
+                            </h4>
+                        </div>
                     </section>
 
                     <!-- IMMAGINI APARTMENT -->
@@ -412,6 +411,15 @@ section {
 section:not(#title-address, section:last-of-type) {
     border-bottom: 1px solid;
     padding: 15px 0;
+}
+
+#title-address .row {
+    @include flexRowCenter (1rem);
+    justify-content: flex-start;
+    // background-color: green;
+    .mainTitle {
+        margin-bottom: 0;
+    }
 }
 
 .address {
