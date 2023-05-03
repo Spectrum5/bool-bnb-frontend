@@ -8,7 +8,7 @@ import { store } from '../../store';
 import PublicPageLayout from './PublicPageLayout.vue';
 import AppSearch from '../../components/AppSearch.vue';
 import AppCard from '../../components/AppCard.vue';
-// import AppButton from '../../components/AppButton.vue';
+import AppButton from '../../components/AppButton.vue';
 import AppLoading from '../../components/AppLoading.vue';
 
 export default {
@@ -17,7 +17,7 @@ export default {
         PublicPageLayout,
         AppSearch,
         AppCard,
-        // AppButton,
+        AppButton,
         AppLoading
     },
     data() {
@@ -26,11 +26,13 @@ export default {
             apartments: [],
             sponsoredApartments: [],
             currentPage: 1,
-            lastPage: null,
+            currentPageSponsored: 1,
+            // lastPageSponsored: null,
             callOk: true,
-            loading: false,             //True quando viene inviata la richiesta e false appena torna la risposta
-            notFound: false,            //True se la ricerca non restituisce risultati
-            searchCompleted: false      //True quando le pagine finiscono
+            loading: false,                      //True quando viene inviata la richiesta e false appena torna la risposta
+            notFound: false,                     //True se la ricerca non restituisce risultati
+            searchCompleted: false,              //True quando le pagine finiscono
+            searchCompletedSponsored: false      //True quando le pagine finiscono
         }
     },
     methods: {
@@ -66,24 +68,31 @@ export default {
                 })
         },
         getSponsoredApartments() {
-            axios.get('http://localhost:8000/api/apartments/indexSponsored')
+            this.loading = true;
+            axios.get('http://localhost:8000/api/apartments/indexSponsored', {
+                params: {
+                    page: this.currentPageSponsored
+                }
+            })
                 .then((response) => {
-                    // if (response.data.success) {
-                    console.log('Index Appartamenti Sponsorizzati', response.data);
+                    if (response.data.success) {
+                        this.loading = false;
 
-                    // if (response.data.apartments.data.length == 0) this.notFound = true;
-                    // if (response.data.apartments.current_page == 1) {
-                    this.sponsoredApartments = response.data.apartments.data;
-                    // }
-                    // else if (response.data.apartments.current_page <= response.data.apartments.last_page) {
-                    //     this.apartments = this.apartments.concat(response.data.apartments.data);
-                    // }
-                    // this.lastPage = response.data.apartments.last_page;
-                    // }
+                        console.log('Index Appartamenti Sponsorizzati', response.data);
+
+                        if (response.data.apartments.current_page == 1) {
+                            this.sponsoredApartments = response.data.apartments.data;
+                        }
+                        else if (response.data.apartments.current_page <= response.data.apartments.last_page) {
+                            this.sponsoredApartments = this.sponsoredApartments.concat(response.data.apartments.data);
+                        }
+                        this.lastPageSponsored = response.data.apartments.last_page;
+                        if (this.currentPageSponsored == this.lastPageSponsored) this.searchCompletedSponsored = true;
+                    }
                 })
                 .catch((response) => {
+                    this.loading = false;
                     console.log('Errore Index Appartamenti Sponsorizzati', response.data);
-                    // this.notFound = true;
                 })
         },
         loadMore() {
@@ -91,6 +100,13 @@ export default {
                 this.currentPage++;
                 console.log('LOAD MORE');
                 this.getApartments();
+            }
+        },
+        loadMoreSponsored() {
+            if (this.currentPageSponsored < this.lastPageSponsored) {
+                this.currentPageSponsored++;
+                console.log('LOAD MORE SPONSORED');
+                this.getSponsoredApartments();
             }
         },
         applyInfiniteScroll() {
@@ -136,6 +152,9 @@ export default {
         <div class="container cards" id="cardsContainer" v-if="sponsoredApartments.length > 0">
             <h2 class="mainTitle">appartamenti in evidenza</h2>
             <AppCard v-for="apartment in sponsoredApartments" :apartment="apartment" />
+
+            <AppButton :action="loadMoreSponsored" :type="'line'" :palette="'primary'" :label="'carica altri'"
+                v-if="!searchCompletedSponsored" />
         </div>
 
         <div class="container cards" id="cardsContainer" v-if="apartments.length > 0">
@@ -210,6 +229,7 @@ export default {
     margin: 25vh auto;
     margin-bottom: 30vh;
     z-index: 14;
+
     &:deep .container {
         margin: 0 auto;
     }
