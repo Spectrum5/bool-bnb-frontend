@@ -37,6 +37,7 @@ export default {
             },
             allServices: [],
             selectedServices: [],
+            imagesToAdd: [],
 
             apartmentUpdated: false,
             images: [],
@@ -44,7 +45,6 @@ export default {
             //TOM TOM API
             url_api_tomtom: 'https://api.tomtom.com/search/2/geocode/',
             api_key_tomtom: 'Vru3uP06eapOxpYMujwrRlVLMB5Vkqch',
-
         }
     },
     methods: {
@@ -83,6 +83,17 @@ export default {
             else {
                 return this.form.visibility = false;
             }
+        },
+        setAutocomplete() {
+            const address = document.querySelector('#address');
+            let autocomplete = new google.maps.places.Autocomplete(address);
+            const self = this;
+            autocomplete.addListener('place_changed', function () {
+                let place = autocomplete.getPlace();
+                let address = place.formatted_address;
+                self.form.address = address;
+                // let city = place.address_components.find(component => component.types.includes('locality')).long_name;
+            });
         },
         // FUNZIONI PER ERRORI COMPILAZIONE
         addError(field) {
@@ -170,22 +181,22 @@ export default {
 
             console.log('immagini da inviare', this.form.images);
 
-            if (this.images.length + this.previewUrls == 0) {
+            if (this.imagesToAdd.length + this.previewUrls == 0) {
                 this.addError('images');
                 this.errorsMessages.image = 'Devi selezionare almeno un\'immagine';
                 fileInput.classList.add('invalid');
             }
-            else if ((this.images.length == 0) && (!fileInput.value)) {
+            else if ((this.imagesToAdd.length == 0) && (!fileInput.value)) {
                 this.addError('images');
                 this.errorsMessages.image = 'Devi selezionare almeno un\'immagine';
                 fileInput.classList.add('invalid');
             }
-            else if ((this.images.length == 0) && (!allowedExtensions.exec(fileInput.value))) {
+            else if ((this.imagesToAdd.length == 0) && (!allowedExtensions.exec(fileInput.value))) {
                 this.addError('images');
                 this.errorsMessages.image = 'L\'immagine deve essere in formato JPG, JPEG o PNG';
                 fileInput.classList.add('invalid');
             }
-            else if ((this.previewUrls.length + this.images.length) > 3) {
+            else if ((this.previewUrls.length + this.imagesToAdd.length) > 3) {
                 this.addError('images');
                 this.errorsMessages.image = 'Puoi selezionare fino a un massimo di tre immagini';
                 fileInput.classList.add('invalid');
@@ -198,11 +209,11 @@ export default {
             this.deleteError('price');
             this.errorsMessages.price = '';
 
-            if(priceInput.value.trim().length === 0) {
+            if (priceInput.value.trim().length === 0) {
                 this.addError('price');
                 this.errorsMessages.price = 'Il campo prezzo deve essere compilato';
                 priceInput.classList.add('invalid');
-            } else if(isNaN(priceInput.value.trim())) {
+            } else if (isNaN(priceInput.value.trim())) {
                 this.addError('price');
                 this.errorsMessages.price = 'Il campo prezzo deve contenere solo numeri';
                 priceInput.classList.add('invalid');
@@ -362,12 +373,8 @@ export default {
 
             this.shakeInputs();
 
-            if (this.store.errors.length == 0) {
-                this.getCoordinates();
-            }
-            else {
-                console.log('Hai inserito dati non corretti. Riprova!');
-            }
+            if (this.store.errors.length == 0) this.getCoordinates();
+            else console.log('Hai inserito dati non corretti. Riprova!');
         },
         // PRENDO COORDINATE APPARTAMENTO
         async getCoordinates() {
@@ -402,80 +409,82 @@ export default {
                 .catch((response) => {
                     console.log('Errore aggiornamento', response.data);
                 })
-                
-                
-                // Redirect
-                if (this.apartmentUpdated) {
-                    setTimeout(() => {
-                        this.apartmentUpdated = false;
-                        router.push('/dashboard/apartments');
-                    }, 1500);
-                }
+
+
+            // Redirect
+            if (this.apartmentUpdated) {
+                setTimeout(() => {
+                    this.apartmentUpdated = false;
+                    router.push('/dashboard/apartments');
+                }, 1500);
+            }
         },
         // sezione immagini
         addFiles(fieldName, fileList) {
-            this.form.images = fileList;
+            this.imagesToAdd = fileList;
+
+            // Crea l'array di url per le previews
             for (let i = 0; i < fileList.length; i++) {
                 this.previewUrls.push(URL.createObjectURL(fileList[i]));
             }
-            // console.log('Files Aggiunti');
             // console.log('URL creati', this.previewUrls);
         },
         postImages(id) {
             // console.log('Images', this.form.images);
-            const images = this.form.images;
+            const images = this.imagesToAdd;
+
+            // Config della chiamata per accettare immagini
             let config = {
                 header: {
                     'Content-Type': 'multipart/form-data'
                 }
             }
+
+            // Crea un istanza di FormData e aggiunge tutte le immagini
             const formData = new FormData();
-            console.log(id);
             formData.append('apartment_id', id);
-            // console.log('FormData', formData);
             for (let i = 0; i < images.length; i++) {
-                // console.log('Appending', images[i]);
                 formData.append(`image-${i}`, images[i]);
             }
+
+            // console.log('FormData', formData);
             axios.post('http://localhost:8000/api/images', formData, config)
                 .then((response) => {
-                    // console.log("Images sent correctly");
+                    console.log("Immagini inviate correttamente");
                 })
         },
         deleteImage(index) {
+            // Elimina l'immagine dall'array delle previews
             this.previewUrls.splice(index, 1);
         },
-        deleteOldImage(index, i) {
-            this.images.splice(i, 1);
-            axios.delete(`http://localhost:8000/api/images/${index}`)
+        deleteOldImage(id, index) {
+            // Permette l'eliminazione di una delle immagini gia' associate all'appartamento
+
+            // Elimina l'immagine dall'array solo per fini grafici
+            this.form.images.splice(index, 1);
+
+            // Invia la richiesta di eliminazione del record dell'immagine dal DB
+            axios.delete(`http://localhost:8000/api/images/${id}`)
                 .then((response) => {
-                    console.log('Immagine cancellata con id', index);
-                    // this.getApartments();
+                    console.log(`Immagine #${id} cancellata`);
                 });
-        },
+        }
     },
     mounted() {
         this.getApartment();
-
+        this.setAutocomplete();
         document.title = 'Dashboard | Apartment Edit';
-
-        const address = document.querySelector('#address');
-        let autocomplete = new google.maps.places.Autocomplete(address);
-        const self = this;
-        autocomplete.addListener('place_changed', function () {
-            let place = autocomplete.getPlace();
-            let address = place.formatted_address;
-            self.form.address = address;
-            // let city = place.address_components.find(component => component.types.includes('locality')).long_name;
-        });
     }
+
+    // Scarico Immagini Attuali in form images
+    // Aggiungo nuove immagini in newImages
 }
 </script>
 
 <template>
     <AppDashboardLayoutVue :title="`Aggiorna ${form.title ?? ''}`">
 
-        <main>
+        <!-- <main> -->
             <form @submit.prevent="validateData()" v-if="form">
                 <!-- Titolo -->
                 <div class="row">
@@ -506,7 +515,7 @@ export default {
                         <label for="address">Dove si trova il tuo alloggio? *</label>
                         <input v-model="form.address" type="text" name="address" id="address"
                             v-on:blur="addressValidation()">
-                            <p v-if="errorsMessages.address.length > 0" class="error">{{ errorsMessages.address }}</p>
+                        <p v-if="errorsMessages.address.length > 0" class="error">{{ errorsMessages.address }}</p>
                     </div>
                 </div>
 
@@ -516,23 +525,20 @@ export default {
                         <label for="rooms_number">Stanze: *</label>
                         <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number"
                             v-on:blur="roomsNumberValidation()">
-                            <p v-if="errorsMessages.rooms_number.length > 0" class="error">{{ errorsMessages.rooms_number }}</p>
+                        <p v-if="errorsMessages.rooms_number.length > 0" class="error">{{ errorsMessages.rooms_number }}</p>
                     </div>
                     <div class="group small">
                         <label for="beds_number">Posti letto: *</label>
-                        <input
-                        v-model="form.beds_number"
-                        type="number"
-                        name="beds_number"
-                        id="beds_number" 
-                        v-on:blur="bedsNumberValidation()">
+                        <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number"
+                            v-on:blur="bedsNumberValidation()">
                         <p v-if="errorsMessages.beds_number.length > 0" class="error">{{ errorsMessages.beds_number }}</p>
                     </div>
                     <div class="group small">
                         <label for="bathrooms_number">Bagni: *</label>
                         <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
                             v-on:blur="bathroomsNumberValidation()">
-                            <p v-if="errorsMessages.bathrooms_number.length > 0" class="error">{{ errorsMessages.bathrooms_number }}</p>
+                        <p v-if="errorsMessages.bathrooms_number.length > 0" class="error">{{
+                            errorsMessages.bathrooms_number }}</p>
                     </div>
                 </div>
 
@@ -542,7 +548,7 @@ export default {
                         <label for="description">Descrizione appartamento: *</label>
                         <textarea v-model="form.description" name="description" id="description" rows="6"
                             v-on:blur="descriptionValidation()"></textarea>
-                            <p v-if="errorsMessages.description.length > 0" class="error">{{ errorsMessages.description }}</p>
+                        <p v-if="errorsMessages.description.length > 0" class="error">{{ errorsMessages.description }}</p>
                     </div>
                 </div>
 
@@ -584,27 +590,28 @@ export default {
 
                         <input name="images" id="images" type="file" accept="image/*" multiple
                             @change="addFiles($event.target.name, $event.target.files)"
-                            :disabled="(previewUrls.length + form.images.length) >= 3">
+                            :disabled="(previewUrls.length + form.images.length) >= 4">
 
-                        <!-- <transition name="fade"> -->
-                        <div class="previews" v-if="form.images.length > 0">
-                            <div class="preview" v-for="element, index in form.images">
-                                <img :src="`http://localhost:8000/storage/apartments/${element.url}`" alt="img">
-                                <button @click.prevent="deleteOldImage(element.id, index)">
-                                    <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
-                                </button>
-                            </div>
-                        </div>
+                        <transition name="fade">
+                            <div class="previews" v-if="form.images.length > 0 || previewUrls.length > 0">
+                                <div class="preview" v-for="element, index in form.images">
+                                    <img :src="`http://localhost:8000/storage/apartments/${element.url}`" alt="img">
+                                    <button @click.prevent="deleteOldImage(element.id, index)">
+                                        <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
+                                    </button>
+                                </div>
 
-                        <div class="previews" v-if="previewUrls.length > 0">
-                            <div class="preview" v-for="url, index in previewUrls">
-                                <img :src="url" alt="Preview">
-                                <button @click.prevent="deleteImage(index)">
-                                    <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
-                                </button>
+                                <!-- </div>
+
+                        <div class="previews" v-if="previewUrls.length > 0"> -->
+                                <div class="preview" v-for="url, index in previewUrls">
+                                    <img :src="url" alt="Preview">
+                                    <button @click.prevent="deleteImage(index)">
+                                        <font-awesome-icon icon="fa-solid fa-xmark" class="icon" />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <!-- </transition> -->
+                        </transition>
                         <!-- </div> -->
                     </div>
                     <p v-if="errorsMessages.image.length > 0" class="error">{{ errorsMessages.image }}</p>
@@ -617,7 +624,7 @@ export default {
                     <AppButton :label="'aggiorna appartamento'" :type="'solid'" :palette="'primary'" v-else />
                 </div>
             </form>
-        </main>
+        <!-- </main> -->
     </AppDashboardLayoutVue>
 </template>
 
@@ -626,13 +633,13 @@ export default {
 @use '../../../styles/partials/form.scss' as *;
 @use '../../../styles/partials/variables.scss' as *;
 
-main {
-    height: 100%;
-    flex-grow: 0;
-    overflow: auto;
-    padding: 1rem;
-    border-radius: $small-border-radius;
-}
+// main {
+//     height: 100%;
+//     flex-grow: 0;
+//     overflow: auto;
+//     padding: 1rem;
+//     border-radius: $small-border-radius;
+// }
 
 form {
     margin: 0 auto;
@@ -698,6 +705,10 @@ label {
     }
 }
 
+.fakeInput {
+    margin-bottom: 0.5rem
+}
+
 .previews {
     @include flexRowCenter(5px);
     width: fit-content;
@@ -713,15 +724,14 @@ label {
         border: 1px solid $dark-color-one;
         position: relative;
         padding: 0;
-        cursor: pointer;
-
+        
         >img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 4px;
         }
-
+        
         >button {
             position: absolute;
             top: 0px;
@@ -737,6 +747,7 @@ label {
             justify-content: center;
             align-items: center;
             border: none;
+            cursor: pointer;
 
             .icon {
                 margin: 0;

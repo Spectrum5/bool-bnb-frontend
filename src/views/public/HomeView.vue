@@ -126,9 +126,12 @@ export default {
     <PublicPageLayout>
         <template v-slot:hero-section>
             <div class="hero-section">
-                <AppSearch :allFields="false" />
             </div>
         </template>
+
+        <div class="search">
+            <AppSearch :allFields="false" />
+        </div>
 
         <div class="container cards" id="cardsContainer" v-if="sponsoredApartments.length > 0">
             <h2 class="mainTitle">appartamenti in evidenza</h2>
@@ -194,5 +197,21 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.search {
+    position: sticky;
+    top: 100px;
+    margin: 25vh auto;
+    margin-bottom: 30vh;
+    z-index: 14;
+    &:deep .container {
+        margin: 0 auto;
+    }
 }
 </style>
