@@ -76,44 +76,21 @@ export default {
             link: '/dashboard/apartments/create'
         }">
 
-        <!-- <main> -->
-        <!-- <main> -->
         <AppLoading v-if="loading == true" />
-        <div class="row-my-partm my-container" v-for="apartment in apartments " :key="apartment.id"
-            v-if="apartments != null" @click="$router.push(`/dashboard/apartments/${apartment.slug}`)">
 
-            <AppModaleDelete :action="deleteApartment" :id="selectedApartmentId">
-            </AppModaleDelete>
-            <div>
-                <p> {{ apartment.title }}</p>
-            </div>
-            <div>
-                <!-- <button class="btn btn-show" @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)">
-                        <font-awesome-icon icon="fa-solid fa-eye" />
-                        Vedi dettagli
-                    </button> -->
-                <button class="btn btn-edit" @click="$router.push(`/dashboard/apartments/${apartment.slug}/edit`)">
-                    <font-awesome-icon icon="fa-solid fa-pencil" />
-                    Modifica
-                </button>
-                <!-- <AppButton :label="'elimina'" :icon="'trash-can'" :type="'solid'" :palette="'danger'" :action="testFunction"/> -->
-                <!-- @click="deleteApartment(apartment.id)" -->
-                <!-- <button id="myBtn" class="btn btn-delete" @click="showDeleteModal(apartment.id)">
-                        <font-awesome-icon icon="fa-solid fa-trash-can" />
-                        Elimina
-                    </button> -->
-                <!-- <button class="btn btn-stats">
-                        <font-awesome-icon icon="fa-solid fa-chart-simple" />
-                        Vedi Statistiche
-                    </button> -->
-
+        <div class="container itemsContainer" v-if="apartments != null">
+            <div class="item" v-for="apartment in apartments" :key="apartment.id"
+                @click="$router.push(`/dashboard/apartments/${apartment.slug}`)">
+                <span class="itemTitle">{{ apartment.title }}</span>
                 <font-awesome-icon icon="fa-solid fa-chevron-right" />
             </div>
         </div>
-        <div class="no-apartment" v-else-if="notFound">
-            <h2>Non sono presenti appartamenti</h2>
+
+        <div class="container" v-else-if="notFound">
+            <div class="warningMessage">
+                <p class="mainTitle">Non sono presenti appartamenti</p>
+            </div>
         </div>
-        <!-- </main> -->
 
     </AppDashboardLayoutVue>
 </template>
@@ -122,97 +99,30 @@ export default {
 @use '../../../styles/partials/variables.scss' as *;
 @use '../../../styles/partials/mixins.scss' as *;
 
+.itemsContainer {
+    .item {
+        @include flexSpaceBtwn;
+        padding: 1rem;
+        cursor: pointer;
+        text-transform: capitalize;
 
-// main {
-//     width: 100%;
-//     height: 100%;
-//     flex-grow: 1;
-//     overflow: auto;
-//     padding: 1rem;
-// }
+        &:not(:last-child) {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.445);
+        }
 
-.no-apartment {
-    text-align: center;
-    margin-top: 35px;
-}
+        &:first-child {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
 
-.my-container {
-    @include flexSpaceBtwn ($gap: 0);
-    padding: 10px;
-    cursor: pointer;
-    text-transform: capitalize;
+        &:last-child {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
 
-    &:not(:last-child) {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.445);
-    }
-
-    .lato-sx {
-        height: 100vh;
-        width: 15vw;
-        border: 1px solid;
-    }
-
-    .lato-dx {
-        height: 100vh;
-        width: 85vw;
-        border: 1px solid;
-        padding: 15px 30px;
-
-        >div {
-            @include flexSpaceBtwn ($gap: 0);
-            margin-bottom: 40px;
+        &:hover {
+            background-color: $light-color-two;
         }
     }
-
-    &:hover {
-        background-color: $light-color-two;
-    }
-}
-
-.btn {
-    padding: 7px 10px;
-    border-radius: 10px;
-    margin-right: 5px;
-    cursor: pointer;
-}
-
-.btn-show {
-    background-color: #f5f5f5;
-    border: 2px solid #141414;
-}
-
-.btn-create {
-    background-color: #59DCC0;
-    border: 2px solid #59DCC0;
-    color: white;
-    font-weight: 600;
-}
-
-.btn-edit {
-    background-color: #f5d679;
-    border: 2px solid #f5d679;
-}
-
-.btn-delete {
-    background-color: #f56372;
-    border: 2px solid #f56372;
-}
-
-.btn-stats,
-.btn-sponsor {
-    background-color: #59DCC0;
-    border: 2px solid #59DCC0;
-}
-
-.hover-effect {
-    background-size: 200% 100%;
-    transition: background-position 0.5s ease;
-}
-
-.hover-effect:hover {
-    background: linear-gradient(45deg, #4294F2, #59DCC0);
-    background-size: 200% 100%;
-    transition: background-position 0.5s ease;
-    background-position: -100% 0;
 }
 </style>

@@ -40,11 +40,10 @@ export default {
             imagesToAdd: [],
 
             apartmentUpdated: false,
-            images: [],
             previewUrls: [],
             //TOM TOM API
             url_api_tomtom: 'https://api.tomtom.com/search/2/geocode/',
-            api_key_tomtom: 'Vru3uP06eapOxpYMujwrRlVLMB5Vkqch',
+            api_key_tomtom: import.meta.env.VITE_TOMTOM_API_KEY,
         }
     },
     methods: {
@@ -172,6 +171,7 @@ export default {
             }
         },
         imageValidation() {
+            // Valida la presenza e il formato dei file
             const fileInput = document.getElementById('images');
             const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
             fileInput.classList.remove('invalid');
@@ -373,8 +373,8 @@ export default {
             if (this.store.errors.length == 0) this.getCoordinates();
             else console.log('Hai inserito dati non corretti. Riprova!');
         },
-        // PRENDO COORDINATE APPARTAMENTO
         async getCoordinates() {
+            // Ottiene le coordinate dell'appartamento dall'indirizzo
             const coordinates = await fetch(`${this.url_api_tomtom}${this.form.address}.json?key=${this.api_key_tomtom}&typeahead=true&limit=1&radius=500`);
             let json = await coordinates.json();
             console.log('COORDINATE', json.results[0].position);
@@ -472,23 +472,19 @@ export default {
         this.setAutocomplete();
         document.title = 'Dashboard | Apartment Edit';
     }
-
-    // Scarico Immagini Attuali in form images
-    // Aggiungo nuove immagini in newImages
 }
 </script>
 
 <template>
     <AppDashboardLayoutVue :title="`Aggiorna ${form.title ?? ''}`">
 
-        <!-- <main> -->
         <form @submit.prevent="validateData()" v-if="form">
             <!-- Titolo -->
             <div class="row">
                 <div class="group large">
                     <label for="title">Inserisci nome appartamento: *</label>
                     <input v-model="form.title" type="text" name="title" id="title" v-on:blur="titleValidation()">
-                    <p v-if="errorsMessages.title.length > 0" class="error">{{ errorsMessages.title }}</p>
+                    <p v-if="errorsMessages.title.length > 0" class="fieldError">{{ errorsMessages.title }}</p>
                 </div>
             </div>
 
@@ -497,12 +493,12 @@ export default {
                 <div class="group small">
                     <label for="price">Inserisci prezzo a notte: *</label>
                     <input v-model="form.price" type="number" name="price" id="price" v-on:blur="priceValidation()">
-                    <p v-if="errorsMessages.price.length > 0" class="error">{{ errorsMessages.price }}</p>
+                    <p v-if="errorsMessages.price.length > 0" class="fieldError">{{ errorsMessages.price }}</p>
                 </div>
                 <div class="group small">
                     <label for="size">Inserisci i mq: *</label>
                     <input v-model="form.size" type="number" name="size" id="size" v-on:blur="sizeValidation()">
-                    <p v-if="errorsMessages.size.length > 0" class="error">{{ errorsMessages.size }}</p>
+                    <p v-if="errorsMessages.size.length > 0" class="fieldError">{{ errorsMessages.size }}</p>
                 </div>
             </div>
 
@@ -511,7 +507,7 @@ export default {
                 <div class="group large">
                     <label for="address">Dove si trova il tuo alloggio? *</label>
                     <input v-model="form.address" type="text" name="address" id="address" v-on:blur="addressValidation()">
-                    <p v-if="errorsMessages.address.length > 0" class="error">{{ errorsMessages.address }}</p>
+                    <p v-if="errorsMessages.address.length > 0" class="fieldError">{{ errorsMessages.address }}</p>
                 </div>
             </div>
 
@@ -521,19 +517,20 @@ export default {
                     <label for="rooms_number">Stanze: *</label>
                     <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number"
                         v-on:blur="roomsNumberValidation()">
-                    <p v-if="errorsMessages.rooms_number.length > 0" class="error">{{ errorsMessages.rooms_number }}</p>
+                    <p v-if="errorsMessages.rooms_number.length > 0" class="fieldError">{{ errorsMessages.rooms_number }}
+                    </p>
                 </div>
                 <div class="group small">
                     <label for="beds_number">Posti letto: *</label>
                     <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number"
                         v-on:blur="bedsNumberValidation()">
-                    <p v-if="errorsMessages.beds_number.length > 0" class="error">{{ errorsMessages.beds_number }}</p>
+                    <p v-if="errorsMessages.beds_number.length > 0" class="fieldError">{{ errorsMessages.beds_number }}</p>
                 </div>
                 <div class="group small">
                     <label for="bathrooms_number">Bagni: *</label>
                     <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
                         v-on:blur="bathroomsNumberValidation()">
-                    <p v-if="errorsMessages.bathrooms_number.length > 0" class="error">{{
+                    <p v-if="errorsMessages.bathrooms_number.length > 0" class="fieldError">{{
                         errorsMessages.bathrooms_number }}</p>
                 </div>
             </div>
@@ -544,7 +541,7 @@ export default {
                     <label for="description">Descrizione appartamento: *</label>
                     <textarea v-model="form.description" name="description" id="description" rows="6"
                         v-on:blur="descriptionValidation()"></textarea>
-                    <p v-if="errorsMessages.description.length > 0" class="error">{{ errorsMessages.description }}</p>
+                    <p v-if="errorsMessages.description.length > 0" class="fieldError">{{ errorsMessages.description }}</p>
                 </div>
             </div>
 
@@ -553,7 +550,7 @@ export default {
                 <div class="group large">
                     <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility">
                     <label for="visibility">Al momento non disponibile</label>
-                    <p v-if="errorsMessages.visibility.length > 0" class="error">{{ errorsMessages.visibility }}</p>
+                    <p v-if="errorsMessages.visibility.length > 0" class="fieldError">{{ errorsMessages.visibility }}</p>
                 </div>
             </div>
 
@@ -568,7 +565,7 @@ export default {
                             <label :for="service.name">{{ service.name }}</label>
                         </span>
                     </div>
-                    <p v-if="errorsMessages.services.length > 0" class="error">{{ errorsMessages.services }}</p>
+                    <p v-if="errorsMessages.services.length > 0" class="fieldError">{{ errorsMessages.services }}</p>
                 </div>
             </div>
 
@@ -597,9 +594,6 @@ export default {
                                 </button>
                             </div>
 
-                            <!-- </div>
-
-                        <div class="previews" v-if="previewUrls.length > 0"> -->
                             <div class="preview" v-for="url, index in previewUrls">
                                 <img :src="url" alt="Preview">
                                 <button @click.prevent="deleteImage(index)">
@@ -610,7 +604,7 @@ export default {
                     </transition>
                     <!-- </div> -->
                 </div>
-                <p v-if="errorsMessages.image.length > 0" class="error">{{ errorsMessages.image }}</p>
+                <p v-if="errorsMessages.image.length > 0" class="fieldError">{{ errorsMessages.image }}</p>
             </div>
 
             <!-- Submit -->
@@ -619,8 +613,8 @@ export default {
                     :disabled="true" v-if="apartmentUpdated" />
                 <AppButton :label="'aggiorna appartamento'" :type="'solid'" :palette="'primary'" v-else />
             </div>
+            <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
         </form>
-        <!-- </main> -->
     </AppDashboardLayoutVue>
 </template>
 
@@ -629,18 +623,14 @@ export default {
 @use '../../../styles/partials/form.scss' as *;
 @use '../../../styles/partials/variables.scss' as *;
 
-// main {
-//     height: 100%;
-//     flex-grow: 0;
-//     overflow: auto;
-//     padding: 1rem;
-//     border-radius: $small-border-radius;
-// }
-
 form {
     margin: 0 auto;
     max-width: 1100px;
     width: 100%;
+
+    .group {
+        position: relative;
+    }
 }
 
 .row.visibility .group {
@@ -666,20 +656,12 @@ label {
 
 .row:last-child {
     &:deep button {
-
-        width: 100%;
+        width: 100% !important;
     }
 }
 
 #images {
     display: none;
-}
-
-.error {
-    color: $danger-color-dark;
-    font-size: 0.8rem;
-    padding-top: 3px;
-    max-width: fit-content;
 }
 
 .services {
@@ -692,15 +674,11 @@ label {
     flex-wrap: wrap;
 
     input {
-        // flex-grow: 0;
         width: unset !important;
     }
 
     .service {
-        // flex-basis: 33%;
         flex-basis: calc((100% - 3rem) / 4);
-        // flex-grow: 1;
-        // border: 2px solid red;
         display: flex;
         justify-content: flex-start;
         align-items: center;

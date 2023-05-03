@@ -1,7 +1,4 @@
 <script>
-// Components
-import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
-import AppErrorForm from '../../../components/AppErrorForm.vue';
 
 // Utilities
 import { store } from '../../../store';
@@ -9,11 +6,17 @@ import { router } from '../../../router';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
+// Components
+import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppErrorForm from '../../../components/AppErrorForm.vue';
+import AppButton from '../../../components/AppButton.vue';
+
 export default {
     name: 'ApartmentCreate',
     components: {
         AppDashboardLayoutVue,
         AppErrorForm,
+        AppButton
     },
     data() {
         return {
@@ -49,9 +52,10 @@ export default {
                 services: '',
                 image: '',
             },
+            apartmentCreated: false,
             previewUrls: [],
             url_api_tomtom: 'https://api.tomtom.com/search/2/geocode/',
-            api_key_tomtom: 'Vru3uP06eapOxpYMujwrRlVLMB5Vkqch',
+            api_key_tomtom: import.meta.env.VITE_TOMTOM_API_KEY,
             services: [],
             ApartmentCreated: false,
         };
@@ -62,6 +66,17 @@ export default {
                 .then(response => {
                     this.services = response.data.services;
                 })
+        },
+        setAutocomplete() {
+            const address = document.querySelector('#address');
+            let autocomplete = new google.maps.places.Autocomplete(address);
+            const self = this;
+            autocomplete.addListener('place_changed', function () {
+                let place = autocomplete.getPlace();
+                let address = place.formatted_address;
+                self.form.address = address;
+                // let city = place.address_components.find(component => component.types.includes('locality')).long_name;
+            });
         },
         handleCreateApartment() {
             this.validateData();
@@ -81,7 +96,6 @@ export default {
                 }
             }
         },
-
         deleteError(fieldName) {
             // toglie l'errore in store.error così da poter fare ogni volta un nuovo controllo da capo
             const index = this.store.errors.findIndex(error => error.field === fieldName);
@@ -89,7 +103,6 @@ export default {
                 this.store.errors.splice(index, 1);
             }
         },
-
         titleValidation() {
             // Title Length
             const titleInput = document.getElementById('title');
@@ -153,13 +166,12 @@ export default {
                 this.errorsMessages.image = 'L\'immagine deve essere in formato JPG, JPEG o PNG';
                 fileInput.classList.add('invalid');
             }
-            else if(this.previewUrls.length > 3){
+            else if (this.previewUrls.length > 3) {
                 this.addError('images');
                 this.errorsMessages.image = 'Puoi selezionare fino a un massimo di tre immagini';
                 fileInput.classList.add('invalid');
             }
         },
-
         priceValidation() {
             const priceInput = document.getElementById('price');
             priceInput.classList.remove('invalid');
@@ -181,7 +193,6 @@ export default {
                 priceInput.classList.add('invalid');
             }
         },
-
         roomsNumberValidation() {
             const roomsNumberInput = document.getElementById('rooms_number');
             roomsNumberInput.classList.remove('invalid');
@@ -203,7 +214,6 @@ export default {
                 roomsNumberInput.classList.add('invalid');
             }
         },
-
         bedsNumberValidation() {
             const bedsNumberInput = document.getElementById('beds_number');
             bedsNumberInput.classList.remove('invalid');
@@ -225,7 +235,6 @@ export default {
                 bedsNumberInput.classList.add('invalid');
             }
         },
-
         bathroomsNumberValidation() {
             const bathroomsNumberInput = document.getElementById('bathrooms_number');
             bathroomsNumberInput.classList.remove('invalid');
@@ -247,7 +256,6 @@ export default {
                 bathroomsNumberInput.classList.add('invalid');
             }
         },
-
         descriptionValidation() {
             const descriptionInput = document.getElementById('description');
             descriptionInput.classList.remove('invalid');
@@ -272,7 +280,6 @@ export default {
                 descriptionInput.classList.add('invalid');
             }
         },
-
         sizeValidation() {
             const sizeInput = document.getElementById('size');
             sizeInput.classList.remove('invalid');
@@ -298,7 +305,6 @@ export default {
                 sizeInput.classList.add('invalid');
             }
         },
-
         visibilityValidation() {
             const visibilityInput = document.getElementById('visibility');
             visibilityInput.classList.remove('invalid');
@@ -312,7 +318,6 @@ export default {
                 visibilityInput.classList.add('invalid');
             }
         },
-
         servicesValidation() {
             this.deleteError('services');
             this.errorsMessages.services = '';
@@ -322,8 +327,6 @@ export default {
                 this.errorsMessages.services = 'Devi selezionare almeno un servizio';
             }
         },
-
-        // FUNZIONE PER SHAKE ERROR
         shakeInputs() {
             if (this.store.errors.length > 0) {
                 this.store.errors.forEach(error => {
@@ -350,9 +353,9 @@ export default {
             this.visibilityValidation();
             this.servicesValidation();
             this.imageValidation();
-            
+
             this.shakeInputs();
-            
+
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) {
                 this.getCoordinates();
@@ -362,6 +365,7 @@ export default {
             }
         },
         async getCoordinates() {
+            // Ottiene le coordinate dall'indirizzo
             const coordinates = await fetch(`${this.url_api_tomtom}${this.form.address}.json?key=${this.api_key_tomtom}&typeahead=true&limit=1&radius=500`);
             // const data = await coordinates.blob();
             let json = await coordinates.json();
@@ -445,111 +449,127 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Apartment | Create';
+        document.title = 'Dashboard | Apartment Create';
         this.getFormData();
-        const address = document.querySelector('#address');
-        let autocomplete = new google.maps.places.Autocomplete(address);
-        const self = this;
-        autocomplete.addListener('place_changed', function () {
-            let place = autocomplete.getPlace();
-            let address = place.formatted_address;
-            self.form.address = address;
-            // let city = place.address_components.find(component => component.types.includes('locality')).long_name;
-            // aggiorna i campi dell'indirizzo e della città con i dati trovati
-        });
+        this.setAutocomplete();
     }
 }
 </script>
 
 <template>
-    <AppDashboardLayoutVue :title="'Aggiungi il tuo appartmento'">
-        <div class="my-container">
+    <AppDashboardLayoutVue :title="'Aggiungi il tuo appartamento'">
+        <!-- <div class="my-container"> -->
 
-            <!-- FORM PER CREATE -->
-            <form @submit.prevent="handleCreateApartment()">
-                <div class="my-row row">
-                    <div class="group small">
-                        <label class="d-block mb-2" for="title">Inserisci nome appartamento: *</label>
-                        <input v-model="form.title" type="text" name="title" id="title" max="255"
-                            v-on:blur="titleValidation()">
-                            <p v-if="errorsMessages.title.length > 0" class="error">{{ errorsMessages.title }}</p>
-                    </div>
-                    <div class="my-group">
-                        <div class="group small d-inline-block">
-                            <label class="d-block mb-2" for="price">Inserisci prezzo a notte: *</label>
-                            <input v-model="form.price" type="number" name="price" id="price" v-on:blur="priceValidation()">
-                            <p v-if="errorsMessages.price.length > 0" class="error">{{ errorsMessages.price }}</p>
-                        </div>
-                        <div class="group small d-inline-block">
-                            <label class="d-block mb-2" for="size">Inserisci i mq: *</label>
-                            <input v-model="form.size" type="number" name="size" id="size" v-on:blur="sizeValidation()">
-                            <p v-if="errorsMessages.size.length > 0" class="error">{{ errorsMessages.size }}</p>
-                        </div>
-                    </div>
-                    <div class="group small">
-                        <label class="d-block mb-2" for="address">Dove si trova il tuo alloggio? *</label>
-                        <input v-model="form.address" type="text" name="address" id="address"
-                            v-on:blur="addressValidation()">
-                        <p v-if="errorsMessages.address.length > 0" class="error">{{ errorsMessages.address }}</p>
-                    </div>
+        <!-- FORM PER CREATE -->
+        <form @submit.prevent="handleCreateApartment()">
+            <!-- Titolo -->
+            <div class="row">
+                <div class="group large">
+                    <label for="title">Inserisci nome appartamento: *</label>
+                    <input v-model="form.title" type="text" name="title" id="title" max="255" v-on:blur="titleValidation()">
+                    <p v-if="errorsMessages.title.length > 0" class="fieldError">{{ errorsMessages.title }}</p>
+                </div>
+            </div>
 
-                    <!-- INFORMAZIONI DI BASE -->
-                    <div class="my-group-info-base">
-                        <div class="group small d-inline-block">
-                            <label class="mb-2 d-block" for="rooms_number">Stanze: *</label>
-                            <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number"
-                                v-on:blur="roomsNumberValidation()">
-                            <p v-if="errorsMessages.rooms_number.length > 0" class="error">{{ errorsMessages.rooms_number }}</p>
-                        </div>
-                        <div class="group small d-inline-block">
-                            <label class="mb-2 d-block" for="beds_number">Posti letto: *</label>
-                            <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number"
-                            v-on:blur="bedsNumberValidation()">
-                            <p v-if="errorsMessages.beds_number.length > 0" class="error">{{ errorsMessages.beds_number }}</p>
-                        </div>
-                        <div class="group small d-inline-block">
-                            <label class="mb-2 d-block" for="bathrooms_number">Bagni: *</label>
-                            <input v-model="form.bathrooms_number" type="number" name="bathrooms_number"
-                                id="bathrooms_number" v-on:blur="bathroomsNumberValidation()">
-                            <p v-if="errorsMessages.bathrooms_number.length > 0" class="error">{{ errorsMessages.bathrooms_number }}</p>
-                        </div>
-                    </div>
-                    <div class="group small">
-                        <label class="mb-2 d-block" for="description">Descrizione appartamento: *</label>
-                        <textarea v-model="form.description" name="description" id="description" rows="6"
-                            v-on:blur="descriptionValidation()"></textarea>
-                            <p v-if="errorsMessages.description.length > 0" class="error">{{ errorsMessages.description }}</p>
-                    </div>
-                    <div>
-                        <label class="mb-2 d-block">Indica se il tuo appartamento non sarà subito disponibile</label>
-                        <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility">
-                        <label for="visibility">Al momento non disponibile</label>
-                        <p v-if="errorsMessages.visibility.length > 0" class="error">{{ errorsMessages.visibility }}</p>
-                    </div>
-                    <div>
-                        <label class="mb-2 d-block">Fai conoscere agli utenti tutti i servizi del tuo alloggio *</label>
-                        <div class="services">
-                            <span class="service" v-for="service in services">
-                                <input v-model="form.services" type="checkbox" :name="service.name" :id="service.name"
-                                    :value="service.id">
-                                <label :for="service.name" class="text-capitalize">{{ service.name }}</label>
-                            </span>
-                        </div>
-                        <p v-if="errorsMessages.services.length > 0" class="error">{{ errorsMessages.services }}</p>
-                    </div>
+            <!-- Prezzo | Metri Quadri -->
+            <div class="row inline-center">
+                <div class="group small">
+                    <label for="price">Inserisci prezzo a notte: *</label>
+                    <input v-model="form.price" type="number" name="price" id="price" v-on:blur="priceValidation()">
+                    <p v-if="errorsMessages.price.length > 0" class="fieldError">{{ errorsMessages.price }}</p>
+                </div>
 
-                    <div class="group small">
-                        <label class="mb-2" for="images">Aggiungi le immagini *</label>
-                        <div class="container">
-                            <label for="images" class="fakeInput" :class="previewUrls.length >= 3 ? 'disabled' : ''">
-                                <font-awesome-icon icon="fa-solid fa-plus" class="icon" />
-                                add images
-                            </label>
-                            <input name="images" id="images" type="file" accept="image/*" multiple
-                                @change="addFiles($event.target.name, $event.target.files)"
-                                :disabled="previewUrls.length >= 3"
-                                v-on:blur="imageValidation()">
-                            <!-- <transition name="fade"> -->
+                <div class="group small">
+                    <label for="size">Inserisci i mq: *</label>
+                    <input v-model="form.size" type="number" name="size" id="size" v-on:blur="sizeValidation()">
+                    <p v-if="errorsMessages.size.length > 0" class="fieldError">{{ errorsMessages.size }}</p>
+                </div>
+            </div>
+
+            <!-- Indirizzo -->
+            <div class="row">
+                <div class="group large">
+                    <label for="address">Dove si trova il tuo alloggio? *</label>
+                    <input v-model="form.address" type="text" name="address" id="address" v-on:blur="addressValidation()">
+                    <p v-if="errorsMessages.address.length > 0" class="fieldError">{{ errorsMessages.address }}</p>
+                </div>
+            </div>
+
+            <!-- Stanze | Letti | Bagni -->
+            <div class="row inline-center">
+                <div class="group small">
+                    <label for="rooms_number">Stanze: *</label>
+                    <input v-model="form.rooms_number" type="number" name="rooms_number" id="rooms_number"
+                        v-on:blur="roomsNumberValidation()">
+                    <p v-if="errorsMessages.rooms_number.length > 0" class="fieldError">{{ errorsMessages.rooms_number }}
+                    </p>
+                </div>
+
+                <div class="group small">
+                    <label for="beds_number">Posti letto: *</label>
+                    <input v-model="form.beds_number" type="number" name="beds_number" id="beds_number"
+                        v-on:blur="bedsNumberValidation()">
+                    <p v-if="errorsMessages.beds_number.length > 0" class="fieldError">{{ errorsMessages.beds_number }}
+                    </p>
+                </div>
+
+                <div class="group small">
+                    <label for="bathrooms_number">Bagni: *</label>
+                    <input v-model="form.bathrooms_number" type="number" name="bathrooms_number" id="bathrooms_number"
+                        v-on:blur="bathroomsNumberValidation()">
+                    <p v-if="errorsMessages.bathrooms_number.length > 0" class="fieldError">{{
+                        errorsMessages.bathrooms_number }}</p>
+                </div>
+            </div>
+
+            <!-- Descrizione -->
+            <div class="row">
+                <div class="group large">
+                    <label for="description">Descrizione appartamento: *</label>
+                    <textarea v-model="form.description" name="description" id="description" rows="6"
+                        v-on:blur="descriptionValidation()"></textarea>
+                    <p v-if="errorsMessages.description.length > 0" class="fieldError">{{ errorsMessages.description }}</p>
+                </div>
+            </div>
+
+            <!-- Visibilita' -->
+            <div class="row visibility">
+                <div class="group large">
+                    <label>Indica se il tuo appartamento non sarà subito disponibile</label>
+                    <input v-model="form.visibility" type="checkbox" name="visibility" id="visibility">
+                    <label for="visibility">Al momento non disponibile</label>
+                    <p v-if="errorsMessages.visibility.length > 0" class="fieldError">{{ errorsMessages.visibility }}</p>
+                </div>
+            </div>
+
+            <!-- Servizi -->
+            <div class="row">
+                <div class="group large">
+                    <label>Fai conoscere agli utenti tutti i servizi del tuo alloggio *</label>
+                    <div class="services">
+                        <span class="service" v-for="service in services">
+                            <input v-model="form.services" type="checkbox" :name="service.name" :id="service.name"
+                                :value="service.id">
+                            <label :for="service.name" class="text-capitalize">{{ service.name }}</label>
+                        </span>
+                    </div>
+                    <p v-if="errorsMessages.services.length > 0" class="fieldError">{{ errorsMessages.services }}</p>
+                </div>
+            </div>
+
+            <!-- Immagini -->
+            <div class="row">
+                <div class="group large">
+                    <label class="mb-2" for="images">Aggiungi le immagini *</label>
+                    <div class="container">
+                        <label for="images" class="fakeInput" :class="previewUrls.length >= 3 ? 'disabled' : ''">
+                            <font-awesome-icon icon="fa-solid fa-plus" class="icon" />
+                            add images
+                        </label>
+                        <input name="images" id="images" type="file" accept="image/*" multiple
+                            @change="addFiles($event.target.name, $event.target.files)" :disabled="previewUrls.length >= 3"
+                            v-on:blur="imageValidation()">
+                        <transition name="fade">
                             <div class="previews" v-if="previewUrls.length > 0">
                                 <div class="preview" v-for="url, index in previewUrls">
                                     <img :src="url" alt="Preview">
@@ -558,18 +578,21 @@ export default {
                                     </button>
                                 </div>
                             </div>
-                            <!-- </transition> -->
-                        </div>
-                        <p v-if="errorsMessages.image.length > 0" class="error">{{ errorsMessages.image }}</p>
+                        </transition>
                     </div>
+                    <p v-if="errorsMessages.image.length > 0" class="fieldError">{{ errorsMessages.image }}</p>
                 </div>
-                <button v-if="!this.ApartmentCreated" type="submit" class="btn my-btn">Crea appartamento</button>
-                <button v-if="this.ApartmentCreated" class="btn my-btn-created">Appartamento creato
-                    <font-awesome-icon icon="fa-solid fa-check" />
-                </button>
-                <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
-            </form>
-        </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="row">
+                <AppButton :label="'appartamento aggiunto'" :icon="'check'" :type="'solid'" :palette="'success'"
+                    :disabled="true" v-if="apartmentCreated" />
+                <AppButton :label="'aggiungi appartamento'" :icon="'plus'" :type="'solid'" :palette="'primary'" v-else />
+            </div>
+            <p class="campi-required">I campi contrassegnati con * sono obbligatori</p>
+        </form>
+        <!-- </div> -->
     </AppDashboardLayoutVue>
 </template>
 
@@ -577,10 +600,64 @@ export default {
 @use '../../../styles/partials/mixins.scss' as *;
 @use '../../../styles/partials/form.scss' as *;
 @use '../../../styles/partials/variables.scss' as *;
-@use '../../../styles/partials/formcreateedit.scss' as *;
+// @use '../../../styles/partials/formcreateedit.scss' as *;
+
+form {
+    margin: 0 auto;
+    max-width: 1100px;
+    width: 100%;
+    .group {
+        position: relative;
+    }
+}
+
+.row.visibility .group {
+    @include flexRowCenter (0.5rem);
+    justify-content: flex-start;
+
+    input {
+        width: unset !important;
+    }
+}
+
+.row.inline-center {
+    gap: 1rem;
+}
+
+.group.small {
+    flex-grow: 1;
+}
 
 label {
-    text-transform: none !important;
+    font-weight: 500;
+}
+
+.row:last-child {
+    &:deep button {
+        width: 100%;
+    }
+}
+
+.services {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    max-height: 280px;
+    flex-wrap: wrap;
+
+    input {
+        width: unset !important;
+    }
+
+    .service {
+        flex-basis: calc((100% - 3rem) / 4);
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 5px;
+    }
 }
 
 .invalid {
@@ -589,13 +666,6 @@ label {
 
 #images {
     display: none;
-}
-
-.error{
-    color: $danger-color-dark;
-    font-size: 0.8rem;
-    padding-top: 3px;
-    max-width: fit-content;
 }
 
 .previews {
@@ -637,6 +707,7 @@ label {
             justify-content: center;
             align-items: center;
             border: none;
+            cursor: pointer;
 
             .icon {
                 margin: 0;
