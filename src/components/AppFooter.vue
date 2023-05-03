@@ -9,6 +9,8 @@ export default {
                 members: [
                     { name: 'salvatore capano', link: 'https://github.com/SalvatoreCapano' },
                     { name: 'sergio tosku', link: 'https://github.com/Spectrum5' },
+                    { name: 'giada ortesta', link: 'https://github.com/GiadaMarzapane' },
+                    { name: 'lucia calenda', link: 'https://github.com/CalendaLucia' },
                     // Inserite qui i vostri link
                 ]
             }
@@ -37,7 +39,7 @@ export default {
 
 footer {
     background: $dark-color-two;
-    padding: 1.5rem 0;
+    padding: 1.5rem;
 }
 
 .col {
@@ -47,13 +49,16 @@ footer {
     }
 
     ul {
-        a {
-            color: $light-color-one;
-            text-transform: capitalize;
-
-            &:hover {
-                color: $light-color-two;
-            }
+        li{
+            list-style: none;
+            a {
+                color: $light-color-one;
+                text-transform: capitalize;
+    
+                &:hover {
+                    color: $light-color-two;
+                }
+        }
         }
     }
 }

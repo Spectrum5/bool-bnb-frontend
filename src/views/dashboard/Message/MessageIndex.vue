@@ -2,6 +2,7 @@
 
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppButton from '../../../components/AppButton.vue';
 
 // Utilities
 import axios from 'axios';
@@ -11,13 +12,14 @@ import { store } from '../../../store';
 export default {
     name: 'MessageIndex',
     components: {
-        AppDashboardLayoutVue
+        AppDashboardLayoutVue,
+        AppButton
     },
     data() {
         return {
             router,
             store,
-            messages: null            // apartments: null
+            messages: null
         }
     },
     methods: {
@@ -58,22 +60,24 @@ export default {
             <main>
                 <div class="messages" v-if="messages">
                     <div class="message" v-for="message in messages">
-                        <div class="title">
-                            <strong>
-                                {{ message.apartment.title }}
-                            </strong>
+                        <div>
+                            <div class="title mb-1">
+                                <strong>
+                                    {{ message.apartment.title }}
+                                </strong>
+                            </div>
+                            <div class="info-message">
+                                <div class="email">Mittente: {{ message.email }}</div>
+                                <div class="text">{{ message.message }}</div>
+                            </div>
                         </div>
-                        <div class="email">{{ message.email }}</div>
-                        <div class="text">{{ message.message }}</div>
+                        <AppButton :label="'Rispondi'" :icon="'share'" :palette="'secondary'"/>
                     </div>
-
-
-                    <!-- <div class="email">
-                        <p></p>
+                    <div>
                     </div>
-                    <div class="text">
-                        <p class="message" v-for="message in messages">{{ message.message }}</p>
-                    </div> -->
+                </div>
+                <div class="no-message" v-else>
+                    <h2>Non sono presenti messaggi</h2>
                 </div>
             </main>
 
@@ -85,12 +89,27 @@ export default {
 @use '../../../styles/partials/variables.scss' as *;
 
 .message {
+    @include flexSpaceBtwn;
     padding: 10px 0;
     border-bottom: 1px solid $dark-color-one;
+
+    &:hover{
+        background-color: #f5f5f5;
+    }
 }
 
 .title{
     text-transform: uppercase;
+}
+
+.no-message{
+    text-align: center;
+    margin-top: 35px;
+}
+
+.info-message{
+    font-size: 0.8rem;
+    color: rgb(51, 51, 51);
 }
 
 .email {

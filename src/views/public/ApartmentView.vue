@@ -363,7 +363,7 @@ export default {
                             </div>
 
                             <div class="row">
-                                <AppButton :label="'messaggio inviato'" :type="'solid'" :palette="'success'" :disabled="true" v-if="messageSent"/>
+                                <AppButton :label="'messaggio inviato'" :type="'solid'" :palette="'success'" :icon="'check'" :disabled="true" v-if="messageSent"/>
                                 <AppButton :label="'invia messaggio'" :type="'solid'" :palette="'primary'" v-else/>
                             </div>
                         </form>
@@ -397,7 +397,7 @@ export default {
     justify-content: space-between;
 
     .leftColumn {
-        flex-basis: 50%;
+        flex-basis: 40%;
     }
 
     .rightColumn {
