@@ -278,6 +278,8 @@ export default {
                             <span>{{ apartment.beds_number }} posti letto</span>
                             &#183;
                             <span>{{ apartment.bathrooms_number }} bagni</span>
+                            &#183;
+                            <span>{{ apartment.size }} mq</span>
                         </p>
                     </section>
 

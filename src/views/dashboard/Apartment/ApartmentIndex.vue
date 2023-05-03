@@ -9,31 +9,41 @@ import { store } from '../../../store';
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
 import AppButton from '../../../components/AppButton.vue';
 import AppModaleDelete from '../../../components/AppModaleDelete.vue';
+import AppLoading from '../../../components/AppLoading.vue';
 
 export default {
     name: 'ApartmentIndex',
     components: {
         AppDashboardLayoutVue,
         AppButton,
-        AppModaleDelete
+        AppModaleDelete,
+        AppLoading
     },
     data() {
         return {
             router,
             store,
             apartments: null,
-            selectedApartmentId: null
+            selectedApartmentId: null,
+            loading: false,
+            notFound: false,
         }
     },
     methods: {
         getApartments() {
+            this.loading = true;
+            this.notFound = false;
             axios.get('http://localhost:8000/api/apartments/indexUser')
                 .then((response) => {
                     console.log('Index Appartamenti Personali', response.data);
+                    if (response.data.apartments.length == 0) this.notFound = true;
+                    this.loading = false;
                     this.apartments = response.data.apartments;
                 })
                 .catch((response) => {
                     console.log('Errore Index Appartamenti Personali', response.data);
+                    this.loading = false;
+                    this.notFound = true;
                 })
         },
         showDeleteModal(id) {
@@ -67,6 +77,7 @@ export default {
         }">
 
         <main>
+        <AppLoading v-if="loading == true" />
             <div class="row-my-partm my-container" v-for="apartment in apartments " :key="apartment.id"
                 v-if="apartments != null" @click="$router.push(`/dashboard/apartments/${apartment.slug}`)">
                 <AppModaleDelete :action="deleteApartment" :id="selectedApartmentId">
@@ -97,11 +108,10 @@ export default {
                     <font-awesome-icon icon="fa-solid fa-chevron-right" />
                 </div>
             </div>
-            <div class="no-apartment" v-else>
+            <div class="no-apartment" v-else-if="notFound">
                 <h2>Non sono presenti appartamenti</h2>
             </div>
         </main>
-
     </AppDashboardLayoutVue>
 </template>
 

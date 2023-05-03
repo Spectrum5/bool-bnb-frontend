@@ -617,7 +617,7 @@ label {
 }
 
 .error{
-    color: #dc3545;
+    color: $danger-color-dark;
     font-size: 0.8rem;
     padding-top: 3px;
     max-width: fit-content;

@@ -57,80 +57,120 @@ export default {
 <div class="my-container">
     <div v-if="apartment">
         <!-- SEZIONE IMMAGINI APARTMENT -->
-        <section id="imagesSection">
-            <swiper-container id="slider" :navigation="true" :pagination="true" :centered-slides="true"
-                :slides-per-view="2" :space-between="25">
+        <section id="imagesSection" class="mb">
+            <swiper-container id="slider"
+            :navigation="true"
+            :pagination="true"
+            :space-between="25"
+            :breakpoints="{
+                    '700': {
+                        slidesPerView: 1,
+                        // spaceBetween: 20,
+                    },
+                    '1400': {
+                        slidesPerView: 2,
+                        // spaceBetween: 30,
+                    },
+                }">
                 <swiper-slide class="slide" v-for="image in apartment.images">
                     <img :src="`http://localhost:8000/storage/apartments/${image.url}`" :alt="apartment.title">
                 </swiper-slide>
             </swiper-container>
         </section>
-        <div class="mb">
-            <h4>Indirizzo:</h4>
-            <p>{{ apartment.address }}</p>
-        </div>
-        <div class="mb">
+        <div class="mb descr">
             <h4>Descrizione:</h4>
-            <p style="max-width: 60vw;">{{ apartment.description }}</p>
+            <p>{{ apartment.description }}</p>
         </div>
-        <div class="mb">
-            <h4>Prezzo a notte:</h4>
-            <p>€ {{ apartment.price }}</p>
-        </div>
-        <div class="mb" style="max-width: 60vw;" v-if="apartment.services.length > 0">
-            <h4>Servizi inclusi:</h4>
-            <div class="services" v-for="service in apartment.services">
-                <span>
-                    <font-awesome-icon :icon="`fa-solid fa-${service.icon}`" />
-                </span>
-                <!-- {{ service.name }} {{ price.products_count }} -->
-            </div>
-        </div>
-    </div>
-    <hr>
-    <!-- SPONSOR -->
-    <div class="my-3">
-        <h2 class="mb">Sponsorizzazioni</h2>
-        <!-- <div class="mb" v-if="apartment.sponsors.length > 0">
-            <h4>Servizi:</h4>
-            <div class="sponsors" v-for="sponsor in apartment.sponsors">
-                <p>{{ sponsor.title }}</p>
-            </div>
-        </div>
-        <div v-else> -->
-        <div>
-            <p class="mb">Al momento non hai nessuna sponsorizzazione! Vuoi sponsorizzare il tuo appartamento? Clicca sul bottone in basso</p>
-            <button class="btn btn-sponsor">
-                <font-awesome-icon icon="fa-solid fa-rocket" />
-                Sponsorizza
-            </button>
-        </div>
-    </div>
-    <!-- FINE SPONSOR -->
-    <hr>
-    <!-- MESSAGGI -->
-    <!-- message, email, -->
-    <div class="my-3">
-        <h2 class="mb">I tuoi messaggi</h2>
-        <div class="mb" v-if="apartment.messages.length > 0">
-            <span>Hai {{ apartment.messages.length }} messaggi ricevuti</span>
-            <div class="row" v-for="message in apartment.messages">
-                <p>Mittente: {{ message.email }}</p>
-                <p>{{ message.message }}</p>
-            </div>
-        </div>
-        <div v-else>
+        <section class="info">
+            <!-- SEZIONE INFO GENERALI APPARTAMENTO -->
             <div>
-                <p>Al momento non hai nessun messaggio!</p>
-                <p>Sponsorizza il tuo appartamento per avere maggiore visibilità! Clicca il bottone in basso</p>
-                <button class="btn btn-sponsor">
-                    <font-awesome-icon icon="fa-solid fa-rocket" />
-                    Sponsorizza
-                </button>
+                <div class="mb">
+                    <h4>Indirizzo:</h4>
+                    <p>{{ apartment.address }}</p>
+                </div>
             </div>
-        </div>
+            <div>
+                <div class="mb">
+                    <h4>Prezzo a notte:</h4>
+                    <p>€ {{ apartment.price }}</p>
+                </div>
+                <div class="mb" v-if="apartment.services.length > 0">
+                    <h4>Servizi inclusi:</h4>
+                    <div class="services" v-for="service in apartment.services">
+                        <span>
+                            <font-awesome-icon :icon="`fa-solid fa-${service.icon}`" />
+                        </span>
+                        <!-- {{ service.name }} {{ price.products_count }} -->
+                    </div>
+                </div>
+            </div>
+            <!-- SEZIONE CARATTERISTICHE APPARTAMENTO -->
+            <div>
+                <div class="mb">
+                    <h4>Numero posti letto:</h4>
+                    <p>{{ apartment.beds_number }} posti letto</p>
+                </div>
+                <div class="mb">
+                    <h4>Numero bagni:</h4>
+                    <p>{{ apartment.bathrooms_number }} bagni</p>
+                </div>
+            </div>
+            <div>
+                <div class="mb">
+                    <h4>Numero stanze:</h4>
+                    <p>{{ apartment.rooms_number }} camere</p>
+                </div>
+                <div class="mb">
+                    <h4>Dimensioni</h4>
+                    <p>{{ apartment.size }} mq</p>
+                </div>
+            </div>
+        </section>
+        <section class="info-2">
+            <!-- SPONSOR -->
+            <div class="my-3">
+                <h3 class="mb">Sponsorizzazioni</h3>
+                <!-- <div class="mb" v-if="apartment.sponsors.length > 0">
+                    <h4>Servizi:</h4>
+                    <div class="sponsors" v-for="sponsor in apartment.sponsors">
+                        <p>{{ sponsor.title }}</p>
+                    </div>
+                </div>
+                <div v-else> -->
+                <div>
+                    <p class="mb-2">Al momento non hai nessuna sponsorizzazione!</p>
+                    <p>Vuoi sponsorizzare il tuo appartamento? Clicca sul bottone in basso</p>
+                    <button class="btn btn-sponsor">
+                        <font-awesome-icon icon="fa-solid fa-rocket" />
+                        Sponsorizza
+                    </button>
+                </div>
+            </div>
+            <!-- FINE SPONSOR -->
+            <!-- MESSAGGI -->
+            <div class="my-3">
+                <h3 class="mb">I tuoi messaggi</h3>
+                <div class="mb-2" v-if="apartment.messages.length > 0">
+                    <span>Hai {{ apartment.messages.length }} messaggi ricevuti</span>
+                    <div class="row" v-for="message in apartment.messages">
+                        <p class="mb-1">Mittente: {{ message.email }}</p>
+                        <p class="mb-2">{{ message.message }}</p>
+                    </div>
+                </div>
+                <div v-else>
+                    <div>
+                        <p class="mb-1">Al momento non hai nessun messaggio!</p>
+                        <p class="mb-2">Sponsorizza il tuo appartamento per avere maggiore visibilità! Clicca il bottone in basso</p>
+                        <button class="btn btn-sponsor">
+                            <font-awesome-icon icon="fa-solid fa-rocket" />
+                            Sponsorizza
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!--FINE MESSAGGI -->
+        </section>
     </div>
-    <!--FINE MESSAGGI -->
 </div>
     </AppDashboardLayoutVue>
 </template>
@@ -142,8 +182,8 @@ export default {
 
 
 .my-container {
-    padding: 10px;
-    overflow: scroll;
+    padding: 10px 20px;
+    overflow-y: scroll;
 }
 
 .mb {
@@ -152,9 +192,10 @@ export default {
 
 #imagesSection {
     max-width: 1100px;
+    margin-inline: auto;
 
     #slider {
-        width: 100vw;
+        width: 70vw;
         padding: 1rem;
         --swiper-navigation-color: #f39237;
         --swiper-pagination-color: #ffffff;
@@ -181,6 +222,39 @@ export default {
     }
 }
 
+.descr{
+    width: 100%;
+    border: 1px solid $light-color-two;
+    padding: 10px;
+    border-radius: 10px;
+    background: $light-color-one;
+    flex-grow: 1;
+}
+
+.info,
+.info-2{
+    display: flex;
+    margin: 30px 0;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    >div{
+        width: calc((100% - 90px) / 4);
+        border: 1px solid $light-color-two;
+        padding: 10px;
+        border-radius: 10px;
+        background: $light-color-one;
+    }
+    h3{
+        text-align: center;
+    }
+}
+.info-2{
+    >div{
+        width: calc((100% - 60px) / 2);
+        // flex-grow: 1;
+    }
+}
+
 .row {
     div {
         margin-bottom: 15px;
@@ -202,13 +276,16 @@ export default {
     display: inline-block;
     margin-bottom: 7px;
     vertical-align: middle;
-    line-height: 25px;
+    text-align: center;
+    line-height: 40px;
+    width: 40px;
+    height: 40px;
 
     // text-transform: capitalize;
     span {
         vertical-align: middle;
         line-height: 25px;
-        font-size: 0.8rem;
+        font-size: 1.2rem;
     }
 }
 
@@ -222,4 +299,26 @@ export default {
 .btn-sponsor {
     background-color: #59DCC0;
     border: 2px solid #59DCC0;
-}</style>
+}
+
+@media screen and (max-width: 992px) {
+    // colonne con width 50% due due due
+    section.info{
+        >div{
+        width: calc((100% - 60px) / 2);
+        margin-bottom: 15px;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    // colonne al 100%
+    section.info,
+    section.info-2{
+            >div{
+            width: calc(100% - 30px);
+        }
+    }
+}
+
+</style>
