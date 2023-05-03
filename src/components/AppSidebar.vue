@@ -95,7 +95,11 @@ li:deep a {
 @media screen and (max-width: 840px) {
     aside {
         width: auto;
+        ul {
+            padding: 0.25rem;
+        }
     }
+
 
     li:deep a {
         .icon {

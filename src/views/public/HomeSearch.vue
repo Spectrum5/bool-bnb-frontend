@@ -70,6 +70,7 @@ export default {
                 .catch((response) => {
                     this.loading = false;
                     this.notFound = true;
+                    this.apartments = [];
                     console.log('Errore Index Appartamenti con Filtri');
                 })
         },
@@ -127,7 +128,7 @@ export default {
             <p class="mainTitle">Nessun appartamento trovato</p>
         </div>
 
-        <div class="container" v-if="searchCompleted == true && lastPage != null && currentPage == lastPage">
+        <div class="container" v-if="searchCompleted == true && lastPage != null && currentPage == lastPage && !notFound">
             <p class="warningMessage">
                 Non ci sono altri risultati da mostrare.
                 <br>

@@ -98,8 +98,9 @@ export default {
                                 Ben tornato,
                                 <br>
                                 {{ store.user.first_name }} {{ store.user.last_name }}
-                                <AppButton :to="'/dashboard/apartments'" :label="'dashboard'" :type="'line'" :palette="'primary'" />
                             </h3>
+                            <AppButton :to="'/dashboard/apartments'" :label="'dashboard'" :type="'line'" :palette="'primary'" />
+                            <AppButton :action="handleLogout" :label="'logout'" :type="'line'" :palette="'danger'" />
                         </div>
                         <div class="public" v-else>
                             <h3 class="maniTitle">
@@ -157,6 +158,7 @@ header {
     text-transform: capitalize;
     font-weight: 600;
     cursor: pointer;
+    user-select: none;
 }
 
 .group.menu {
@@ -195,6 +197,7 @@ header {
             &:deep a {
                 width: 100%;
                 text-align: center;
+                margin: 1rem 0;
             }
         }
     }

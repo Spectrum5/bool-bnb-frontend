@@ -76,10 +76,12 @@ export default {
             link: '/dashboard/apartments/create'
         }">
 
-        <main>
+        <!-- <main> -->
+        <!-- <main> -->
         <AppLoading v-if="loading == true" />
             <div class="row-my-partm my-container" v-for="apartment in apartments " :key="apartment.id"
-                v-if="apartments != null" @click="$router.push(`/dashboard/apartments/${apartment.slug}`)">
+                v-if="apartments != null" >
+                <!-- v-if="apartments != null" @click="$router.push(`/dashboard/apartments/${apartment.slug}`)"> -->
                 <AppModaleDelete :action="deleteApartment" :id="selectedApartmentId">
                 </AppModaleDelete>
                 <div>
@@ -89,11 +91,11 @@ export default {
                     <!-- <button class="btn btn-show" @click.self="$router.push(`/dashboard/apartments/${apartment.slug}`)">
                         <font-awesome-icon icon="fa-solid fa-eye" />
                         Vedi dettagli
-                    </button>
+                    </button> -->
                     <button class="btn btn-edit" @click="$router.push(`/dashboard/apartments/${apartment.slug}/edit`)">
                         <font-awesome-icon icon="fa-solid fa-pencil" />
                         Modifica
-                    </button> -->
+                    </button>
                     <!-- <AppButton :label="'elimina'" :icon="'trash-can'" :type="'solid'" :palette="'danger'" :action="testFunction"/> -->
                     <!-- @click="deleteApartment(apartment.id)" -->
                     <!-- <button id="myBtn" class="btn btn-delete" @click="showDeleteModal(apartment.id)">
@@ -111,7 +113,8 @@ export default {
             <div class="no-apartment" v-else-if="notFound">
                 <h2>Non sono presenti appartamenti</h2>
             </div>
-        </main>
+        <!-- </main> -->
+
     </AppDashboardLayoutVue>
 </template>
 
@@ -120,13 +123,13 @@ export default {
 @use '../../../styles/partials/mixins.scss' as *;
 
 
-main {
-    width: 100%;
-    height: 100%;
-    flex-grow: 1;
-    overflow: auto;
-    padding: 1rem;
-}
+// main {
+//     width: 100%;
+//     height: 100%;
+//     flex-grow: 1;
+//     overflow: auto;
+//     padding: 1rem;
+// }
 
 .no-apartment{
     text-align: center;
@@ -136,8 +139,12 @@ main {
 .my-container {
     @include flexSpaceBtwn ($gap: 0);
     padding: 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.445);
     cursor: pointer;
+    text-transform: capitalize;
+    
+    &:not(:last-child) {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.445);
+    }
 
     .lato-sx {
         height: 100vh;
@@ -158,7 +165,7 @@ main {
     }
 
     &:hover {
-        background-color: $light-color-one;
+        background-color: $light-color-two;
     }
 }
 

@@ -16,8 +16,7 @@ export default {
     data() {
         return {
             store,
-            router,
-            images: []
+            router
         }
     },
     props: {
@@ -62,7 +61,8 @@ export default {
                     <h3>{{ this.apartment.title }}</h3>
                 </div>
                 <div class="cardViews">
-                    123
+                    {{ this.apartment.views_count ?? '0' }}
+                    <font-awesome-icon icon="fa-solid fa-eye" class="icon" />
                 </div>
             </div>
             <div class="row">
@@ -119,7 +119,7 @@ button {
     border: none;
 }
 
-.sponsorized{
+.sponsorized {
     max-width: fit-content;
     position: absolute;
     z-index: 2;

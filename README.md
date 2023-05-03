@@ -10,3 +10,5 @@
 - Ricerca in Apartment Index
 - Loader iniziale con logo
 - Aggiunta Immagine User
+
+- Sistemare files backend (routes/api.php)

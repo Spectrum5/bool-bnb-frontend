@@ -17,7 +17,7 @@ export default {
             allServices: [],
             tomtomApiKey: import.meta.env.VITE_TOMTOM_API_KEY,
             form: {
-                address: null,
+                address: '',
                 radius: 20,
                 rooms_number: 0,
                 beds_number: 0,
@@ -40,6 +40,16 @@ export default {
                     this.allServices = response.data.services;
                     // console.log('Servizi', this.allServices);
                 })
+        },
+        setAutocomplete() {
+            const address = document.querySelector('#address');
+            const autocomplete = new google.maps.places.Autocomplete(address);
+            const self = this;
+            autocomplete.addListener('place_changed', function () {
+                const place = autocomplete.getPlace();
+                const address = place.formatted_address;
+                self.form.address = address;
+            });
         },
         radiusInput(direction) {
             // Incrementa l'input Raggio
@@ -127,7 +137,6 @@ export default {
                 .then(data => {
                     this.store.searchForm.lat = data.results[0].position.lat;
                     this.store.searchForm.lng = data.results[0].position.lon;
-
                 })
             this.$router.push(this.searchUrl);
             this.$emit('searchEvent');
@@ -135,7 +144,6 @@ export default {
         handleSearch() {
             // Se dei parametri sono stati inseriti, rimanda alla pagina di ricerca
             if (this.form.address != '' || this.form.rooms_number > 0 || this.form.beds_number > 0 || this.form.bathrooms_number > 0 || this.form.services.length > 0) {
-
                 this.calcUrl();
 
                 if (this.form.address != '') {
@@ -154,16 +162,7 @@ export default {
     mounted() {
         if (this.store.searchForm.address) this.form.address = this.store.searchForm.address;
         this.getServices();
-
-        const address = document.querySelector('#address');
-        const autocomplete = new google.maps.places.Autocomplete(address);
-        const self = this;
-        autocomplete.addListener('place_changed', function () {
-            const place = autocomplete.getPlace();
-            const address = place.formatted_address;
-            self.form.address = address;
-            // aggiornamento degli altri campi del form con i dati trovati
-        });
+        this.setAutocomplete();
     }
 }
 </script>
@@ -393,6 +392,7 @@ export default {
     .container {
         margin-bottom: 0 !important;
     }
+
     .searchbar {
         form {
             .row {
@@ -419,6 +419,7 @@ export default {
 @media screen and (max-width: 916px) {
     .servicesGroup {
         flex-basis: 100%;
+
         .servicesMenu {
             top: calc(100% + 15px);
             right: unset;
@@ -428,10 +429,10 @@ export default {
 }
 
 @media screen and (max-width: 750px) {
+
     .group:not(:first-child),
     .group:not(:last-child),
     .group:not(.servicesGroup) {
         flex-basis: calc(50% - 1rem);
     }
-}
-</style>
+}</style>

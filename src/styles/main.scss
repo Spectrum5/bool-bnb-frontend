@@ -30,7 +30,7 @@ button {
     // Da usare sugli h1 nelle pagine
     margin-bottom: 1rem;
     text-transform: capitalize;
-    font-size: clamp(2rem, 5vw, 2.5rem);
+    font-size: clamp(1.9rem, 5vw, 2.5rem);
     font-weight: 600;
     user-select: none;
     color: $dark-color-one;
@@ -39,7 +39,7 @@ button {
 .warningMessage {
     text-align: center;
     font-weight: 500;
-    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-size: clamp(1rem, 5vw, 1.5rem);
     margin-bottom: 1.5rem;
 }
 

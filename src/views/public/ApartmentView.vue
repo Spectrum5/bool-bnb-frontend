@@ -38,7 +38,8 @@ export default {
                 text: ''
             },
             rooms: [],
-            messageSent: false
+            messageSent: false,
+            ip_address: null
         }
     },
     methods: {
@@ -53,6 +54,7 @@ export default {
 
                     // Richiede la mappa solo dopo aver ricevuto le coordinate dell'appartamento
                     this.getMap();
+                    this.getIp();
                 })
                 .catch((response) => {
                     console.log('Errore Richiesta Appartamento', response.data);
@@ -160,7 +162,7 @@ export default {
                     }, 300)
                 });
             }
-        },    
+        },
         validateData() {
             // Front End Validation
             console.log('Validazione dati messaggio...');
@@ -174,7 +176,7 @@ export default {
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.sendMessage();
             else console.log('Hai inserito dati non corretti. Riprova.');
-        }, 
+        },
         sendMessage() {
             console.log('Invio messaggio...');
 
@@ -191,7 +193,7 @@ export default {
 
                     setTimeout(() => {
                         this.messageSent = false;
-                        this.message.text ='';
+                        this.message.text = '';
                     }, 2000);
                 })
                 .catch((response) => {
@@ -216,11 +218,37 @@ export default {
                     tot_beds = tot_beds - 1;
                 }
             }
+        },
+        async getIp() {
+            const ip = await fetch('https://api.ipify.org?format=json');
+            this.ip_address = await ip.json();
+
+            // console.log('IP', ip);
+            // console.log('IP', this.ip_address.ip);
+            // console.log('ID', this.apartment.id);
+            await this.saveView();
+        },
+        async saveView() {
+            console.log('IP', this.ip_address.ip);
+            console.log('Apartment Id', this.apartment.id);
+            axios.post(`http://localhost:8000/api/views`, {
+                ip_address: this.ip_address.ip,
+                apartment_id: this.apartment.id
+            })
+                .then(response => {
+                    console.log('Invio Informazioni View OK', response);
+                })
+                .catch(response => {
+                    console.log('Errore Invio Informazioni View', response);
+                })
         }
     },
     mounted() {
         document.title = 'Boolbnb';
         this.getApartment();
+
+        // Ottenere ip
+        // Inviare ip e id appartamento al backend
     }
 }
 </script>
@@ -238,7 +266,8 @@ export default {
                     <section id="title-address">
                         <div class="row">
                             <h1 class="mainTitle">{{ apartment.title }}</h1>
-                            <AppBadge :label="`${apartment.sponsors[0].title}`" :palette="`${apartment.sponsors[0].title}`" :icon="'award'" v-if="apartment.sponsors.length > 0"/>
+                            <AppBadge :label="`${apartment.sponsors[0].title}`" :palette="`${apartment.sponsors[0].title}`"
+                                :icon="'award'" v-if="apartment.sponsors.length > 0" />
                         </div>
                         <div class="row">
                             <h4 class="address">Dove si trova:
@@ -364,8 +393,9 @@ export default {
                             </div>
 
                             <div class="row">
-                                <AppButton :label="'messaggio inviato'" :type="'solid'" :palette="'success'" :icon="'check'" :disabled="true" v-if="messageSent"/>
-                                <AppButton :label="'invia messaggio'" :type="'solid'" :palette="'primary'" v-else/>
+                                <AppButton :label="'messaggio inviato'" :type="'solid'" :palette="'success'" :icon="'check'"
+                                    :disabled="true" v-if="messageSent" />
+                                <AppButton :label="'invia messaggio'" :type="'solid'" :palette="'primary'" v-else />
                             </div>
                         </form>
                         <AppErrorForm />
@@ -418,6 +448,7 @@ section:not(#title-address, section:last-of-type) {
 #title-address .row {
     @include flexRowCenter (1rem);
     justify-content: flex-start;
+
     // background-color: green;
     .mainTitle {
         margin-bottom: 0;
@@ -524,12 +555,12 @@ section:not(#title-address, section:last-of-type) {
     }
 }
 
-    .maps {
-        border: 1px solid;
-        height: 450px;
-        width: 600px;
-        background-color: antiquewhite;
-    }
+.maps {
+    border: 1px solid;
+    height: 450px;
+    width: 600px;
+    background-color: antiquewhite;
+}
 
 
 .services {
