@@ -51,6 +51,17 @@ export default {
             this.store.overlayOpen = value;
             if (value == true) document.body.style.overflow = 'hidden';
             else document.body.style.overflow = 'visible';
+        },
+        handleDesktopMenu() {
+            // if (this.menuDesktopOpen) {
+
+            // }
+            this.store.menuDesktopOpen = !this.store.menuDesktopOpen;
+
+            // this.menuMobileOpen = value;
+            this.store.overlayOpen = this.store.menuDesktopOpen;
+            // if (value == true) document.body.style.overflow = 'hidden';
+            // else document.body.style.overflow = 'visible';
         }
     }
 }
@@ -75,14 +86,14 @@ export default {
                 <div class="group" v-else>
                     <AppButton :to="'/dashboard/apartments'" :label="'dashboard'" :type="'line'" :palette="'primary'" />
 
-                    <div class="userMenu" @click="menuDesktopOpen = !menuDesktopOpen">
+                    <div class="userMenu" @click="handleDesktopMenu">
                         <p>{{ store.user.first_name }} {{ store.user.last_name }}</p>
                         <font-awesome-icon icon="fa-solid fa-chevron-down" class="icon"
-                            :class="menuDesktopOpen ? 'rotated' : ''" />
+                            :class="store.menuDesktopOpen ? 'rotated' : ''" />
                     </div>
 
                     <transition name="fade-slide-top">
-                        <AppMenu :menuData="userMenu" :isLastDanger="true" v-if="menuDesktopOpen" />
+                        <AppMenu :menuData="userMenu" :isLastDanger="true" v-if="store.menuDesktopOpen" />
                     </transition>
                 </div>
             </div>

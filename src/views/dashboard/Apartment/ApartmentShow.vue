@@ -2,11 +2,14 @@
 
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppModaleDelete from '../../../components/AppModaleDelete.vue';
 import AppButton from '../../../components/AppButton.vue';
+import AppLoading from '../../../components/AppLoading.vue';
 
 // Utilities
 import axios from 'axios';
 import { router } from '../../../router';
+import { store } from '../../../store';
 import { register } from 'swiper/element/bundle';
 register();
 
@@ -14,34 +17,47 @@ export default {
     name: 'ApartmentShow',
     components: {
         AppDashboardLayoutVue,
-        AppButton
+        AppModaleDelete,
+        AppButton,
+        AppLoading
     },
     data() {
         return {
             router,
+            store,
             apartment: null,
+            loading: false
         }
     },
     methods: {
         getApartment() {
+            this.loading = true;
             axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}`)
                 .then((response) => {
                     console.log('Dati Appartamento', response.data.apartment);
+                    this.loading = false;
                     this.apartment = response.data.apartment;
                 })
                 .catch((response) => {
+                    this.loading = false;
                     console.log('Errore Ottenimento Appartamento', response.data);
                 })
         },
-
         goBackToDashboard() {
             console.log('GO TO DASHBOARD');
             this.$router.push('/dashboard/apartments');
         },
-
-    },
-    computed() {
-        return this.apartment.title;
+        deleteApartment() {
+            axios.delete(`http://localhost:8000/api/apartments/${this.apartment.id}`)
+                .then((response) => {
+                    console.log(`Eliminato appartamento #${this.apartment.id}`);
+                    this.$router.push('/dashboard/apartments');
+                });
+            this.store.showModal = false;
+        },
+        openModal() {
+            this.store.showModal = true
+        }
     },
     created() {
         this.getApartment();
@@ -55,6 +71,8 @@ export default {
             icon: 'arrow-left',
             action: goBackToDashboard
         }">
+
+        <AppLoading v-if="loading == true" />
 
         <div class="my-container">
             <div v-if="apartment">
@@ -171,12 +189,12 @@ export default {
                 </section>
             </div>
         </div>
-        <div class="actions">
+        <div class="actions" v-if="apartment">
             <AppButton :label="'modifica'" :icon="'pen'" :palette="'warning'" :type="'solid'"
                 :to="`/dashboard/apartments/${apartment.slug}/edit`" />
-            <AppButton :label="'elimina'" :icon="'trash-can'" :palette="'danger'" :type="'solid'"
-                :to="`/dashboard/apartments/${apartment.slug}/edit`" />
+            <AppButton :label="'elimina'" :icon="'trash-can'" :palette="'danger'" :type="'solid'" :action="openModal" />
         </div>
+        <AppModaleDelete :action="deleteApartment" />
     </AppDashboardLayoutVue>
 </template>
 
@@ -336,4 +354,5 @@ export default {
             width: calc(100% - 30px);
         }
     }
-}</style>
+}
+</style>

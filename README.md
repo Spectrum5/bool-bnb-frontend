@@ -11,10 +11,8 @@
 - Aggiunta Immagine User
 
 - Sistemare files backend (routes/api.php)
-- Sistemare menu filtri
 - Fix messaggi Apartment Show
 - Overlay
-
 
 
 
@@ -25,8 +23,8 @@
 ## Features
 ### Home
 - 10 Appartamenti in Evidenza
-- Appartamenti Esplora (Scroll Infinito)
 - Vedi Altri (App. in Evidenza)
+- Appartamenti Esplora (Scroll Infinito)
 - Carosello nelle Cards
 - Dati nelle Cards
 - Visualizzazioni Aumentano 1 volta

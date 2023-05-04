@@ -24,6 +24,9 @@ import MessageIndex from './views/dashboard/Message/MessageIndex.vue';
 import SponsorIndex from './views/dashboard/Sponsor/SponsorIndex.vue';
 import SponsorPayment from './views/dashboard/Sponsor/SponsorPayment.vue';
 
+// Dashboard - Statistics
+import StatsIndex from './views/dashboard/Stats/StatsIndex.vue';
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -124,7 +127,15 @@ const router = createRouter({
         //     name: 'apartment-search',
         //     component: HomeSearch
         // },
-
+        // Dashboard - Stats
+        {
+            path: '/dashboard/statistics',
+            name: 'stats-index',
+            component: StatsIndex,
+            beforeEnter: (to, from) => {
+                if (store.user == null) return { name: 'login' }
+            },
+        },
         {
             path: '/:pathMatch(.*)*',
             name: 'not-found',
