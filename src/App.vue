@@ -56,5 +56,6 @@ export default {
 </template>
 
 <style lang="scss">
+@use './styles/partials/transitions.scss' as *;
 @import './styles/main';
 </style>

@@ -104,6 +104,15 @@ form .row {
     }
 }
 
+.fieldError {
+    position: absolute;
+    top: 100%;
+    color: $danger-color-dark;
+    font-size: 0.8rem;
+    padding-top: 3px;
+    max-width: fit-content;
+}
+
 @keyframes horizontalShake {
     0% {
         transform: translateX(-5px);

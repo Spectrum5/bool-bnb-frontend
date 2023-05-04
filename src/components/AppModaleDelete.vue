@@ -1,10 +1,17 @@
 <script>
 
+// Utilities
 import { store } from '../store';
 import { router } from '../router';
 
+// Components
+import AppButton from './AppButton.vue';
+
 export default {
     name: 'AppModaleDelete',
+    components: {
+        AppButton
+    },
     data() {
         return {
             store,
@@ -18,9 +25,9 @@ export default {
         //     let modal = document.getElementById("myModal");
         //     modal.style.display = "none";
         // }
-        
+
     },
-    props:{
+    props: {
         action: Function
     },
 
@@ -36,6 +43,9 @@ export default {
                 }
             }
         },
+        closeModal() {
+            this.store.showModal = false;
+        }
     },
     mounted() {
         this.openModal
@@ -45,47 +55,64 @@ export default {
 
 <template>
     <!-- Trigger/Open The Modal -->
-        <div id="myModal" class="modal" v-if="store.showModal">
-          <!-- Modal content -->
-          <div class="modal-content">
+    <div id="myModal" class="modal" v-if="store.showModal" @click.self="store.showModal = false">
+        <!-- Modal content -->
+        <div class="modal-content">
             <span class="close" @click="store.showModal = false">&times;</span>
             <p>Sei sicuro di voler eliminare il tuo appartamento?</p>
-            <div>
-                <button class="btn btn-show" @click="store.showModal = false">Annulla</button>
-                <button class="btn btn-delete" @click="this.action">Elimina</button>
+            <div class="actions">
+                <AppButton :label="'annulla'" :icon="'arrow-left'" :palette="'warning'" :type="'line'" :action="closeModal" />
+                <AppButton :label="'elimina'" :icon="'trash-can'" :palette="'danger'" :type="'solid'" :action="this.action" />
             </div>
-          </div>
         </div>
+    </div>
 </template>
 
 <style lang="scss" scoped>
 @use '../styles/partials/variables.scss' as *;
+@use '../styles/partials/mixins.scss' as *;
+
+.actions {
+    @include flexRowCenter (1rem);
+}
 
 /* The Modal (background) */
 .modal {
-  position: fixed; /* Stay in place */
-  z-index: 2; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0,0,0,0.1); /* Black w/ opacity */
+    position: fixed;
+    /* Stay in place */
+    z-index: 2;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.3);
+    /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
 .modal-content {
+    @include customShadow;
     background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 15% auto;
+    /* 15% from the top and centered */
     padding: 20px;
-    border: 2px solid $danger-color-dark;
+    // border: 2px solid $danger-color-dark;
     border-radius: 10px;
-    width: 50%; /* Could be more or less, depending on screen size */
+    max-width: 500px;
+    width: 100%;
+    /* Could be more or less, depending on screen size */
     position: relative;
-    div{
+
+    div {
         margin-top: 40px;
         margin-right: 10px;
-        button{
+
+        button {
             margin-right: 16px;
         }
     }
@@ -103,9 +130,9 @@ export default {
 
 .close:hover,
 .close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .btn {
@@ -114,12 +141,13 @@ export default {
     margin-right: 5px;
     cursor: pointer;
 }
+
 .btn-delete {
     background-color: #f56372;
     border: 2px solid #f56372;
 }
+
 .btn-show {
     background-color: #f5f5f5;
     border: 2px solid #141414;
-}
-</style>
+}</style>

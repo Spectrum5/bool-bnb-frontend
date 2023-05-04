@@ -240,7 +240,7 @@ export default {
 
                         <transition name="fade-slide-top">
                             <div class="servicesMenu" v-if="servicesMenuOpen">
-                                <h3>Servizi</h3>
+                                <label>Servizi</label>
                                 <div class="service" v-for="service in allServices">
                                     <input v-model="form.services" type="checkbox" :name="service.name" :id="service.name"
                                         :value="service.id">
@@ -329,7 +329,7 @@ export default {
                     flex-wrap: wrap;
                     width: 420px;
 
-                    h3 {
+                    >label {
                         flex-basis: 100%;
                         margin-bottom: 4px;
                     }
@@ -383,9 +383,10 @@ export default {
     top: calc(100% + 25px);
     right: 0;
     z-index: 5;
-    padding: 6px;
-    border: 1px solid $dark-color-one;
-    background-color: $light-color-one;
+    padding: 8px;
+    border-radius: $small-border-radius;
+    background-color: #ffffff;
+    @include customShadow;
 }
 
 @media screen and (max-width: 1200px) {

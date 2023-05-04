@@ -1,12 +1,20 @@
 <script>
 
+// Utilities
+import { store } from '../store';
+
 export default {
     name: 'AppOverlay',
+    data() {
+        return {
+            store
+        }
+    }
 }
 </script>
 
 <template>
-    <div class="overlay"></div>
+    <div class="overlay" @click="store.clear"></div>
 </template>
 
 <style lang="scss" scoped>

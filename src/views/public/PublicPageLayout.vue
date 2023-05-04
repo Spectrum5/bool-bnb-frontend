@@ -43,13 +43,16 @@ export default {
 
     <AppFooter />
 
-    <AppOverlay v-if="store.overlayOpen" />
+    <transition name="fade">
+        <AppOverlay v-if="store.overlayOpen" />
+    </transition>
 </template>
 
 <style lang="scss" scoped>
 @use '../../styles/partials/mixins.scss' as *;
 @use '../../styles/partials/variables.scss' as *;
 @use '../../styles/partials/grid.scss' as *;
+@use '../../styles/partials/transitions.scss' as *;
 
 main {
     min-height: 60vh;

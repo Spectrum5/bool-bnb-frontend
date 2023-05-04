@@ -9,6 +9,7 @@ export const store = reactive({
     errors: [],
     user: null,
     filterModalOpen: false,
+    menuDesktopOpen: false,
     overlayOpen: false,
     searchForm: {
         address: null,
@@ -32,6 +33,8 @@ export const store = reactive({
     
     clear() {
         this.overlayOpen = false;
+        this.menuDesktopOpen = false;
+        
         this.errors = [];
     }
 })

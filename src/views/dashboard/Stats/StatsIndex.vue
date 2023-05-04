@@ -1,32 +1,29 @@
 <script>
 
-// Utilities
-import axios from 'axios';
-import { router } from '../../../router';
-import { store } from '../../../store';
-
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
-import AppButton from '../../../components/AppButton.vue';
-import AppModaleDelete from '../../../components/AppModaleDelete.vue';
 import AppLoading from '../../../components/AppLoading.vue';
+// import AppButton from '../../../components/AppButton.vue';
+
+// Utilities
+import axios from 'axios';
+// import { router } from '../../../router';
+// import { store } from '../../../store';
 
 export default {
-    name: 'ApartmentIndex',
+    name: 'StatsIndex',
     components: {
         AppDashboardLayoutVue,
-        AppButton,
-        AppModaleDelete,
         AppLoading
+        // AppButton
     },
     data() {
         return {
-            router,
-            store,
-            apartments: null,
-            selectedApartmentId: null,
-            loading: false,
-            notFound: false,
+            // router,
+            // store,
+            // messages: null
+            apartments: [],
+            loading: false
         }
     },
     methods: {
@@ -46,35 +43,36 @@ export default {
                     this.notFound = true;
                 })
         },
-        showDeleteModal(id) {
-            store.showModal = true;
-            this.selectedApartmentId = id;
-            console.log('Appartamento selezionato da eliminare: ', this.selectedApartmentId);
-        },
-        deleteApartment() {
-            axios.delete(`http://localhost:8000/api/apartments/${this.selectedApartmentId}`)
-                .then((response) => {
-                    console.log('Apartment Deleted con id', this.selectedApartmentId);
-                    this.getApartments();
-                });
-            this.store.showModal = false;
+        calcStats() {
+
+            // this.apartments.forEach(apartment => {
+
+            //     // apartment.forEach(month => {
+
+            //     // });
+
+
+
+            //     // for (let i=1; i<=12; i++) {
+            //     //     if (apartment[i].month != null) {
+            //     //         const apartment = {
+            //     //             apartment[i].month: 
+            //     //         }
+            //     //     }
+            //     // }
+
+            // });
         }
     },
     mounted() {
-        document.title = 'Dashboard | I miei Appartamenti';
-        this.$nextTick(this.store.clear());
+        document.title = 'Dashboard | Statistiche'
         this.getApartments();
-    },
-    created() { }
+    }
 }
 </script>
 
 <template>
-    <AppDashboardLayoutVue :title="'i miei appartamenti'" :button="{
-            label: 'Aggiungi',
-            icon: 'plus',
-            link: '/dashboard/apartments/create'
-        }">
+    <AppDashboardLayoutVue :title="'le mie statistiche'">
 
         <AppLoading v-if="loading == true" />
 
@@ -82,7 +80,10 @@ export default {
             <div class="item" v-for="apartment in apartments" :key="apartment.id"
                 @click="$router.push(`/dashboard/apartments/${apartment.slug}`)">
                 <span class="itemTitle">{{ apartment.title }}</span>
-                <font-awesome-icon icon="fa-solid fa-chevron-right" />
+                <div>
+                    {{ apartment.views_count }}
+                    <font-awesome-icon icon="fa-solid fa-eye" class="icon" />
+                </div>
             </div>
         </div>
 
@@ -96,8 +97,8 @@ export default {
 </template>
 
 <style scoped lang="scss">
-@use '../../../styles/partials/variables.scss' as *;
 @use '../../../styles/partials/mixins.scss' as *;
+@use '../../../styles/partials/variables.scss' as *;
 
 .itemsContainer {
     .item {
