@@ -41,16 +41,6 @@ export default {
                     // console.log('Servizi', this.allServices);
                 })
         },
-        setAutocomplete() {
-            const address = document.querySelector('#address');
-            const autocomplete = new google.maps.places.Autocomplete(address);
-            const self = this;
-            autocomplete.addListener('place_changed', function () {
-                const place = autocomplete.getPlace();
-                const address = place.formatted_address;
-                self.form.address = address;
-            });
-        },
         radiusInput(direction) {
             // Incrementa l'input Raggio
             const min = 5;
@@ -162,7 +152,7 @@ export default {
     mounted() {
         if (this.store.searchForm.address) this.form.address = this.store.searchForm.address;
         this.getServices();
-        this.setAutocomplete();
+        this.store.setAutocomplete('address');
     }
 }
 </script>

@@ -47,9 +47,9 @@ export default {
 
         <button class="cardFavorites" @click.stop="addToFavorites()" ref="btn"></button>
 
-        <!-- <div v-if="apartment.sponsors.length > 0" class="sponsorized">
+        <div v-if="apartment.sponsors != null && apartment.sponsors.length > 0" class="sponsorized">
             <font-awesome-icon icon="fa-solid fa-medal" />
-        </div> -->
+        </div>
 
         <div class="imageContainer">
             <AppSlider :images="this.apartment.images" v-if="this.apartment.images" @goShowEvent="goShow()" />
@@ -134,12 +134,18 @@ button {
     cursor: pointer;
     border-radius: $big-border-radius;
 
+    &:hover {
+        .imageContainer:deep img {
+            transform: scale(1.05);
+        }
+    }
+
     .imageContainer {
         margin-bottom: 0.75rem;
         transition: all 0.3s;
 
         border-radius: $big-border-radius;
-        background-color: rgb(181, 241, 181);
+        background-color: $light-color-one;
     }
 
     .row.inline {

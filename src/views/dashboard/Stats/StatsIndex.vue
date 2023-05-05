@@ -22,51 +22,57 @@ export default {
             // router,
             // store,
             // messages: null
-            apartments: [],
+            viewsData: [],
             loading: false
         }
     },
     methods: {
-        getApartments() {
+        getViews() {
             this.loading = true;
             this.notFound = false;
-            axios.get('http://localhost:8000/api/apartments/indexUser')
+            axios.get('http://localhost:8000/api/views/apartmentViewsMonths')
                 .then((response) => {
-                    console.log('Index Appartamenti Personali', response.data);
-                    if (response.data.apartments.length == 0) this.notFound = true;
+                    // console.log('Statistiche Appartamenti Personali', response.data);
+                    console.log('Statistiche Appartamenti Personali', response.data.viewsData);
+                    // if (response.data.viewsData.length == 0) this.notFound = true;
+                    // else this.viewsData = response.data.viewsData;
+                    this.viewsData = response.data.viewsData;
                     this.loading = false;
-                    this.apartments = response.data.apartments;
+                    // this.calcViews();
                 })
                 .catch((response) => {
-                    console.log('Errore Index Appartamenti Personali', response.data);
+                    console.log('Errore Statistiche Appartamenti Personali', response.data);
                     this.loading = false;
                     this.notFound = true;
                 })
         },
-        calcStats() {
+        // calcViews() {
+        //     this.viewsData.forEach(apartment => {
 
-            // this.apartments.forEach(apartment => {
+        //         apartment.months.forEach(singleMonth => {
+        //             console.log('MESE', singleMonth.month);
+        //             console.log('VIEWS', singleMonth.views);
+        //             for (let i = 0; i <= 12; i++) {
 
-            //     // apartment.forEach(month => {
+        //             }
+        //         });
 
-            //     // });
+        //     });
+        // },
+        getMonthName(n) {
+            const months = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
+            return months[n - 1];
+        },
+        calcBarHeight(month) {
+            const monthValue = month != null ? month.views : '0';
+            const height = monthValue * 15;
+            return `height: ${height}px`;
 
-
-
-            //     // for (let i=1; i<=12; i++) {
-            //     //     if (apartment[i].month != null) {
-            //     //         const apartment = {
-            //     //             apartment[i].month: 
-            //     //         }
-            //     //     }
-            //     // }
-
-            // });
         }
     },
     mounted() {
         document.title = 'Dashboard | Statistiche'
-        this.getApartments();
+        this.getViews();
     }
 }
 </script>
@@ -76,22 +82,28 @@ export default {
 
         <AppLoading v-if="loading == true" />
 
-        <div class="container itemsContainer" v-if="apartments != null">
-            <div class="item" v-for="apartment in apartments" :key="apartment.id"
-                @click="$router.push(`/dashboard/apartments/${apartment.slug}`)">
-                <span class="itemTitle">{{ apartment.title }}</span>
-                <div>
-                    {{ apartment.views_count }}
-                    <font-awesome-icon icon="fa-solid fa-eye" class="icon" />
+        <div class="container itemsContainer" v-if="viewsData.length > 0">
+
+            <div class="item" v-for="apartment in viewsData" :key="apartment.apartment_id">
+                <!-- @click="$router.push(`/dashboard/apartments/${apartment.slug}`)"> -->
+                <span class="itemTitle">appartamento #{{ apartment.apartment_id }}</span>
+
+                <div class="months">
+                    <div class="month" v-for="n in 12">
+                        <div class="bar" :style="calcBarHeight(apartment.months[n - 1])"></div>
+                        <!-- mese {{ n }} {{ apartment.months[n-1] != null ? apartment.months[n-1].views : '0' }} -->
+                        <span class="name">{{ getMonthName(n) }}</span>
+                    </div>
                 </div>
+
             </div>
         </div>
 
-        <div class="container" v-else-if="notFound">
+        <!-- <div class="container" v-else-if="notFound">
             <div class="warningMessage">
                 <p class="mainTitle">Non sono presenti appartamenti</p>
             </div>
-        </div>
+        </div> -->
 
     </AppDashboardLayoutVue>
 </template>
@@ -101,29 +113,78 @@ export default {
 @use '../../../styles/partials/variables.scss' as *;
 
 .itemsContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+
     .item {
-        @include flexSpaceBtwn;
-        padding: 1rem;
-        cursor: pointer;
-        text-transform: capitalize;
+        // border: 1px solid lightblue;
+        padding: 10px;
+        height: 250px;
+        border-radius: $small-border-radius;
+        display: flex;
+        flex-direction: column;
+        @include customShadow;
 
-        &:not(:last-child) {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.445);
+        .itemTitle {
+            text-transform: capitalize;
+            font-weight: 600;
         }
 
-        &:first-child {
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
+        .months {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 10px;
+            flex-grow: 1;
 
-        &:last-child {
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-        }
+            .month {
 
-        &:hover {
-            background-color: $light-color-two;
+                // display: flex;
+                // justify-content: center;
+                // align-items: flex-end;
+
+                .bar {
+                    background-color: green;
+                    // width: 15px;
+                    width: 100%;
+                    margin: 0 auto;
+                }
+
+                .name {
+                    text-transform: capitalize;
+                }
+            }
         }
     }
 }
+
+// .itemsContainer {
+//     .item {
+//         @include flexSpaceBtwn;
+//         padding: 1rem;
+//         cursor: pointer;
+//         text-transform: capitalize;
+
+//         &:not(:last-child) {
+//             border-bottom: 1px solid rgba(0, 0, 0, 0.445);
+//         }
+
+//         &:first-child {
+//             border-top-left-radius: 8px;
+//             border-top-right-radius: 8px;
+//         }
+
+//         &:last-child {
+//             border-bottom-left-radius: 8px;
+//             border-bottom-right-radius: 8px;
+//         }
+
+//         &:hover {
+//             background-color: $light-color-two;
+//         }
+//     }
+// }
 </style>

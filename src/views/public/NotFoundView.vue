@@ -1,3 +1,14 @@
+<script>
+import AppButton from '../../components/AppButton.vue';
+
+export default {
+    name: 'NotFoundView',
+    components: {
+        AppButton,
+    },
+};
+</script>
+
 <template>
     <section class="page_404">
         <div class="four_zero_four_bg">
@@ -9,23 +20,11 @@
             </h3>
             <p> Pagina non trovata!</p>
         </div>
-        <AppButton :to="'/'" :label="'Torna alla Homepage'" :type="'solid'" :palette="'primary'" />
+        <AppButton :to="'/'" :label="'torna alla homepage'" :type="'solid'" :palette="'primary'" />
     </section>
 </template>
-  
-<script>
-import AppButton from '../../components/AppButton.vue';
 
-export default {
-    name: 'NotFoundView',
-    components: {
-        AppButton,
-    },
-};
-</script>
-  
 <style lang="scss" scoped>
-@import '../../styles/partials/variables.scss';
 
 .page_404 {
     padding: 30px 0;
@@ -45,6 +44,7 @@ export default {
 
     p {
         font-size: 2rem;
+        margin-bottom: 1rem;
     }
 }
 </style>

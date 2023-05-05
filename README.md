@@ -4,7 +4,6 @@
 
 ## BONUS
 - Responsive (Dashboard)
-- Togliere button dashboard (grafica nuova)
 - Migliorare footer o nuova pagina per il nostro team
 - Ricerca in Apartment Index
 - Loader iniziale con logo
@@ -12,13 +11,6 @@
 
 - Sistemare files backend (routes/api.php)
 - Fix messaggi Apartment Show
-- Overlay
-
-
-
-
-
-
 
 ## Features
 ### Home
