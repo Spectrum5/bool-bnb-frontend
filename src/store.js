@@ -79,6 +79,7 @@ export const store = reactive({
     shakeInputs() {
         if (this.errors.length > 0) {
             this.errors.forEach(error => {
+                console.log('field',error.field)
                 document.querySelector(`#${error.field}`).classList.add('shake');
                 setTimeout(() => {
                     document.querySelector(`#${error.field}`).classList.remove('shake');
@@ -416,10 +417,12 @@ export const store = reactive({
     visibilityValidation(fieldName) {
         const visibilityInput = document.querySelector(`#${fieldName}`)
 
+        console.log('VISIBILITY', visibilityInput.value)
+
         visibilityInput.classList.remove('invalid');
         this.deleteErrors('visibility');
 
-        if (visibilityInput != 'yes' && visibilityInput != 'no') {
+        if (visibilityInput.value != true && visibilityInput.value != false) {
             this.addError('Il campo visibilità non è valido', 'visibility');
             visibilityInput.classList.add('invalid');
         }

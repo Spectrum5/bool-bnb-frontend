@@ -74,8 +74,10 @@ export default {
         validateData() {
             // Front End Validation
             console.log('Validazione Dati Crea Appartamento...');
+
             // Reset Form Validation
             this.store.errors = [];
+
             this.store.titleValidation('title');
             this.store.priceValidation('price');
             this.store.sizeValidation('size');
