@@ -51,14 +51,14 @@ export default {
             // Recupero dati dell'appartamento per la modifica
             axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}/edit`)
                 .then((response) => {
-                    // console.log('Dati Appartamento', response.data.apartment);
+                    console.log('Dati Appartamento', response.data.apartment);
                     this.form = response.data.apartment;
 
                     this.getServices();
                     this.setVisibility();
                 })
                 .catch((response) => {
-                    // console.log('Errore Index Appartamenti', response.data);
+                    console.log('Errore Index Appartamenti', response.data);
                 })
         },
         getServices() {
@@ -156,7 +156,7 @@ export default {
                 user_id: this.form.user_id
             })
                 .then((response) => {
-                    // console.log('Appartamento aggiornato', response);
+                    console.log('Appartamento aggiornato', response);
                     this.apartmentUpdated = true;
                     this.postImages(response.data.apartment_id);
 
@@ -208,7 +208,7 @@ export default {
             // console.log('FormData', formData);
             axios.post('http://localhost:8000/api/images', formData, config)
                 .then((response) => {
-                    // console.log("Immagini inviate correttamente");
+                    console.log("Immagini inviate correttamente");
                 })
         },
         deleteImage(index) {
@@ -224,7 +224,7 @@ export default {
             // Invia la richiesta di eliminazione del record dell'immagine dal DB
             axios.delete(`http://localhost:8000/api/images/${id}`)
                 .then((response) => {
-                    // console.log(`Immagine #${id} cancellata`);
+                    console.log(`Immagine #${id} cancellata`);
                 });
         },
         goApartments() {

@@ -28,7 +28,7 @@ export default {
             this.$router.push(`/apartments/${this.apartment.slug}`)
         },
         addToFavorites() {
-            // console.log(`${this.apartment.title} aggiunto ai preferiti!`);
+            console.log(`${this.apartment.title} aggiunto ai preferiti!`);
             this.$refs.btn.classList.toggle('animate');
         }
     },

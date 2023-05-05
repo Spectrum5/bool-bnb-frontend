@@ -52,7 +52,7 @@ export default {
             this.store.user = null;
             this.store.overlayOpen = false;
             router.push('/');
-            // console.log('Logged Out');
+            console.log('Logged Out');
         }
     },
     mounted() {

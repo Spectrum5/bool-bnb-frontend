@@ -36,7 +36,7 @@ export default {
             this.store.user = null;
             this.store.overlayOpen = false;
             router.push('/');
-            // console.log('LogOut')
+            console.log('LogOut')
         },
     }
 }

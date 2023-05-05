@@ -73,7 +73,7 @@ export default {
         },
         validateData() {
             // Front End Validation
-            // console.log('Validating Create apartment data...');
+            console.log('Validazione Dati Crea Appartamento...');
             // Reset Form Validation
             this.store.errors = [];
             this.store.titleValidation('title');
@@ -84,9 +84,9 @@ export default {
             this.store.bedsNumberValidation('beds_number');
             this.store.bathroomsNumberValidation('bathrooms_number');
             this.store.descriptionValidation('description');
-            this.store.visibilityValidation('visibility');
+            // this.store.visibilityValidation('visibility');
             this.store.servicesValidation(this.form.services);
-            this.store.imageValidation('images');
+            this.store.imageValidation('images', this.previewUrls);
 
             this.store.shakeInputs();
 
@@ -130,11 +130,11 @@ export default {
             })
                 .then((response) => {
                     this.postImages(response.data.apartment_id);
-                    // console.log('Appartamento Aggiunto', response.data);
+                    console.log('Appartamento Aggiunto', response.data);
                 })
                 .catch((response) => {
                     this.addError('Errore del server. Riprovare piú tardi', 'server_error');
-                    // console.log('Errore Invio dati Register:', response.response);
+                    console.log('Errore Invio dati Register:', response.response);
                 })
             this.ApartmentCreated = true;
             setTimeout(() => {
@@ -158,7 +158,7 @@ export default {
 
             axios.post('http://localhost:8000/api/images', formData, config)
                 .then((response) => {
-                    // console.log("Immagini Inviate Correttamente");
+                    console.log("Immagini Inviate Correttamente");
                 })
         },
         deleteImage(index) {

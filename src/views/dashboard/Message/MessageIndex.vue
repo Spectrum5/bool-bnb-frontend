@@ -43,17 +43,6 @@ export default {
                     this.notFound = true;
                 })
         },
-        // deleteApartment(id) {
-        //     axios.delete(`http://localhost:8000/api/apartments/${id}`)
-        //         .then((response) => {
-        //             console.log('Project Deleted');
-        //             this.getApartments();
-        //         })
-        // },
-        // gotoCreate() {
-        //     console.log('GO TO');
-        //     this.$router.push('/dashboard/apartments/create');
-        // }
         formatDate(date) {
             // return new Date(date).toLocaleDateString('it')
             const dateToFormat = new Date(date);

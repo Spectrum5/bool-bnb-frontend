@@ -61,20 +61,20 @@ export default {
                         this.lastPage = response.data.apartments.last_page;
                         if (this.currentPage == this.lastPage) this.searchCompleted = true;
                     }
-                    // console.log('Index Appartamenti con Filtri', response.data);
+                    console.log('Index Appartamenti con Filtri', response.data);
                 })
                 .catch((response) => {
                     this.loading = false;
                     this.notFound = true;
                     this.apartments = [];
-                    // console.log('Errore Index Appartamenti con Filtri');
+                    console.log('Errore Index Appartamenti con Filtri');
                 })
         },
         loadMore() {
             if (this.currentPage < this.lastPage) {
                 this.currentPage++;
                 this.getApartments();
-                // console.log('Richiesti Altri Appartamenti');
+                console.log('Richiesti Altri Appartamenti');
             }
         },
         applyInfiniteScroll() {
