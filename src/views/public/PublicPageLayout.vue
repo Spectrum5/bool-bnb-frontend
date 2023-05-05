@@ -1,28 +1,19 @@
 <script>
 
 // Utilities
-import axios from 'axios';
 import { store } from '../../store';
 
 // Components
-import AppLogo from '../../components/AppLogo.vue';
 import AppHeader from '../../components/AppHeader.vue';
-import AppSearch from '../../components/AppSearch.vue';
-import AppCard from '../../components/AppCard.vue';
-import AppButton from '../../components/AppButton.vue';
-import AppOverlay from '../../components/AppOverlay.vue';
 import AppFooter from '../../components/AppFooter.vue';
+import AppOverlay from '../../components/AppOverlay.vue';
 
 export default {
     name: 'HomeView',
     components: {
-        AppLogo,
         AppHeader,
-        AppSearch,
-        AppCard,
-        AppButton,
-        AppOverlay,
-        AppFooter
+        AppFooter,
+        AppOverlay
     },
     data() {
         return {
@@ -35,26 +26,24 @@ export default {
 <template>
     <AppHeader />
 
-    <slot name="hero-section"></slot>
-
     <main>
-        <slot></slot>
+        <div class="container">
+            <slot></slot>
+        </div>
     </main>
 
     <AppFooter />
-
-    <transition name="fade">
-        <AppOverlay v-if="store.overlayOpen" />
-    </transition>
 </template>
 
 <style lang="scss" scoped>
 @use '../../styles/partials/mixins.scss' as *;
-@use '../../styles/partials/variables.scss' as *;
-@use '../../styles/partials/grid.scss' as *;
 @use '../../styles/partials/transitions.scss' as *;
 
 main {
     min-height: 60vh;
+    >.container {
+        @include largeContainer;
+    }
 }
+
 </style>

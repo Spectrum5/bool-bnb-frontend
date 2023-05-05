@@ -10,6 +10,7 @@ import AppLogo from '../../components/AppLogo.vue';
 import AppButton from '../../components/AppButton.vue';
 import AppSidebar from '../../components/AppSidebar.vue';
 import AppMenu from '../../components/AppMenu.vue';
+import AppUserMenuDesktop from '../../components/AppUserMenuDesktop.vue';
 
 export default {
     name: 'AppDashboardLayout',
@@ -17,13 +18,13 @@ export default {
         AppLogo,
         AppButton,
         AppSidebar,
-        AppMenu
+        AppMenu,
+        AppUserMenuDesktop
     },
     data() {
         return {
             store,
             router,
-            menuDesktopOpen: false,
             userMenu: [
                 {
                     label: 'impostazioni',
@@ -49,8 +50,9 @@ export default {
         handleLogout() {
             axios.post('http://localhost:8000/logout');
             this.store.user = null;
-            // console.log('Logged Out');
+            this.store.overlayOpen = false;
             router.push('/');
+            // console.log('Logged Out');
         }
     },
     mounted() {
@@ -67,17 +69,7 @@ export default {
         <div class="rightSide">
 
             <header>
-                <div class="group">
-                    <div class="userMenu" @click="menuDesktopOpen = !menuDesktopOpen">
-                        <p>{{ store.user.first_name }} {{ store.user.last_name }}</p>
-                        <font-awesome-icon icon="fa-solid fa-chevron-down" class="icon"
-                            :class="menuDesktopOpen ? 'rotated' : ''" />
-                    </div>
-
-                    <transition name="fade-slide-top">
-                        <AppMenu :menuData="userMenu" :isLastDanger="true" v-if="menuDesktopOpen" />
-                    </transition>
-                </div>
+                <AppUserMenuDesktop :menuData="userMenu"/>
             </header>
 
             <div class="content">
@@ -128,6 +120,8 @@ $header-height: 80px;
         height: $header-height;
         padding: 0 1rem;
         border-bottom: 2px solid $dark-color-one;
+        // isolation: isolate;
+        // z-index: 30;
 
         @include flexSpaceBtwn;
         justify-content: flex-end; // Temp

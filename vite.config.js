@@ -17,9 +17,12 @@ export default defineConfig({
         preprocessorOptions: {
             scss: {
                 // Attenzione al percorso!
-                additionalData: 
-                `@use './src/styles/main.scss';`
+                additionalData:
+                    `@use './src/styles/main.scss';`
             }
         }
+    },
+    server: {
+        host: true
     }
 })

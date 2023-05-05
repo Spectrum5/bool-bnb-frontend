@@ -23,20 +23,20 @@ export default {
     data() {
         return {
             store,
-            apartments: [],
-            sponsoredApartments: [],
-            currentPage: 1,
-            currentPageSponsored: 1,
-            // lastPageSponsored: null,
-            callOk: true,
-            loading: false,                      //True quando viene inviata la richiesta e false appena torna la risposta
-            notFound: false,                     //True se la ricerca non restituisce risultati
-            searchCompleted: false,              //True quando le pagine finiscono
-            searchCompletedSponsored: false      //True quando le pagine finiscono
+            apartments: [],                     //Conterra' gli appartamenti scaricati
+            sponsoredApartments: [],            //Conterra' gli appartamenti sponsorizzati scaricati
+            currentPage: 1,                     //Pagina Attuale Appartamenti Esplora
+            currentPageSponsored: 1,            //Pagina Attuale Appartamenti Sponsorizzati
+            callOk: true,                       //Per gestire Infinite Scroll
+            loading: false,                     //True quando viene inviata la richiesta e false appena torna la risposta
+            notFound: false,                    //True se la ricerca non restituisce risultati
+            searchCompleted: false,             //True quando le pagine finiscono
+            searchCompletedSponsored: false     //True quando le pagine finiscono
         }
     },
     methods: {
         getApartments() {
+            // Ottiene gli appartamenti
             this.loading = true;
             this.notFound = false;
             axios.get('http://localhost:8000/api/apartments', {
@@ -48,8 +48,6 @@ export default {
                     if (response.data.success) {
                         this.loading = false;
 
-                        console.log('Index Appartamenti', response.data);
-
                         if (response.data.apartments.data.length == 0) this.notFound = true;
                         if (response.data.apartments.current_page == 1) {
                             this.apartments = response.data.apartments.data;
@@ -59,6 +57,8 @@ export default {
                         }
                         this.lastPage = response.data.apartments.last_page;
                         if (this.currentPage == this.lastPage) this.searchCompleted = true;
+
+                        console.log('Index Appartamenti', response.data);
                     }
                 })
                 .catch((response) => {
@@ -68,6 +68,7 @@ export default {
                 })
         },
         getSponsoredApartments() {
+            // Ottiene gli appartamenti Sponsorizzati
             this.loading = true;
             axios.get('http://localhost:8000/api/apartments/indexSponsored', {
                 params: {
@@ -78,8 +79,6 @@ export default {
                     if (response.data.success) {
                         this.loading = false;
 
-                        console.log('Index Appartamenti Sponsorizzati', response.data);
-
                         if (response.data.apartments.current_page == 1) {
                             this.sponsoredApartments = response.data.apartments.data;
                         }
@@ -88,6 +87,8 @@ export default {
                         }
                         this.lastPageSponsored = response.data.apartments.last_page;
                         if (this.currentPageSponsored == this.lastPageSponsored) this.searchCompletedSponsored = true;
+
+                        // console.log('Index Appartamenti Sponsorizzati', response.data);
                     }
                 })
                 .catch((response) => {
@@ -98,113 +99,121 @@ export default {
         loadMore() {
             if (this.currentPage < this.lastPage) {
                 this.currentPage++;
-                console.log('LOAD MORE');
                 this.getApartments();
+                // console.log('Richiesti Altri Appartamenti');
             }
         },
         loadMoreSponsored() {
             if (this.currentPageSponsored < this.lastPageSponsored) {
                 this.currentPageSponsored++;
-                console.log('LOAD MORE SPONSORED');
                 this.getSponsoredApartments();
+                // console.log('Richiesti Altri Appartamenti Sponsorizzati');
             }
         },
         applyInfiniteScroll() {
-            const self = this;
-            window.onscroll = function () {
-                if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 1) {
+            setTimeout(() => {
+                const self = this;
+                window.onscroll = function () {
+                    if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 1) {
 
-                    if (self.callOk) {
-                        self.loadMore();
-                        self.callOk = false;
-                        setTimeout(() => {
-                            self.callOk = true;
-                        }, 1500)
+                        // Permette di richiamare la funzione loadMore al massimo una volta ogni 1500ms
+                        if (self.callOk) {
+                            self.loadMore();
+                            self.callOk = false;
+                            setTimeout(() => {
+                                self.callOk = true;
+                            }, 1500)
+                        }
                     }
-                }
-            };
+                };
+            }, 4000)
         }
     },
     mounted() {
         document.title = 'Boolbnb | Home'
+
+        // Ottenimento Dati
         this.getSponsoredApartments();
         this.getApartments();
+
         this.$nextTick(this.store.clear());
 
-        setTimeout(() => {
-            this.applyInfiniteScroll();
-        }, 4500)
+        this.applyInfiniteScroll();
     }
 }
 </script>
 
 <template>
     <PublicPageLayout>
-        <template v-slot:hero-section>
-            <div class="hero-section">
-            </div>
-        </template>
+        
+        <!-- Hero Section -->
+        <section class="hero-section"></section>
 
-        <div class="search">
+        <!-- Search Section -->
+        <section class="search-section">
             <AppSearch :allFields="false" />
-        </div>
+        </section>
 
-        <div class="container cards" id="cardsContainer" v-if="sponsoredApartments.length > 0">
+        <!-- Sponsored Section -->
+        <section v-if="sponsoredApartments.length > 0">
             <h2 class="mainTitle">appartamenti in evidenza</h2>
-            <AppCard v-for="apartment in sponsoredApartments" :apartment="apartment" />
-
+            <div class="cardsContainer">
+                <AppCard v-for="apartment in sponsoredApartments" :apartment="apartment" />
+            </div>
             <AppButton :action="loadMoreSponsored" :type="'line'" :palette="'primary'" :label="'carica altri'"
                 v-if="!searchCompletedSponsored" />
-        </div>
+        </section>
 
-        <div class="container cards" id="cardsContainer" v-if="apartments.length > 0">
+        <!-- Explore Section -->
+        <section v-if="apartments.length > 0">
             <h2 class="mainTitle">esplora</h2>
-            <AppCard v-for="apartment in apartments" :apartment="apartment" />
-        </div>
-
-        <div class="container" v-else-if="notFound">
-            <div class="warningMessage">
-                <p class="mainTitle">Nessun appartamento trovato</p>
+            <div class="cardsContainer">
+                <AppCard v-for="apartment in apartments" :apartment="apartment" />
             </div>
-        </div>
+        </section>
 
-        <div class="container" v-if="searchCompleted == true && lastPage != null && currentPage == lastPage">
-            <p class="warningMessage">
-                Non ci sono altri risultati da mostrare.
-                <br>
-                Aggiungi dei filtri per una ricerca più dettagliata.
-            </p>
-        </div>
+        <!-- Not Found Section -->
+        <section v-else-if="notFound">
+            <div class="warningMessage">
+                <p>Nessun appartamento trovato</p>
+            </div>
+        </section>
+
+        <!-- No More Results Section -->
+        <section v-if="searchCompleted == true && lastPage != null && currentPage == lastPage">
+            <div class="warningMessage">
+                <p>
+                    Non ci sono altri risultati da mostrare.
+                    <br>
+                    Aggiungi dei filtri per una ricerca più dettagliata.
+                </p>
+            </div>
+        </section>
 
         <AppLoading v-if="loading == true" />
-
-        <!-- <div class="btn-container">
-            <AppButton :action="loadMore" :type="'line'" :palette="'primary'" :label="'load more'" />
-        </div> -->
     </PublicPageLayout>
 </template>
 
 <style lang="scss" scoped>
 @import '../../styles/partials/mixins.scss';
-@import '../../styles/partials/grid.scss';
 
-.container {
-    padding: 0 1rem;
-}
-
-.container.cards {
-    @include flexRowCenter;
-    @include largeContainer;
-    gap: 2.5rem 3rem;
-    flex-wrap: wrap;
-
-    min-height: 40vh;
-
-    margin-bottom: 3rem;
-
-    >h2 {
-        flex-basis: 100%;
+section {
+    >.mainTitle {
         text-align: center;
+        margin: 2.5rem 0;
+    }
+
+    >.cardsContainer {
+        @include flexSpaceBtwn;
+        flex-wrap: wrap;
+        gap: 2.5rem 3rem;
+        padding: 0 1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    &:deep>button {
+        display: block !important;
+        margin: 0 auto;
     }
 }
 
@@ -223,7 +232,7 @@ export default {
     right: 0;
 }
 
-.search {
+.search-section {
     position: sticky;
     top: 100px;
     margin: 25vh auto;

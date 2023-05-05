@@ -8,11 +8,13 @@ import { router } from './router';
 
 // Components
 import AppLoadingBar from './components/AppLoadingBar.vue';
+import AppOverlay from './components/AppOverlay.vue';
 
 export default {
     name: 'App',
     components: {
-        AppLoadingBar
+        AppLoadingBar,
+        AppOverlay
     },
     data() {
         return {
@@ -53,6 +55,10 @@ export default {
     </transition>
 
     <router-view @[calcEvent]="doRedirect => getUser(doRedirect)"></router-view>
+
+    <transition name="fade">
+        <AppOverlay v-if="store.overlayOpen" />
+    </transition>
 </template>
 
 <style lang="scss">

@@ -2,14 +2,12 @@
 
 // Utilities
 import axios from 'axios';
-import { router } from '../../router';
 import { store } from '../../store';
 
 // Components
 import PublicPageLayout from './PublicPageLayout.vue';
 import AppSearch from '../../components/AppSearch.vue';
 import AppCard from '../../components/AppCard.vue';
-import AppButton from '../../components/AppButton.vue';
 import AppLoading from '../../components/AppLoading.vue';
 
 export default {
@@ -18,18 +16,16 @@ export default {
         PublicPageLayout,
         AppSearch,
         AppCard,
-        AppButton,
         AppLoading
     },
     data() {
         return {
-            router,
             store,
-            apartments: [],
-            currentPage: 1,
-            callOk: true,
-            notFound: false,
-            lastPage: null,
+            apartments: [],             //Conterra' gli appartamenti scaricati
+            currentPage: 1,             //Pagina Attuale Appartamenti Esplora
+            callOk: true,               //Per gestire Infinite Scroll
+            notFound: false,            //True se la ricerca non restituisce risultati
+            lastPage: null,             //Ultima pagina dei risultati della ricerca
             loading: false,             //True quando viene inviata la richiesta e false appena torna la risposta
             notFound: false,            //True se la ricerca non restituisce risultati
             searchCompleted: false      //True quando le pagine finiscono
@@ -54,7 +50,6 @@ export default {
             })
                 .then((response) => {
                     this.loading = false;
-                    console.log('Index Appartamenti con Filtri', response.data);
                     if (response.data.success) {
                         if (response.data.apartments.data.length == 0) this.notFound = true;
                         if (response.data.apartments.current_page == 1) {
@@ -66,107 +61,114 @@ export default {
                         this.lastPage = response.data.apartments.last_page;
                         if (this.currentPage == this.lastPage) this.searchCompleted = true;
                     }
+                    // console.log('Index Appartamenti con Filtri', response.data);
                 })
                 .catch((response) => {
                     this.loading = false;
                     this.notFound = true;
                     this.apartments = [];
-                    console.log('Errore Index Appartamenti con Filtri');
+                    // console.log('Errore Index Appartamenti con Filtri');
                 })
         },
         loadMore() {
             if (this.currentPage < this.lastPage) {
                 this.currentPage++;
-                console.log('LOAD MORE');
                 this.getApartments();
+                // console.log('Richiesti Altri Appartamenti');
             }
         },
         applyInfiniteScroll() {
-            const self = this;
-            window.onscroll = function () {
-                if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 1) {
-                    // sei arrivato alla fine della pagina
-                    // console.log('SCROLL',window.innerHeight + window.pageYOffset)
+            setTimeout(() => {
+                const self = this;
+                window.onscroll = function () {
+                    if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 1) {
 
-                    if (self.callOk) {
-                        self.loadMore();
-                        self.callOk = false;
-                        setTimeout(() => {
-                            self.callOk = true;
-                        }, 1500)
+                        // Permette di richiamare la funzione loadMore al massimo una volta ogni 1500ms
+                        if (self.callOk) {
+                            self.loadMore();
+                            self.callOk = false;
+                            setTimeout(() => {
+                                self.callOk = true;
+                            }, 1500)
+                        }
                     }
-                }
-            };
+                };
+            }, 4000)
         }
     },
     mounted() {
         document.title = 'Boolbnb | Search'
+
+        // Ottenimento Dati
         this.getApartments();
+
         this.$nextTick(this.store.clear());
 
-        setTimeout(() => {
-            this.applyInfiniteScroll();
-        }, 4500)
+        this.applyInfiniteScroll();
     }
 }
 </script>
 
 <template>
     <PublicPageLayout>
-        <template v-slot:hero-section>
-            <div class="hero-section">
-                <AppSearch :allFields="true" @searchEvent="getApartments" />
-            </div>
-        </template>
 
-        <div class="container cards" v-if="apartments.length > 0">
+        <!-- Hero Search Section -->
+        <section class="hero-section">
+            <AppSearch :allFields="true" @searchEvent="getApartments" />
+        </section>
+
+        <!-- Results Section -->
+        <section v-if="apartments.length > 0">
             <h2 class="mainTitle">i tuoi risultati</h2>
-            <AppCard v-for="apartment in apartments" :apartment="apartment" />
-        </div>
+            <div class="cardsContainer">
+                <AppCard v-for="apartment in apartments" :apartment="apartment" />
+            </div>
+        </section>
 
-        <div class="message" v-else-if="notFound">
-            <p class="mainTitle">Nessun appartamento trovato</p>
-        </div>
+        <!-- Not Found Section -->
+        <section v-else-if="notFound">
+            <div class="warningMessage">
+                <p>Nessun appartamento trovato</p>
+            </div>
+        </section>
 
-        <div class="container" v-if="searchCompleted == true && lastPage != null && currentPage == lastPage && !notFound">
-            <p class="warningMessage">
-                Non ci sono altri risultati da mostrare.
-                <br>
-                Modifica i filtri per risutati diversi.
-            </p>
-        </div>
+        <!-- No More Results Section -->
+        <section v-if="searchCompleted == true && lastPage != null && currentPage == lastPage && !notFound">
+            <div class="warningMessage">
+                <p>
+                    Non ci sono altri risultati da mostrare.
+                    <br>
+                    Aggiungi dei filtri per una ricerca più dettagliata.
+                </p>
+            </div>
+        </section>
 
         <AppLoading v-if="loading == true" />
-
-        <!-- <div class="btn-container">
-            <AppButton :action="loadmore" :type="'line'" :palette="'primary'" :label="'load more'" />
-        </div> -->
     </PublicPageLayout>
 </template>
 
 <style lang="scss" scoped>
 @import '../../styles/partials/mixins.scss';
-@import '../../styles/partials/grid.scss';
 
-.container.cards {
-    @include flexRowCenter;
-    @include largeContainer;
-    gap: 2.5rem 3rem;
-    flex-wrap: wrap;
-
-    min-height: 40vh;
-
-    padding: 0 1rem;
-    padding-bottom: 3rem;
-
-    >h2 {
-        flex-basis: 100%;
+section:not(.hero-section) {
+    >.mainTitle {
         text-align: center;
+        margin: 2.5rem 0;
+    }
+
+    >.cardsContainer {
+        @include flexSpaceBtwn;
+        justify-content: center;
+
+        flex-wrap: wrap;
+        gap: 2.5rem 3rem;
+        padding: 0 1rem;
+        margin-bottom: 2.5rem;
     }
 }
 
-.message {
-    text-align: center;
+.hero-section+* {
+    margin-top: 35vh;
 }
 
 .hero-section {
@@ -177,25 +179,17 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 @media screen and (max-width: 1200px) {
     .hero-section {
-        // height: 40vh;
         height: unset;
         padding: 1.5rem 0;
     }
 }
-
-// @media screen and (max-width: 920px) {
-//     .hero-section {
-//         height: 50vh;
-//     }
-// }
-
-// @media screen and (max-width: 750px) {
-//     .hero-section {
-//         height: 60vh;
-//     }
-// }
 </style>

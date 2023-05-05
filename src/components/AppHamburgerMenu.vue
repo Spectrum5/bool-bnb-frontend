@@ -1,10 +1,14 @@
 <script>
 
+// Utilities
+import { store } from '../store';
+
 export default {
     name: 'AppHamburgerMenu',
     data() {
         return {
-            menuMobileOpen: false,
+            store,
+            // menuMobileOpen: false,
             windowHeight: window.innerWidth
         }
     },
@@ -13,14 +17,14 @@ export default {
     },
     methods: {
         handleMenuOpening() {
-            this.menuMobileOpen = !this.menuMobileOpen;
-            this.$emit('menuOpenEvent', this.menuMobileOpen);
+            this.store.menuMobileOpen = !this.store.menuMobileOpen;
+            this.$emit('menuOpenEvent', this.store.menuMobileOpen);
         }
     },
     mounted() {
         setInterval(() => {
-            if ((window.innerWidth > this.maxWidth) && (this.menuMobileOpen == true)) {
-                this.menuMobileOpen = false;
+            if ((window.innerWidth > this.maxWidth) && (this.store.menuMobileOpen == true)) {
+                this.store.menuMobileOpen = false;
                 this.$emit('menuOpenEvent', false);
             }
         }, 20000);
@@ -30,9 +34,9 @@ export default {
 
 <template>
     <div class="container" @click="handleMenuOpening">
-        <div class="bar" :class="menuMobileOpen ? 'open' : ''"></div>
-        <div class="bar" :class="menuMobileOpen ? 'open' : ''"></div>
-        <div class="bar" :class="menuMobileOpen ? 'open' : ''"></div>
+        <div class="bar" :class="store.menuMobileOpen ? 'open' : ''"></div>
+        <div class="bar" :class="store.menuMobileOpen ? 'open' : ''"></div>
+        <div class="bar" :class="store.menuMobileOpen ? 'open' : ''"></div>
     </div>
 </template>
 

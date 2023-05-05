@@ -9,6 +9,16 @@
   opacity: 0;
 }
 
+// Fade Fast
+.fade-fast-enter-active {
+  transition: all 0.2s ease;
+}
+
+.fade-fast-enter-from,
+.fade-fast-leave-to {
+  opacity: 0;
+}
+
 // Fade Slide Top
 .fade-slide-top-enter-active,
 .fade-slide-top-leave-active {

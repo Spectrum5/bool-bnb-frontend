@@ -10,6 +10,7 @@ import AppLogo from './AppLogo.vue';
 import AppButton from './AppButton.vue';
 import AppMenu from './AppMenu.vue';
 import AppHamburgerMenu from './AppHamburgerMenu.vue';
+import AppUserMenuDesktop from './AppUserMenuDesktop.vue';
 
 export default {
     name: 'AppHeader',
@@ -17,14 +18,13 @@ export default {
         AppLogo,
         AppButton,
         AppMenu,
-        AppHamburgerMenu
+        AppHamburgerMenu,
+        AppUserMenuDesktop
     },
     data() {
         return {
             store,
             router,
-            menuDesktopOpen: false,
-            menuMobileOpen: false,
             userMenu: [
                 {
                     label: 'impostazioni',
@@ -40,28 +40,11 @@ export default {
         }
     },
     methods: {
-        handleLogout() {
-            axios.post('http://localhost:8000/logout');
-            this.store.user = null;
-            // console.log('LogOut')
-            router.push('/');
-        },
         handleMobileMenu(value) {
-            this.menuMobileOpen = value;
+            this.store.menuMobileOpen = value;
             this.store.overlayOpen = value;
             if (value == true) document.body.style.overflow = 'hidden';
             else document.body.style.overflow = 'visible';
-        },
-        handleDesktopMenu() {
-            // if (this.menuDesktopOpen) {
-
-            // }
-            this.store.menuDesktopOpen = !this.store.menuDesktopOpen;
-
-            // this.menuMobileOpen = value;
-            this.store.overlayOpen = this.store.menuDesktopOpen;
-            // if (value == true) document.body.style.overflow = 'hidden';
-            // else document.body.style.overflow = 'visible';
         }
     }
 }
@@ -70,40 +53,19 @@ export default {
 <template>
     <header>
         <div class="container">
+
             <div class="group">
                 <AppLogo />
             </div>
 
-            <!-- Menu Tablet - Desktop -->
-            <div class="group user">
-                <!-- Pulsanti Autenticatione -->
-                <div class="group" v-if="store.user == null">
-                    <AppButton :to="'/login'" :label="'login'" :type="'line'" :palette="'primary'" />
-                    <AppButton :to="'/register'" :label="'registrati'" :type="'solid'" :palette="'primary'" />
-                </div>
-
-                <!-- Pulsanti Utente Autenticato -->
-                <div class="group" v-else>
-                    <AppButton :to="'/dashboard/apartments'" :label="'dashboard'" :type="'line'" :palette="'primary'" />
-
-                    <div class="userMenu" @click="handleDesktopMenu">
-                        <p>{{ store.user.first_name }} {{ store.user.last_name }}</p>
-                        <font-awesome-icon icon="fa-solid fa-chevron-down" class="icon"
-                            :class="store.menuDesktopOpen ? 'rotated' : ''" />
-                    </div>
-
-                    <transition name="fade-slide-top">
-                        <AppMenu :menuData="userMenu" :isLastDanger="true" v-if="store.menuDesktopOpen" />
-                    </transition>
-                </div>
-            </div>
+            <AppUserMenuDesktop :menuData="userMenu"/>
 
             <!-- Menu Mobile -->
             <div class="group menu">
                 <AppHamburgerMenu :maxWidth="840" @menuOpenEvent="handleMobileMenu" />
                 <transition name="fade-slide-right">
 
-                    <div class="menu" v-if="menuMobileOpen">
+                    <div class="menu" v-if="store.menuMobileOpen">
                         <div class="auth" v-if="this.store.user != null">
                             <h3 class="maniTitle">
                                 Ben tornato,
@@ -159,18 +121,7 @@ header {
     }
 }
 
-.group>.group {
-    @include flexRowCenter (1rem);
-    position: relative;
-}
 
-.userMenu {
-    @include flexRowCenter (0.5rem);
-    text-transform: capitalize;
-    font-weight: 600;
-    cursor: pointer;
-    user-select: none;
-}
 
 .group.menu {
     display: none !important;

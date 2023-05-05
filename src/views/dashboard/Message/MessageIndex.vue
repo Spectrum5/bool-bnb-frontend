@@ -64,7 +64,7 @@ export default {
         },
     },
     mounted() {
-        document.title = 'Dashboard | My Messages'
+        document.title = 'Dashboard | I miei Messaggi'
         this.getMessages();
     }
 }
