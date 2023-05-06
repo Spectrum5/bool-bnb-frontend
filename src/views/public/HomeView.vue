@@ -204,10 +204,9 @@ section {
     }
 
     >.cardsContainer {
-        @include flexSpaceBtwn;
-        flex-wrap: wrap;
+        @include cardsContainer (5, 280px, 3rem);
         gap: 2.5rem 3rem;
-        padding: 0 1rem;
+        margin: 0 auto;
         margin-bottom: 2.5rem;
     }
 

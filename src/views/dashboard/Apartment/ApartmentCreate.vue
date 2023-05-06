@@ -191,7 +191,8 @@ export default {
     mounted() {
         document.title = 'Dashboard | Crea Appartamento';
         this.getFormData();
-        this.store.setAutocomplete('address');
+        const self = this;
+        this.store.setAutocomplete('address', self);
     }
 }
 </script>

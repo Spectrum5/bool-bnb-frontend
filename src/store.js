@@ -11,6 +11,7 @@ export const store = reactive({
     filterModalOpen: false,
     menuMobileOpen: false,
     menuDesktopOpen: false,
+    servicesMenuOpen: false,
     overlayOpen: false,
     searchForm: {
         address: null,
@@ -36,17 +37,17 @@ export const store = reactive({
         this.overlayOpen = false;
         this.menuMobileOpen = false;
         this.menuDesktopOpen = false;
+        this.servicesMenuOpen = false;
         this.errors = [];
     },
 
-    setAutocomplete(fieldName) {
+    setAutocomplete(fieldName, self) {
         const addressInput = document.querySelector(`#${fieldName}`)
         let autocomplete = new google.maps.places.Autocomplete(addressInput);
-        const self = this;
         autocomplete.addListener('place_changed', function () {
             let place = autocomplete.getPlace();
             let address = place.formatted_address;
-            // self.form.address = address;
+            self.form.address = address;
         });
     },
 
@@ -77,13 +78,16 @@ export const store = reactive({
         }
     },
     shakeInputs() {
+        const notShakingInput = ['services'];
+        
         if (this.errors.length > 0) {
             this.errors.forEach(error => {
-                console.log('field',error.field)
-                document.querySelector(`#${error.field}`).classList.add('shake');
-                setTimeout(() => {
-                    document.querySelector(`#${error.field}`).classList.remove('shake');
-                }, 300)
+                if (!notShakingInput.includes(error.field)) {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                }
             });
         }
     },

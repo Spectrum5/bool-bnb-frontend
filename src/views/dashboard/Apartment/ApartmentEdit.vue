@@ -241,7 +241,8 @@ export default {
     mounted() {
         document.title = 'Dashboard | Aggiorna Appartamento';
         this.getApartment();
-        this.store.setAutocomplete('address');
+        const self = this;
+        this.store.setAutocomplete('address', self);
     }
 }
 </script>

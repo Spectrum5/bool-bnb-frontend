@@ -13,7 +13,6 @@ export default {
         return {
             store,
             router,
-            servicesMenuOpen: false,
             allServices: [],
             tomtomApiKey: import.meta.env.VITE_TOMTOM_API_KEY,
             form: {
@@ -44,7 +43,7 @@ export default {
         radiusInput(direction) {
             // Incrementa l'input Raggio
             const min = 5;
-            const max = 50;
+            const max = 40;
 
             if (direction == 'minus') {
                 if (this.form.radius > min) this.form.radius -= 5;
@@ -147,12 +146,18 @@ export default {
                 if (this.form.bathrooms_number > 0) this.store.searchForm.bathrooms_number = this.form.bathrooms_number;
                 if (this.form.services.length > 0) this.store.searchForm.services = this.form.services;
             }
+        },
+        handleServicesMenu() {
+            // Gestisce l'apertura/chiusura del menu
+            this.store.servicesMenuOpen = !this.store.servicesMenuOpen;
+            this.store.overlayOpen = this.store.servicesMenuOpen;
         }
     },
     mounted() {
         if (this.store.searchForm.address) this.form.address = this.store.searchForm.address;
         this.getServices();
-        this.store.setAutocomplete('address');
+        const self = this;
+        this.store.setAutocomplete('address', self);
     }
 }
 </script>
@@ -163,7 +168,7 @@ export default {
             <form @submit.prevent="handleSearch()">
                 <div class="row">
                     <div class="group">
-                        <label for="address" v-if="allFields">dove vuoi andare?</label>
+                        <label for="address" v-if="allFields">localitá</label>
                         <input type="text" id="address" name="address" placeholder="Dove vuoi andare?"
                             v-model="form.address">
                     </div>
@@ -221,15 +226,15 @@ export default {
                     </div>
 
                     <div class="group servicesGroup" v-if="allFields">
-                        <div @click="servicesMenuOpen = !servicesMenuOpen">
+                        <div @click="handleServicesMenu">
                             <label for="services">servizi necessari</label>
                             <div class="iconContainer">
-                                <font-awesome-icon icon="fa-solid fa-chevron-down" />
+                                <font-awesome-icon icon="fa-solid fa-chevron-down" :class="store.servicesMenuOpen ? 'rotated' : ''"/>
                             </div>
                         </div>
 
                         <transition name="fade-slide-top">
-                            <div class="servicesMenu" v-if="servicesMenuOpen">
+                            <div class="servicesMenu" v-if="store.servicesMenuOpen">
                                 <label>Servizi</label>
                                 <div class="service" v-for="service in allServices">
                                     <input v-model="form.services" type="checkbox" :name="service.name" :id="service.name"
@@ -318,6 +323,7 @@ export default {
                     display: flex;
                     flex-wrap: wrap;
                     width: 420px;
+                    z-index: 18;
 
                     >label {
                         flex-basis: 100%;
@@ -364,7 +370,22 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: gray;
+        cursor: pointer;
+        border: 1px solid $light-color-three;
+
+        &:hover {
+            color: $color-three-dark;
+        }
+
+        &:first-child {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        &:last-child {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
     }
 }
 

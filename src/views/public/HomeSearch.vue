@@ -157,39 +157,75 @@ section:not(.hero-section) {
     }
 
     >.cardsContainer {
-        @include flexSpaceBtwn;
-        justify-content: center;
-
-        flex-wrap: wrap;
+        @include cardsContainer (5, 280px, 3rem);
         gap: 2.5rem 3rem;
-        padding: 0 1rem;
+        margin: 0 auto;
         margin-bottom: 2.5rem;
     }
 }
 
 .hero-section+* {
-    margin-top: 35vh;
+    margin-top: 45vh;
 }
 
 .hero-section {
-    height: 35vh;
+    height: 40vh;
     @include flexRowCenter;
-    margin-bottom: 3rem;
     background: url('../../assets/images/hero-section.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
 
     position: absolute;
-    top: 0;
+    top: 70px;
     left: 0;
     right: 0;
+
+    &:deep>* {
+        margin-top: 1rem;
+    }
 }
 
 @media screen and (max-width: 1200px) {
     .hero-section {
         height: unset;
         padding: 1.5rem 0;
+
+        &+* {
+            margin-top: 55vh;
+        }
+    }
+}
+
+@media screen and (max-width: 920px) {
+    .hero-section {
+        &+* {
+            margin-top: 65vh;
+        }
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .hero-section {
+        &+* {
+            margin-top: 80vh;
+        }
+    }
+}
+
+@media screen and (max-width: 410px) {
+    .hero-section {
+        &+* {
+            margin-top: 95vh;
+        }
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .hero-section {
+        &+* {
+            margin-top: 105vh;
+        }
     }
 }
 </style>
