@@ -85,7 +85,7 @@ export default {
                 .catch((response) => {
                     console.log('Errore Invio Dati Login', response);
                     this.store.loadingWidth = 100;
-                    this.addError('Errore del server. Riprovare piú tardi', 'server_error');
+                    this.store.addError('Errore del server. Riprovare piú tardi', 'server_error');
                 })
         }
     },

@@ -29,15 +29,7 @@ export default {
             // Gestisce l'apertura/chiusura del menu
             this.store.menuDesktopOpen = !this.store.menuDesktopOpen;
             this.store.overlayOpen = this.store.menuDesktopOpen;
-        },
-        handleLogout() {
-            // Invia una richiesta di Logout
-            axios.post('http://localhost:8000/logout');
-            this.store.user = null;
-            this.store.overlayOpen = false;
-            router.push('/');
-            console.log('LogOut')
-        },
+        }
     }
 }
 </script>

@@ -81,7 +81,7 @@ export default {
                 )
                 .catch((response) => {
                     this.store.loadingWidth = 100;
-                    this.addError('Errore del server. Riprovare piú tardi', 'server_error');
+                    this.store.addError('Errore del server. Riprovare piú tardi', 'server_error');
                     console.log('Errore Invio dati Register:', response.response);
                 })
         }
