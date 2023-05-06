@@ -5,6 +5,7 @@ import { store } from './store';
 import HomeView from './views/public/HomeView.vue';
 import ApartmentView from './views/public/ApartmentView.vue';
 import HomeSearch from './views/public/HomeSearch.vue';
+import NotFoundView from './views/public/NotFoundView.vue';
 
 // Authentication Pages
 import AppLogin from './views/auth/AppLogin.vue';
@@ -21,6 +22,10 @@ import MessageIndex from './views/dashboard/Message/MessageIndex.vue';
 
 // Dashboard - Sponsors
 import SponsorIndex from './views/dashboard/Sponsor/SponsorIndex.vue';
+import SponsorPayment from './views/dashboard/Sponsor/SponsorPayment.vue';
+
+// Dashboard - Statistics
+import StatsIndex from './views/dashboard/Stats/StatsIndex.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -41,8 +46,6 @@ const router = createRouter({
             name: 'search',
             component: HomeSearch
         },
-
-
         // Authentication Pages
         {
             path: '/login',
@@ -111,29 +114,29 @@ const router = createRouter({
                 if (store.user == null) return { name: 'login' }
             },
         },
-        
-
-
-
-
-
         {
-            path: '/apartments/search/:title',
-            name: 'apartment-search',
-            component: HomeSearch
+            path: '/dashboard/sponsors/:plan/:slug',
+            name: 'sponsor-payment',
+            component: SponsorPayment,
+            beforeEnter: (to, from) => {
+                if (store.user == null) return { name: 'login' }
+            },
         },
-
-        
-
+        // Dashboard - Stats
+        {
+            path: '/dashboard/statistics',
+            name: 'stats-index',
+            component: StatsIndex,
+            beforeEnter: (to, from) => {
+                if (store.user == null) return { name: 'login' }
+            },
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
+            component: NotFoundView
+        }
     ]
 });
-
-// Protezione Rotte Frontend
-// router.beforeEach(async (to, from) => {
-//     if (to.path.includes('/dashboard') && !store.user && to.name !== 'login') {
-//         console.log('ROUTER', store.user);
-//         return { name: 'login' }
-//     }
-// })
 
 export { router };

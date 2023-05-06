@@ -2,6 +2,8 @@
 
 // Components
 import AppDashboardLayoutVue from '../AppDashboardLayout.vue';
+import AppButton from '../../../components/AppButton.vue';
+import AppLoading from '../../../components/AppLoading.vue';
 
 // Utilities
 import axios from 'axios';
@@ -11,60 +13,115 @@ import { store } from '../../../store';
 export default {
     name: 'MessageIndex',
     components: {
-        AppDashboardLayoutVue
+        AppDashboardLayoutVue,
+        AppButton,
+        AppLoading
     },
     data() {
         return {
             router,
             store,
-            // apartments: null
+            messages: null,
+            loading: false,
+            notFound: false,
         }
     },
     methods: {
         getMessages() {
-            // console.log('USER ID', store.user.id);
+            this.loading = true;
+            this.notFound = false;
             axios.get('http://localhost:8000/api/messages',)
                 .then((response) => {
-                    console.log('Index Messaggi', response.data);
-                    // this.apartments = response.data.apartments;
+                    if (response.data.messages.length == 0) this.notFound = true;
+                    this.loading = false;
+                    this.messages = response.data.messages;
+                    console.log('Index Messaggi', response.data.messages);
                 })
                 .catch((response) => {
-                    console.log('Errore Index Messaggi', response.data);
+                    console.log('Errore Index Messaggi', response);
+                    this.loading = false;
+                    this.notFound = true;
                 })
         },
-        // deleteApartment(id) {
-        //     axios.delete(`http://localhost:8000/api/apartments/${id}`)
-        //         .then((response) => {
-        //             console.log('Project Deleted');
-        //             this.getApartments();
-        //         })
-        // },
-        // gotoCreate() {
-        //     console.log('GO TO');
-        //     this.$router.push('/dashboard/apartments/create');
-        // }
+        formatDate(date) {
+            // return new Date(date).toLocaleDateString('it')
+            const dateToFormat = new Date(date);
+            const day = dateToFormat.getDate().toString().padStart(2, '0');
+            const month = (dateToFormat.getMonth() + 1).toString().padStart(2, '0');
+            const year = dateToFormat.getFullYear();
+            return `${day}-${month}-${year}`;
+        },
     },
     mounted() {
-        document.title = 'Dashboard | My Messages'
+        document.title = 'Dashboard | I miei Messaggi'
         this.getMessages();
     }
 }
 </script>
 
 <template>
-    <AppDashboardLayoutVue 
-        :title="'i miei messaggi'">
+    <AppDashboardLayoutVue :title="'i miei messaggi'">
 
-            <main>
-                messaggi
-            </main>
+        <main>
+            <AppLoading v-if="loading == true" />
+            <div class="messages" v-if="messages">
+                <div class="message" v-for="message in messages">
+                    <div>
+                        <div class="title mb-1">
+                            <strong>
+                                {{ message.apartment.title }}
+                            </strong>
+                        </div>
+                        <div class="info-message">
+                            <p class="email">Ricevuto il: {{ formatDate(message.created_at) }}</p>
+                            <p class="email">Mittente: {{ message.email }}</p>
+                            <p class="text">{{ message.message }}</p>
+                        </div>
+                    </div>
+                    <AppButton :label="'Rispondi'" :icon="'share'" :palette="'secondary'" />
+                </div>
+                <div>
+                </div>
+            </div>
+            <div class="no-message" v-else-if="notFound">
+                <h2>Non sono presenti messaggi</h2>
+            </div>
+        </main>
 
     </AppDashboardLayoutVue>
 </template>
 
 <style scoped lang="scss">
 @use '../../../styles/partials/mixins.scss' as *;
+@use '../../../styles/partials/variables.scss' as *;
 
+.message {
+    @include flexSpaceBtwn;
+    padding: 10px 0;
+    border-bottom: 1px solid $dark-color-one;
+
+    &:hover{
+        background-color: #f5f5f5;
+    }
+}
+
+.title{
+    text-transform: uppercase;
+}
+
+.no-message{
+    text-align: center;
+    margin-top: 35px;
+}
+
+.info-message{
+    font-size: 0.8rem;
+    color: rgb(51, 51, 51);
+}
+
+.email {
+    font-weight: 600;
+}
 
 main {
     width: 100%;

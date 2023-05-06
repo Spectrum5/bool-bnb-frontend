@@ -2,7 +2,8 @@
 @use '../partials/mixins.scss' as *;
 
 .formContainer {
-    width: 500px;
+    max-width: 500px;
+    width: 100%;
     margin: 0 auto;
     padding: 1.5rem;
     margin-top: 4rem;
@@ -46,6 +47,7 @@ form .row {
         textarea,
         select,
         .fakeInput {
+            font-family: 'Poppins', sans-serif;
             font-size: 0.95rem;
             width: 100%;
             max-width: 100%;
@@ -59,11 +61,15 @@ form .row {
             background: $light-color-two;
 
             &.invalid {
-                border: 1px solid $danger-color-dark;
+                border: 1px solid $danger-color-dark !important;
 
                 &.shake {
                     animation: horizontalShake 0.2s forwards;
                 }
+            }
+
+            &::placeholder {
+                font-size: clamp(0.9rem, 5vw, 1.05rem);
             }
         }
 
@@ -71,6 +77,12 @@ form .row {
             display: inline-block;
             width: 150px;
             text-transform: capitalize;
+
+            &.disabled{
+                color: gray;
+                outline: transparent;
+            }
+
             .icon {
                 margin-right: 10px;
             }
@@ -88,25 +100,37 @@ form .row {
     }
 
     button {
-        // @include customButton;
         width: 100%;
     }
 }
 
+.fieldError {
+    position: absolute;
+    top: 100%;
+    color: $danger-color-dark;
+    font-size: 0.8rem;
+    padding-top: 3px;
+    max-width: fit-content;
+}
+
 @keyframes horizontalShake {
-    0%{
+    0% {
         transform: translateX(-5px);
     }
-    25%{
+
+    25% {
         transform: translateX(5px);
     }
-    50%{
+
+    50% {
         transform: translateX(-5px);
     }
-    75%{
+
+    75% {
         transform: translateX(5px);
     }
-    100%{
+
+    100% {
         transform: translateX(0px);
     }
 }

@@ -5,12 +5,12 @@
 .my-container {
     padding: 10px;
     overflow-y: scroll;
-    max-width: 80%;
+    min-width: 80%;
     margin: 40px auto;
     // margin-inline: auto;
 
     .my-group {
-        @include flexSpaceBtwn($gap: 100px);
+        @include flexSpaceBtwnFlexStart($gap: 100px);
 
         div {
             flex-grow: 1 !important;
@@ -18,7 +18,7 @@
     }
 
     .my-group-info-base {
-        @include flexSpaceBtwn($gap: 50px);
+        @include flexSpaceBtwnFlexStart($gap: 50px);
 
         div {
             flex-grow: 1 !important;
@@ -28,10 +28,10 @@
 
 .services {
     display: flex;
-    // justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
-    max-width: 80vw;
+    max-height: 280px;
     flex-wrap: wrap;
 
     .service {
@@ -43,7 +43,7 @@
 }
 
 .my-row {
-    div {
+    div:not(div.previews, div.preview) {
         margin-bottom: 15px;
         padding-bottom: 15px;
         // border-bottom: 1px solid;
@@ -53,7 +53,7 @@
     input,
     textarea {
         line-height: 20px;
-        border: 1px solid black !important;
+        border: 1px solid black;
     }
 
     label.mb-2 {
@@ -67,15 +67,20 @@
     // padding: 7px;
     margin: 5px;
     cursor: pointer;
-}
-
-.my-btn {
     display: block;
     width: 50%;
     color: white;
     font-weight: 700;
     padding: 10px 0px;
     border-radius: 10px;
-    background: linear-gradient(90deg, rgba(125, 183, 248, 1) 25%, rgba(66, 148, 242, 1) 75%);;
+}
+
+.my-btn {
+    background: linear-gradient(90deg, rgba(125, 183, 248, 1) 25%, rgba(66, 148, 242, 1) 75%);
     border: rgb(125, 183, 248) !important;
+}
+
+.my-btn-created{
+    background: linear-gradient(90deg, rgba(86, 219, 117, 1) 25%, rgba(40, 167, 69, 1) 75%);
+    border: rgb(40, 167, 69)!important;
 }

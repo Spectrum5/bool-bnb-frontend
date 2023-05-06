@@ -1,395 +1,245 @@
 <script>
 
-// Components
-import AppLogo from '../../components/AppLogo.vue';
-import AppIconsBar from '../../components/AppIconsBar.vue';
-import AppCard from '../../components/AppCard.vue';
-import AppLoginModal from '../../components/AppLoginModal.vue';
-import AppMenuSearch from '../../components/AppMenuSearch.vue';
-
-
 // Utilities
 import axios from 'axios';
-import { router } from '../../router';
+import { store } from '../../store';
 
+// Components
+import PublicPageLayout from './PublicPageLayout.vue';
+import AppSearch from '../../components/AppSearch.vue';
+import AppCard from '../../components/AppCard.vue';
+import AppButton from '../../components/AppButton.vue';
+import AppLoading from '../../components/AppLoading.vue';
 
 export default {
     name: 'HomeView',
     components: {
-        AppLogo,
+        PublicPageLayout,
+        AppSearch,
         AppCard,
-        AppLoginModal,
-        AppMenuSearch,
-        AppIconsBar,
+        AppButton,
+        AppLoading
     },
     data() {
         return {
-            isOpen: false,
-            active: false,
-            loginModal: false,
-
-            router,
-            currentPage: 1,
-            searchTitle: '',
-            apartments: [],
-
-            menuItems: [
-                { label: 'Ovunque', link: '#' },
-                { label: '01 giu - 31 ago', link: '#' },
-                { label: '1 ospite', link: '#' },
-
-            ],
-
-            menuItems2: [
-                { label: 'Affitta con Airbnb', link: '#' },
-                { icon: 'fa-solid fa-globe', link: '#' },
-            ],
-            menuHamb: [
-                { icon: 'fa-solid fa-bars', link: '#' },
-                { icon: 'fa-solid fa-circle-user', link: '#' }
-            ],
-
-            menuItem3: [
-                { label: 'Dove', link: '#', active: 0 },
-                { label: 'Check-in', link: '#' },
-                { label: 'Check-out', link: '#' },
-                { label: 'Chi', link: '#' },
-            ],
-            menuHidden: [
-                { label: 'Soggiorni', link: '#', active: 0 },
-                { label: 'Esperienze', link: '#' },
-                { label: 'Esperienze Online', link: '#' },
-            ],
-
+            store,
+            apartments: [],                     //Conterra' gli appartamenti scaricati
+            sponsoredApartments: [],            //Conterra' gli appartamenti sponsorizzati scaricati
+            currentPage: 1,                     //Pagina Attuale Appartamenti Esplora
+            currentPageSponsored: 1,            //Pagina Attuale Appartamenti Sponsorizzati
+            callOk: true,                       //Per gestire Infinite Scroll
+            loading: false,                     //True quando viene inviata la richiesta e false appena torna la risposta
+            notFound: false,                    //True se la ricerca non restituisce risultati
+            searchCompleted: false,             //True quando le pagine finiscono
+            searchCompletedSponsored: false     //True quando le pagine finiscono
         }
     },
     methods: {
         getApartments() {
-            console.log('GET APARTMENTS');
+            // Ottiene gli appartamenti
+            this.loading = true;
+            this.notFound = false;
             axios.get('http://localhost:8000/api/apartments', {
                 params: {
                     page: this.currentPage
                 }
             })
                 .then((response) => {
-                    console.log('Index Appartamenti', response.data);
-                    this.apartments = this.apartments.concat(response.data.apartments.data);
+                    if (response.data.success) {
+                        this.loading = false;
+
+                        if (response.data.apartments.data.length == 0) this.notFound = true;
+                        if (response.data.apartments.current_page == 1) {
+                            this.apartments = response.data.apartments.data;
+                        }
+                        else if (response.data.apartments.current_page <= response.data.apartments.last_page) {
+                            this.apartments = this.apartments.concat(response.data.apartments.data);
+                        }
+                        this.lastPage = response.data.apartments.last_page;
+                        if (this.currentPage == this.lastPage) this.searchCompleted = true;
+
+                        console.log('Index Appartamenti', response.data);
+                    }
                 })
                 .catch((response) => {
+                    this.loading = false;
+                    this.notFound = true;
                     console.log('Errore Index Appartamenti', response.data);
                 })
         },
-        loadMore() {
-            this.currentPage++;
-            this.getApartments();
-        },
-        handleSearch() {
-            this.$router.push(`/apartments/search/${this.searchTitle}`);
-        },
-        toggleSearchbar() {
-            this.isOpen = !this.isOpen;
-        },
+        getSponsoredApartments() {
+            // Ottiene gli appartamenti Sponsorizzati
+            this.loading = true;
+            axios.get('http://localhost:8000/api/apartments/indexSponsored', {
+                params: {
+                    page: this.currentPageSponsored
+                }
+            })
+                .then((response) => {
+                    if (response.data.success) {
+                        this.loading = false;
 
-        getLogin() {
-            if (this.loginModal) {
-                this.loginModal = false;
-            } else {
-                this.loginModal = true;
+                        if (response.data.apartments.current_page == 1) {
+                            this.sponsoredApartments = response.data.apartments.data;
+                        }
+                        else if (response.data.apartments.current_page <= response.data.apartments.last_page) {
+                            this.sponsoredApartments = this.sponsoredApartments.concat(response.data.apartments.data);
+                        }
+                        this.lastPageSponsored = response.data.apartments.last_page;
+                        if (this.currentPageSponsored == this.lastPageSponsored) this.searchCompletedSponsored = true;
+
+                        console.log('Index Appartamenti Sponsorizzati', response.data);
+                    }
+                })
+                .catch((response) => {
+                    this.loading = false;
+                    console.log('Errore Index Appartamenti Sponsorizzati', response.data);
+                })
+        },
+        loadMore() {
+            if (this.currentPage < this.lastPage) {
+                this.currentPage++;
+                this.getApartments();
+                console.log('Richiesti Altri Appartamenti');
             }
         },
+        loadMoreSponsored() {
+            if (this.currentPageSponsored < this.lastPageSponsored) {
+                this.currentPageSponsored++;
+                this.getSponsoredApartments();
+                console.log('Richiesti Altri Appartamenti Sponsorizzati');
+            }
+        },
+        applyInfiniteScroll() {
+            setTimeout(() => {
+                const self = this;
+                window.onscroll = function () {
+                    if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 1) {
+
+                        // Permette di richiamare la funzione loadMore al massimo una volta ogni 1500ms
+                        if (self.callOk) {
+                            self.loadMore();
+                            self.callOk = false;
+                            setTimeout(() => {
+                                self.callOk = true;
+                            }, 1500)
+                        }
+                    }
+                };
+            }, 4000)
+        }
     },
-
     mounted() {
+        document.title = 'Boolbnb | Home'
 
+        // Ottenimento Dati
+        this.getSponsoredApartments();
         this.getApartments();
 
+        this.$nextTick(this.store.clear());
+
+        this.applyInfiniteScroll();
     }
 }
 </script>
 
 <template>
-    <header>
-        <nav class="navbar">
-            <div class="container-fluid">
-                <!-- MENU LOGO -->
-                <AppLogo />
+    <PublicPageLayout>
+        
+        <!-- Hero Section -->
+        <section class="hero-section"></section>
 
-                <!-- MENU HIDDEN 2°SEARCHBAR -->
-                <div class="menu-hidden" v-if="isOpen">
-                    <ul>
-                        <li class="item" v-for="(item, index) in menuHidden" :key="index"
-                            :class="{ active: item.active === index }">
-                            {{ item.label }}
-                        </li>
-                    </ul>
-                </div>
+        <!-- Search Section -->
+        <section class="search-section">
+            <AppSearch :allFields="false" />
+        </section>
 
-
-                <!-- MENU CENTRALE-->
-                <div class="searchbar first" :class="{ open: isOpen }">
-                    <!-- Prima searchbar -->
-                    <ul class="group-list" v-if="!isOpen">
-                        <li class="item" v-for="(item, index) in menuItems" :key="index" @click="toggleSearchbar">
-                            <a :href="item.link">{{ item.label }}</a>
-                            <i class="line"></i>
-                        </li>
-                        <li class="item icon" @click="toggleSearchbar">
-                            <a href="#">
-                                <font-awesome-icon class="myicon" icon="fa-solid fa-magnifying-glass" />
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- SEARCHBAR GRANDE NASCOSTA  -->
-                <AppMenuSearch :isOpen="isOpen" />
-
-                <!-- MENU A DESTRA -->
-                <div class="right-menu">
-                    <ul class="group-list">
-                        <li class="item" v-for="item in menuItems2" :key="item.label">
-                            <a :href="item.link">{{ item.label }}</a>
-                        </li>
-                        <li class="item">
-                            <font-awesome-icon :icon="menuItems2[1].icon" class="globe" />
-                        </li>
-                    </ul>
-
-                    <!-- MENU DI LOGIN -->
-                    <ul class="group-list ">
-                        <li class="item menu-bars d-inline-block">
-                            <font-awesome-icon :icon="menuHamb[0].icon" class="bars" @click="getLogin()" />
-                        </li>
-                        <AppLoginModal :loginModal="loginModal" />
-                        <li class="item d-inline-block">
-                            <font-awesome-icon :icon="menuHamb[1].icon" class="user" />
-                        </li>
-                    </ul>
-                </div>
+        <!-- Sponsored Section -->
+        <section v-if="sponsoredApartments.length > 0">
+            <h2 class="mainTitle">appartamenti in evidenza</h2>
+            <div class="cardsContainer">
+                <AppCard v-for="apartment in sponsoredApartments" :apartment="apartment" />
             </div>
-        </nav>
-    </header>
+            <AppButton :action="loadMoreSponsored" :type="'line'" :palette="'primary'" :label="'carica altri'"
+                v-if="!searchCompletedSponsored" />
+        </section>
 
-    <div class="icon-bar">
-        <AppIconsBar />
-    </div>
-
-    <div class="cardsContainer">
-        <AppCard v-for="apartment in apartments" :apartment="apartment" />
-    </div>
-
-    <!-- 
-            <div class="container">
-                <label for="searchTitle">Titolo</label>
-                <input type="text" v-model="searchTitle" id="searchTitle" name="searchTitle" placeholder="Inserisci il titolo...">
-                <button @click="handleSearch()">Cerca</button>
+        <!-- Explore Section -->
+        <section v-if="apartments.length > 0">
+            <h2 class="mainTitle">esplora</h2>
+            <div class="cardsContainer">
+                <AppCard v-for="apartment in apartments" :apartment="apartment" />
             </div>
+        </section>
 
-            <div class="container">
-                <div class="card" v-for="apartment in apartments" @click="$router.push(`/apartments/${apartment.slug}`)">
-                    <h2>Titolo: {{ apartment.title }}</h2>
-                    <p>Descrizione: {{ apartment.description }}</p>
-                </div>
-
+        <!-- Not Found Section -->
+        <section v-else-if="notFound">
+            <div class="warningMessage">
+                <p>Nessun appartamento trovato</p>
             </div>
-        -->
-    <button @click="loadMore()">LOAD MORE</button>
+        </section>
+
+        <!-- No More Results Section -->
+        <section v-if="searchCompleted == true && lastPage != null && currentPage == lastPage">
+            <div class="warningMessage">
+                <p>
+                    Non ci sono altri risultati da mostrare.
+                    <br>
+                    Aggiungi dei filtri per una ricerca più dettagliata.
+                </p>
+            </div>
+        </section>
+
+        <AppLoading v-if="loading == true" />
+    </PublicPageLayout>
 </template>
 
 <style lang="scss" scoped>
 @import '../../styles/partials/mixins.scss';
-@import '../../styles/partials/variables.scss';
 
+section {
+    >.mainTitle {
+        text-align: center;
+        margin: 2.5rem 0;
+    }
 
-.cardsContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem 1rem;
-    flex-wrap: wrap;
-    max-width: 1860px;
+    >.cardsContainer {
+        @include cardsContainer (5, 280px, 3rem);
+        gap: 2.5rem 3rem;
+        margin: 0 auto;
+        margin-bottom: 2.5rem;
+    }
+
+    &:deep>button {
+        display: block !important;
+        margin: 0 auto;
+    }
 }
 
-.icon-bar {
-    width: 100%;
-    padding: 50px 50px;
-}
+.hero-section {
+    height: 70vh;
+    @include flexRowCenter;
+    margin-bottom: 3rem;
+    background: url('../../assets/images/hero-section.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
 
-header {
-    width: 100%;
-    background-color: white;
-    padding: 15px 20px;
-    border-bottom: 1px solid #e2dbdb;
-    z-index: 1;
-    position: relative;
-    position: sticky;
-    position: -webkit-sticky;
-    position: sticky;
+    position: absolute;
     top: 0;
+    left: 0;
+    right: 0;
+}
 
-    .navbar {
-        max-width: 100%;
-        width: 100%;
+.search-section {
+    position: sticky;
+    top: 100px;
+    margin: 25vh auto;
+    margin-bottom: 30vh;
+    z-index: 14;
 
-        .container-fluid {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            .menu-hidden {
-                margin-left: 100px;
-
-                .item {
-                    font-size: 16px;
-                    letter-spacing: 1.5px;
-                    margin-right: 30px;
-                    font-weight: lighter, bolder;
-                    transition: all 0.4s ease-in;
-                    cursor: pointer;
-
-
-                    &:hover {
-                        border-bottom: 1.5px solid #B8B8B8;
-                        padding: 8px 0px;
-                        font-weight: lighter;
-                    }
-                }
-
-                .active {
-                    border-bottom: 1.5px solid black;
-                    padding: 8px 0px;
-                }
-            }
-
-
-            .searchbar,
-            .open,
-            .menu-hidden {
-
-                .group-list,
-                .group-list:last-child {
-                    border: 1px solid #B8B8B8;
-                    padding: 12px 25px;
-                    border-radius: 50px;
-                    text-align: center;
-                    -webkit-box-shadow: 1px 2px 9px -1px #B8B8B8;
-                    box-shadow: 1px 2px 9px -1px #B8B8B8;
-                    transition: box-shadow 0.5s ease-in-out;
-                    cursor: pointer;
-                    transform: translate(-150%, -0%);
-
-
-                    &:hover {
-                        -webkit-box-shadow: 1px 1px 6px 1px #B8B8B8;
-                        box-shadow: 1px 1px 6px 1px #B8B8B8;
-                    }
-
-                    .item {
-                        margin-right: 2px;
-
-                        a {
-                            text-decoration: none;
-                        }
-                    }
-
-                    .line {
-                        display: inline-block;
-                        color: black;
-                        background-color: black;
-                        width: 20px;
-                        height: 1px;
-                        transform: rotate(90deg);
-                        vertical-align: middle;
-                    }
-
-                    .icon {
-                        border: 1px solid none;
-                        padding: 6px 9px;
-                        border-radius: 50px;
-                        background-color: $color-one-light;
-
-                        .myicon {
-                            color: white;
-                        }
-                    }
-
-                }
-            }
-
-            .right-menu {
-                width: calc(100% / 4);
-                display: flex;
-                justify-content: center;
-                align-items: baseline;
-                position: fixed;
-                top: 10px;
-                right: 10px;
-
-
-                .globe {
-                    color: white;
-                    background-color: black;
-                    border-radius: 50px;
-                    font-size: 16px;
-                    vertical-align: middle;
-                }
-
-                .group-list:first-child {
-                    .item {
-                        transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out;
-
-                        &:hover {
-                            transform: scale(1.2);
-                            border: 1px solid #e6e2e2;
-                            padding: 8px 10px;
-                            border-radius: 50px;
-                            background: #e6e2e2;
-                        }
-
-                        a {
-                            text-decoration: none;
-                        }
-                    }
-                }
-
-                .group-list:last-child {
-                    border: 1px solid #e0dcdc;
-                    border-radius: 50px;
-                    margin-left: 18px;
-                    padding: 10px 0px;
-                    transition: transform 0.8s ease-in-out, box-shadow 0.5s ease-in-out;
-
-                    &:hover {
-                        -webkit-box-shadow: 1px 1px 6px 1px #B8B8B8;
-                        box-shadow: 1px 1px 6px 1px #B8B8B8;
-                        transform: scale(1.2);
-                    }
-
-                    .user {
-                        font-size: 28px;
-                        color: #6d6a6a;
-                    }
-
-                    .bars {
-                        font-size: 15px;
-                        padding-left: 10px;
-                    }
-                }
-            }
-
-            .item {
-                display: inline-block;
-                margin-right: 10px;
-                font-size: 14px;
-                font-weight: lighter, bolder;
-                color: black;
-                vertical-align: middle;
-
-                a {
-                    color: black;
-                }
-            }
-        }
+    &:deep .container {
+        margin: 0 auto;
     }
 }
 </style>

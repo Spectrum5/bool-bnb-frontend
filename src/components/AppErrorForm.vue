@@ -11,25 +11,22 @@ export default {
         return {
             store,
         }
-    },
-
-    methods: {
-        
-    },
+    }
 }
 </script>
 
 <template>
-
     <ul>
-        <li v-for="error in store.errors">
-            {{ error.message }}
-        </li>
+        <transition-group name="fade-fast">
+            <li v-for="error in store.errors" :key="error.field">
+                {{ error.message }}
+            </li>
+        </transition-group>
     </ul>
-
 </template>
 
 <style lang="scss" scoped>
+@use '../styles/partials/transitions.scss' as *;
     ul {
         list-style-type: none;
         margin-bottom: 1rem;

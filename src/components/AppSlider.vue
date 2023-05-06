@@ -26,6 +26,8 @@ export default {
 </template>
 
 <style scoped lang="scss">
+@use '../styles/partials/variables.scss' as *;
+
 #slider {
     position: relative;
     width: 100%;
@@ -44,6 +46,7 @@ export default {
         height: 100%;
         object-fit: cover;
         display: block;
+        transition: all 0.3s;
     }
 }
 </style>

@@ -16,21 +16,13 @@ export default {
     data() {
         return {
             store,
-            router,
-            images: []
+            router
         }
     },
     props: {
         apartment: Object
     },
     methods: {
-        getImages() {
-            axios.get(`http://localhost:8000/api/images/${this.apartment.id}`)
-                .then((response) => {
-                    this.images = response.data.images;
-                    console.log('Images', response.data);
-                })
-        },
         goShow() {
             // Cambia la rotta nella rotta relativa al singolo appartamento
             this.$router.push(`/apartments/${this.apartment.slug}`)
@@ -42,23 +34,25 @@ export default {
     },
     computed: {
         calcLocation() {
-            return this.apartment.address.replace(/[0-9-]/g, '');
+            // return this.apartment.address.replace(/[0-9-]/g, '');
         }
     },
     mounted() {
-        this.getImages();
     }
 }
 </script>
-
 
 <template>
     <div class="card" tabindex="0">
 
         <button class="cardFavorites" @click.stop="addToFavorites()" ref="btn"></button>
 
+        <div v-if="apartment.sponsors != null && apartment.sponsors.length > 0" class="sponsorized">
+            <font-awesome-icon icon="fa-solid fa-medal" />
+        </div>
+
         <div class="imageContainer">
-            <AppSlider :images="this.images" v-if="this.images" @goShowEvent="goShow()"/>
+            <AppSlider :images="this.apartment.images" v-if="this.apartment.images" @goShowEvent="goShow()" />
         </div>
 
         <div class="infoContainer" @click="goShow()">
@@ -67,12 +61,14 @@ export default {
                     <h3>{{ this.apartment.title }}</h3>
                 </div>
                 <div class="cardViews">
-                    123
+                    {{ this.apartment.views_count ?? '0' }}
+                    <font-awesome-icon icon="fa-solid fa-eye" class="icon" />
                 </div>
             </div>
             <div class="row">
                 <div class="cardLocation">
-                    {{ calcLocation }}
+                    <!-- {{ calcLocation }} -->
+                    {{ apartment.address }}
                 </div>
                 <div class="cardPrice">
                     <span>{{ apartment.price }}</span> &euro; a notte
@@ -83,52 +79,73 @@ export default {
     </div> <!-- /card-->
 </template>
 
-
 <style lang="scss" scoped>
-// @use '../styles/partials/variables.scss' as *;
+@use '../styles/partials/variables.scss' as *;
 
-$cardWidth: 260px;
-$border-radius-small: 12px;
-$color-three-light: #faa95e;
-$color-three-dark: #f39237;
+// @media screen and (max-width:840px) {
+//     $cardWidth: 310px;
 
-@mixin customOutline {
-    outline-style: solid;
-    outline-color: $color-three-dark;
-    outline-offset: 2px;
-    outline-width: 0px;
+//     .card {
+//         width: $cardWidth;
 
-    transition: outline-width 0.05s, outline-color 0.03s;
+//         .imageContainer {
+//             height: $cardWidth;
+//         }
 
-    &:hover,
-    &:focus-visible {
-        outline-width: 2px;
+//         .cardTitle {
+//             max-width: calc($cardWidth - 40px);
+//         }
+//     }
+// }
+
+// @media screen and (min-width:820px) {
+    $cardWidth: 280px;
+
+    .card {
+        width: $cardWidth;
+
+        .imageContainer {
+            height: $cardWidth;
+        }
+
+        .cardTitle {
+            max-width: calc($cardWidth - 40px);
+        }
     }
-
-    &:active {
-        outline-color: $color-three-light;
-    }
-}
+// }
 
 button {
     background: none;
     border: none;
 }
 
+.sponsorized {
+    max-width: fit-content;
+    position: absolute;
+    z-index: 2;
+    color: $color-three-dark;
+    font-size: 25px;
+    top: -0.8rem;
+    left: -0.5rem;
+}
+
 .card {
-    width: $cardWidth;
     position: relative;
     cursor: pointer;
-    border-radius: $border-radius-small;
+    border-radius: $big-border-radius;
 
-    @include customOutline;
+    &:hover {
+        .imageContainer:deep img {
+            transform: scale(1.05);
+        }
+    }
 
     .imageContainer {
-        height: $cardWidth;
         margin-bottom: 0.75rem;
+        transition: all 0.3s;
 
-        border-radius: $border-radius-small;
-        background-color: rgb(181, 241, 181);
+        border-radius: $big-border-radius;
+        background-color: $light-color-one;
     }
 
     .row.inline {
@@ -139,13 +156,12 @@ button {
     }
 
     .cardTitle {
-        max-width: calc($cardWidth - 40px);
-
         flex-grow: 1;
         flex-shrink: 0;
         font-size: 0.8rem;
+        text-transform: capitalize;
         margin-bottom: 2px;
-        
+
         h3 {
             text-overflow: ellipsis;
             overflow: hidden;
@@ -162,6 +178,11 @@ button {
         color: gray;
         font-size: 0.7rem;
         margin-bottom: 0.5rem;
+
+        width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     .cardPrice {
@@ -178,7 +199,7 @@ button {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    z-index: 20;
+    z-index: 5;
 
     padding-top: 2em;
     background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/66955/web_heart_animation.png');

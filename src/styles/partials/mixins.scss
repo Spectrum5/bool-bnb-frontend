@@ -1,9 +1,16 @@
-@use '../partials/variables.scss' as *;
+@use './variables.scss' as *;
 
 @mixin flexSpaceBtwn ($gap: 0) {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: $gap;
+}
+
+@mixin flexSpaceBtwnFlexStart ($gap: 0) {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     gap: $gap;
 }
 
@@ -14,19 +21,52 @@
     gap: $gap;
 }
 
+@mixin flexStart ($gap: 0) {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: $gap;
+}
+
+
 @mixin largeContainer {
-    max-width: 1760px;
+
+    max-width: 1660px;
     margin: 0 auto;
 }
 
-@mixin cardsContainer ($gap: 0) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: $gap;
+// @mixin cardsContainer ($gap: 0) {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     gap: $gap;
 
-    >.card {
-        width: 260px;
+//     >.card {
+//         width: 260px;
+//     }
+// }
+
+// Container Responsive per Cards
+@mixin cardsContainer ($maxCardsNumber: 4, $cardWidth: 320px, $spacing: 1rem) {
+
+    display: grid;
+    padding: 0 1rem;
+
+    // Dimensioni < di $cardWidth
+    @media screen and (max-width: calc($cardWidth - 1px + 2rem)) {
+        grid-template-columns: 1fr;
+        max-width: calc($cardWidth + 2rem);
+        width: 100%;
+        gap: $spacing;
+    }
+
+    // Dimensioni > di $cardWidth
+    @for $i from 1 through $maxCardsNumber {
+        @media screen and (min-width: calc(($cardWidth * $i) + calc($spacing * calc($i - 1)) + 2rem)) {
+            grid-template-columns: repeat($i, 1fr);
+            max-width: calc(($cardWidth * $i) + calc($spacing * calc($i - 1)) + 2rem);
+            gap: $spacing;
+        }
     }
 }
 
@@ -35,6 +75,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+@mixin customShadow {
+    box-shadow: 0px 4px 16px 1px #00000060;
 }
 
 @mixin customOutline {
@@ -52,6 +96,43 @@
 
     &:active {
         outline-color: $color-three-light;
+    }
+}
+
+// MEDIA QUERY
+
+$layout-breakpoint-x-small: 576px;
+$layout-breakpoint-small: 576px;
+$layout-breakpoint-medium: 768px;
+
+@mixin for-phone {
+    @media (max-width: 599px) {
+        @content;
+    }
+}
+
+@mixin for-tablet-up {
+    @media (max-width: 600px) {
+        @content;
+    }
+}
+
+@mixin for-tablet-landscape-up {
+    @media (min-width: 900px) {
+        @content;
+    }
+}
+
+@mixin for-desktop-up {
+    @media (min-width: 900px) {
+        @content;
+    }
+}
+
+
+@mixin for-big-desktop {
+    @media (min-width: 1800px) {
+        @content;
     }
 }
 
@@ -73,22 +154,27 @@
     user-select: none;
     transition: all 0.05s;
 
-    @if $palette == primary {
+    @if $palette ==primary {
         $colorB: $color-one-dark;
         $colorC: $color-two-dark;
     }
 
-    @else if $palette == success {
+    @else if $palette ==secondary {
+        $colorB: $secondary-color-one-light;
+        $colorC: $secondary-color-two-light;
+    }
+
+    @else if $palette ==success {
         $colorB: $success-color-dark;
         $colorC: $success-color-light;
     }
-    
-    @else if $palette == warning {
+
+    @else if $palette ==warning {
         $colorB: $warning-color-dark;
         $colorC: $warning-color-light;
     }
-    
-    @else if $palette == danger {
+
+    @else if $palette ==danger {
         $colorB: $danger-color-dark;
         $colorC: $danger-color-light;
     }

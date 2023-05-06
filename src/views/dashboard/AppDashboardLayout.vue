@@ -1,39 +1,40 @@
 <script>
 
+// Utilities
+import axios from 'axios';
+import { store } from '../../store';
+import { router } from '../../router';
+
 // Components
 import AppLogo from '../../components/AppLogo.vue';
 import AppButton from '../../components/AppButton.vue';
-
-// Utilities
-import { store } from '../../store';
-import { router } from '../../router';
-import axios from 'axios';
+import AppSidebar from '../../components/AppSidebar.vue';
+import AppMenu from '../../components/AppMenu.vue';
+import AppUserMenuDesktop from '../../components/AppUserMenuDesktop.vue';
 
 export default {
     name: 'AppDashboardLayout',
     components: {
         AppLogo,
-        AppButton
+        AppButton,
+        AppSidebar,
+        AppMenu,
+        AppUserMenuDesktop
     },
     data() {
         return {
             store,
             router,
-            asideLinks: [
+            userMenu: [
                 {
-                    label: 'apartments',
-                    icon: 'house-chimney',
-                    link: '/dashboard/apartments'
+                    label: 'impostazioni',
+                    icon: 'gear',
+                    onClick: ''
                 },
                 {
-                    label: 'messages',
-                    icon: 'envelope',
-                    link: '/dashboard/messages'
-                },
-                {
-                    label: 'sponsors',
-                    icon: 'layer-group',
-                    link: '/dashboard/sponsors'
+                    label: 'logout',
+                    icon: 'right-from-bracket',
+                    onClick: this.handleLogout
                 }
             ]
         }
@@ -49,11 +50,13 @@ export default {
         handleLogout() {
             axios.post('http://localhost:8000/logout');
             this.store.user = null;
-            console.log('Logged Out');
+            this.store.overlayOpen = false;
             router.push('/');
-        },
+            console.log('Logged Out');
+        }
     },
     mounted() {
+        this.$nextTick(this.store.clear());
     }
 }
 </script>
@@ -61,45 +64,26 @@ export default {
 <template>
     <div class="wrapper">
 
-        <aside>
-            <div class="sidebar">
-                <header>
-                    <AppLogo />
-                </header>
-
-                <ul>
-                    <li v-for="item in asideLinks">
-                        <router-link :to="item.link">
-                            <font-awesome-icon class="icon" :icon="`fa-solid fa-${item.icon}`" />
-                            <span class="label">{{ item.label }}</span>
-                        </router-link>
-                    </li>
-                </ul>
-            </div>
-        </aside>
+        <AppSidebar />
 
         <div class="rightSide">
 
             <header>
-                <!-- Searchbar -->
-                <!-- Menu Utente -->
-                <button @click="handleLogout()">logout</button>
+                <AppUserMenuDesktop :menuData="userMenu"/>
             </header>
 
             <div class="content">
                 <header>
                     <h2 class="mainTitle">{{ this.title }}</h2>
-
-                    <!-- <div class="create" @click="this.button.action" v-if="this.button">
-                        <button class="btn btn-create">
-                            <font-awesome-icon :icon="`fa-solid fa-${this.button.icon}`" />
-                            {{ this.button.label }}
-                        </button>
-                    </div> -->
-                    <AppButton v-if="button" :to="button.link ?? null" :action="button.action ?? null" :label="button.label" :icon="button.icon ?? null" :type="'solid'" :palette="'primary'"/>
+                    <AppButton v-if="button" :to="button.link ?? null" :action="button.action ?? null" :label="button.label"
+                        :icon="button.icon ?? null" :type="'solid'" :palette="'primary'" />
                 </header>
 
-                <slot></slot>
+                <main>
+                    <div class="card">
+                        <slot></slot>
+                    </div>
+                </main>
             </div>
 
         </div>
@@ -109,107 +93,84 @@ export default {
 <style scoped lang="scss">
 @use '../../styles/partials/variables.scss' as *;
 @use '../../styles/partials/mixins.scss' as *;
+@use '../../styles/partials/transitions.scss' as *;
+
+// Local Variables
+$header-height: 80px;
+
+
 
 .wrapper {
     height: 100vh;
+    width: 100vw;
     @include flexRowCenter;
     overflow: hidden;
 }
 
-aside {
-    width: 260px;
-    height: 100vh;
-    border-right: 2px solid $dark-color-one;
-
-    header {
-        @include flexRowCenter;
-        height: 80px;
-    }
-
-    ul {
-        padding: 1rem;
-        list-style: none;
-
-        li {
-            margin-bottom: 0.5rem;
-
-            a {
-                @include flexRowCenter (0.75rem);
-                justify-content: flex-start;
-
-                width: 100%;
-                padding: 0.75rem 1rem;
-                text-transform: capitalize;
-                text-decoration: none;
-                background-color: gray;
-
-                border-radius: $small-border-radius;
-
-                .icon {
-                    font-size: 1.25rem;
-                }
-            }
-        }
-    }
+.mainTitle {
+    margin-bottom: 0;
 }
 
 .rightSide {
     height: 100vh;
     flex-grow: 1;
-    flex-shrink: 0;
+    // flex-shrink: 0;
 
     >header {
-        height: 80px;
+        height: $header-height;
+        padding: 0 1rem;
         border-bottom: 2px solid $dark-color-one;
+        // isolation: isolate;
+        // z-index: 30;
+
+        @include flexSpaceBtwn;
+        justify-content: flex-end; // Temp
+
+        .group {
+            position: relative;
+        }
     }
 
     .content {
-        height: calc(100% - 80px);
+        height: calc(100% - $header-height);
+        // background-color: green;
 
         display: flex;
         flex-direction: column;
-        // justify-content: center;
-        // align-items: center;
 
         header {
             width: 100%;
             @include flexSpaceBtwn;
-            background: lightcyan;
+            flex-wrap: wrap;
 
             box-shadow: 0 4px 4px -2px white;
             isolation: isolate;
-            z-index: 5;
+            z-index: 1;
             padding: 0.25rem 1rem;
+        }
+
+        main {
+            background-color: $light-color-two;
+            padding: 1rem;
+            height: 100%;
+            overflow-y: auto;
+
+            .card {
+                padding: 0.5rem;
+                background-color: #fcfcfc;
+                // border: 2px solid black;
+                border-radius: $small-border-radius;
+                @include customShadow;
+            }
         }
     }
 }
 
-.btn {
-    padding: 7px 10px;
-    border-radius: 10px;
-    margin-right: 5px;
-    cursor: pointer;
-}
-
-.btn-show {
-    background-color: #f5f5f5;
-    border: 2px solid #141414;
-}
-
-.btn-create {
-    background-color: #59DCC0;
-    border: 2px solid #59DCC0;
-    color: white;
+.userMenu {
+    @include flexRowCenter (0.5rem);
+    text-transform: capitalize;
     font-weight: 600;
-}
-
-.btn-edit {
-    background-color: #f5d679;
-    border: 2px solid #f5d679;
-}
-
-.btn-delete {
-    background-color: #f56372;
-    border: 2px solid #f56372;
+    cursor: pointer;
+    user-select: none;
 }
 </style>

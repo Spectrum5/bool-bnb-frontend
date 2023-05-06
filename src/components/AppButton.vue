@@ -31,6 +31,10 @@ export default {
     palette: {
       type: String,
       default: 'primary'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -38,13 +42,19 @@ export default {
 
 <template>
   <!-- Link Button -->
-  <router-link :to="this.to" v-if="this.to" :class="this.type" :palette="this.palette ?? ''">
+  <router-link :to="this.to" v-if="this.to && !this.action" :class="this.type" :palette="this.palette ?? ''">
     <font-awesome-icon :icon="`fa-solid fa-${this.icon}`" class="icon" v-if="this.icon" />
     <span v-if="this.label">{{ this.label }}</span>
   </router-link>
 
   <!-- Action Button -->
-  <button v-if="this.action" :class="this.type" :palette="this.palette ?? ''" @click="this.action">
+  <button v-if="this.action && !this.to" :class="this.type" :palette="this.palette ?? ''" @click="this.action" :disabled="this.disabled">
+    <font-awesome-icon :icon="`fa-solid fa-${this.icon}`" class="icon" v-if="this.icon" />
+    <span v-if="this.label">{{ this.label }}</span>
+  </button>
+
+  <!-- Standard Button -->
+  <button v-if="!this.action && !this.to" :class="this.type" :palette="this.palette ?? ''" :disabled="this.disabled">
     <font-awesome-icon :icon="`fa-solid fa-${this.icon}`" class="icon" v-if="this.icon" />
     <span v-if="this.label">{{ this.label }}</span>
   </button>
@@ -56,11 +66,16 @@ export default {
 
 a,
 button {
+  white-space: nowrap;
 
   @include flexRowCenter (0.5rem);
 
   &[palette=primary] {
     @include customButton (primary);
+  }
+
+  &[palette=secondary] {
+    @include customButton (secondary);
   }
 
   &[palette=success] {
