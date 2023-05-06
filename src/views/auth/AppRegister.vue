@@ -38,7 +38,7 @@ export default {
         },
         validateData() {
             // Front End Validation
-            // console.log('Validazione dati registrazione...');
+            console.log('Validazione dati registrazione...');
             this.store.errors = [];
             this.store.loadingWidth = 20;
 
@@ -57,7 +57,7 @@ export default {
             if (this.store.errors.length == 0) this.postRegisterData();
             else {
                 this.store.loadingWidth = 100;
-                // console.log('Hai inserito dati non corretti. Riprova.');
+                console.log('Hai inserito dati non corretti. Riprova.');
             }
         },
         postRegisterData() {
@@ -76,13 +76,13 @@ export default {
                     // Emette ad App.vue l'evento per richiedere l'utente autenticato
                     this.$emit('getUserEvent', true);
 
-                    // console.log('Risposta Register', response);
+                    console.log('Risposta Register', response);
                 }
                 )
                 .catch((response) => {
                     this.store.loadingWidth = 100;
-                    this.addError('Errore del server. Riprovare piú tardi', 'server_error');
-                    // console.log('Errore Invio dati Register:', response.response);
+                    this.store.addError('Errore del server. Riprovare piú tardi', 'server_error');
+                    console.log('Errore Invio dati Register:', response.response);
                 })
         }
     },

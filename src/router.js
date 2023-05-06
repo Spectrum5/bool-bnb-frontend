@@ -122,11 +122,6 @@ const router = createRouter({
                 if (store.user == null) return { name: 'login' }
             },
         },
-        // {
-        //     path: '/apartments/search/',
-        //     name: 'apartment-search',
-        //     component: HomeSearch
-        // },
         // Dashboard - Stats
         {
             path: '/dashboard/statistics',
@@ -140,19 +135,8 @@ const router = createRouter({
             path: '/:pathMatch(.*)*',
             name: 'not-found',
             component: NotFoundView
-        },
-
-        
-
+        }
     ]
 });
-
-// Protezione Rotte Frontend
-// router.beforeEach(async (to, from) => {
-//     if (to.path.includes('/dashboard') && !store.user && to.name !== 'login') {
-//         console.log('ROUTER', store.user);
-//         return { name: 'login' }
-//     }
-// })
 
 export { router };

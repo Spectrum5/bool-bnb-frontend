@@ -22,23 +22,9 @@ export default {
             router,
             store,
             form: {},
-            errorsMessages: {
-                title: '',
-                price: '',
-                size: '',
-                address: '',
-                rooms_number: '',
-                beds_number: '',
-                bathrooms_number: '',
-                description: '',
-                visibility: '',
-                services: '',
-                image: '',
-            },
             allServices: [],
             selectedServices: [],
             imagesToAdd: [],
-
             apartmentUpdated: false,
             previewUrls: [],
             //TOM TOM API
@@ -51,14 +37,14 @@ export default {
             // Recupero dati dell'appartamento per la modifica
             axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}/edit`)
                 .then((response) => {
-                    // console.log('Dati Appartamento', response.data.apartment);
+                    console.log('Dati Appartamento', response.data.apartment);
                     this.form = response.data.apartment;
 
                     this.getServices();
                     this.setVisibility();
                 })
                 .catch((response) => {
-                    // console.log('Errore Index Appartamenti', response.data);
+                    console.log('Errore Index Appartamenti', response.data);
                 })
         },
         getServices() {
@@ -89,26 +75,22 @@ export default {
             const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
             fileInput.classList.remove('invalid');
 
-            this.deleteError('images');
-            this.errorsMessages.image = '';
+            this.store.deleteErrors('images');
 
             console.log('immagini da inviare', this.form.images);
 
             if ((this.imagesToAdd.length + this.form.images.length) == 0) {
-                this.addError('images');
-                this.errorsMessages.image = 'Devi selezionare almeno un\'immagine';
+                this.store.addError('images', 'Devi selezionare almeno un\'immagine');
                 fileInput.classList.add('invalid');
             }
             else if (this.imagesToAdd.length > 0) {
                 if (!allowedExtensions.exec(fileInput.value)) {
-                    this.addError('images');
-                    this.errorsMessages.image = 'L\'immagine deve essere in formato JPG, JPEG o PNG';
+                    this.store.addError('images', 'L\'immagine deve essere in formato JPG, JPEG o PNG');
                     fileInput.classList.add('invalid');
                 }
             }
             else if ((this.previewUrls.length + this.imagesToAdd.length) > 3) {
-                this.addError('images');
-                this.errorsMessages.image = 'Puoi selezionare fino a un massimo di tre immagini';
+                this.store.addError('images', 'Puoi selezionare fino a un massimo di tre immagini');
                 fileInput.classList.add('invalid');
             }
         },
@@ -122,7 +104,7 @@ export default {
             this.store.bedsNumberValidation('beds_number');
             this.store.bathroomsNumberValidation('bathrooms_number');
             this.store.descriptionValidation('description');
-            this.store.visibilityValidation('visibility');
+            // this.store.visibilityValidation('visibility');
             this.store.servicesValidation(this.form.services);
             this.imageValidation();
 
@@ -156,7 +138,7 @@ export default {
                 user_id: this.form.user_id
             })
                 .then((response) => {
-                    // console.log('Appartamento aggiornato', response);
+                    console.log('Appartamento aggiornato', response);
                     this.apartmentUpdated = true;
                     this.postImages(response.data.apartment_id);
 
@@ -208,7 +190,7 @@ export default {
             // console.log('FormData', formData);
             axios.post('http://localhost:8000/api/images', formData, config)
                 .then((response) => {
-                    // console.log("Immagini inviate correttamente");
+                    console.log("Immagini inviate correttamente");
                 })
         },
         deleteImage(index) {
@@ -224,7 +206,7 @@ export default {
             // Invia la richiesta di eliminazione del record dell'immagine dal DB
             axios.delete(`http://localhost:8000/api/images/${id}`)
                 .then((response) => {
-                    // console.log(`Immagine #${id} cancellata`);
+                    console.log(`Immagine #${id} cancellata`);
                 });
         },
         goApartments() {
@@ -241,7 +223,8 @@ export default {
     mounted() {
         document.title = 'Dashboard | Aggiorna Appartamento';
         this.getApartment();
-        this.store.setAutocomplete('address');
+        const self = this;
+        this.store.setAutocomplete('address', self);
     }
 }
 </script>

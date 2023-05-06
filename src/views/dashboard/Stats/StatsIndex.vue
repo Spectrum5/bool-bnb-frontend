@@ -32,7 +32,6 @@ export default {
             this.notFound = false;
             axios.get('http://localhost:8000/api/views/apartmentViewsMonths')
                 .then((response) => {
-                    // console.log('Statistiche Appartamenti Personali', response.data);
                     console.log('Statistiche Appartamenti Personali', response.data.viewsData);
                     // if (response.data.viewsData.length == 0) this.notFound = true;
                     // else this.viewsData = response.data.viewsData;
@@ -115,6 +114,7 @@ export default {
 .itemsContainer {
     display: flex;
     justify-content: flex-start;
+    // justify-content: space-evenly;
     align-items: center;
     gap: 2.5rem;
     flex-wrap: wrap;
@@ -148,6 +148,8 @@ export default {
 
                 .bar {
                     background-color: green;
+                    background: linear-gradient(45deg, $color-three-dark, $color-three-light);
+                    border-radius: 4px;
                     // width: 15px;
                     width: 100%;
                     margin: 0 auto;

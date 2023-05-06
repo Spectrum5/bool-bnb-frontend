@@ -47,7 +47,7 @@ export default {
             // Richiesta dell'appartamento corrispondente allo slug passato come parametro
             axios.get(`http://localhost:8000/api/apartments/${this.$route.params.slug}`)
                 .then((response) => {
-                    // console.log('Appartamento Show', response.data.apartment);
+                    console.log('Appartamento Show', response.data.apartment);
                     this.apartment = response.data.apartment;
                     document.title = `Boolbnb | ${this.apartment.title}`;
 
@@ -56,7 +56,7 @@ export default {
                     this.defineRoomsStructure();
                 })
                 .catch((response) => {
-                    // console.log('Errore Richiesta Appartamento', response.data);
+                    console.log('Errore Richiesta Appartamento', response.data);
                 })
         },
         async getMap() {
@@ -75,10 +75,10 @@ export default {
                 apartment_id: this.apartment.id
             })
                 .then(response => {
-                    // console.log('Invio Informazioni View OK', response);
+                    console.log('Invio Informazioni View OK', response);
                 })
                 .catch(response => {
-                    // console.log('Errore Invio Informazioni View', response);
+                    console.log('Errore Invio Informazioni View', response);
                 })
         },
         setContactEmail() {
@@ -93,7 +93,7 @@ export default {
         },
         validateData() {
             // Front End Validation
-            // console.log('Validazione dati messaggio...');
+            console.log('Validazione dati messaggio...');
             this.store.errors = [];
 
             this.store.emailValidation('email');
@@ -106,7 +106,7 @@ export default {
             else console.log('Hai inserito dati non corretti. Riprova.');
         },
         sendMessage() {
-            // console.log('Invio messaggio...');
+            console.log('Invio messaggio...');
 
             axios.post('http://localhost:8000/api/messages', {
                 email: this.message.contactEmail,
@@ -123,10 +123,10 @@ export default {
                         this.message.text = '';
                     }, 2000);
 
-                    // console.log('Messaggio Inviato', response);
+                    console.log('Messaggio Inviato', response);
                 })
                 .catch((response) => {
-                    // console.log('Errore Messaggio', response.data);
+                    console.log('Errore Messaggio', response.data);
                 })
         },
         defineRoomsStructure() {

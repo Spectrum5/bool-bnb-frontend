@@ -28,7 +28,7 @@ export default {
             this.$router.push(`/apartments/${this.apartment.slug}`)
         },
         addToFavorites() {
-            // console.log(`${this.apartment.title} aggiunto ai preferiti!`);
+            console.log(`${this.apartment.title} aggiunto ai preferiti!`);
             this.$refs.btn.classList.toggle('animate');
         }
     },
@@ -82,23 +82,23 @@ export default {
 <style lang="scss" scoped>
 @use '../styles/partials/variables.scss' as *;
 
-@media screen and (max-width:840px) {
-    $cardWidth: 310px;
+// @media screen and (max-width:840px) {
+//     $cardWidth: 310px;
 
-    .card {
-        width: $cardWidth;
+//     .card {
+//         width: $cardWidth;
 
-        .imageContainer {
-            height: $cardWidth;
-        }
+//         .imageContainer {
+//             height: $cardWidth;
+//         }
 
-        .cardTitle {
-            max-width: calc($cardWidth - 40px);
-        }
-    }
-}
+//         .cardTitle {
+//             max-width: calc($cardWidth - 40px);
+//         }
+//     }
+// }
 
-@media screen and (min-width:820px) {
+// @media screen and (min-width:820px) {
     $cardWidth: 280px;
 
     .card {
@@ -112,7 +112,7 @@ export default {
             max-width: calc($cardWidth - 40px);
         }
     }
-}
+// }
 
 button {
     background: none;

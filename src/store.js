@@ -11,6 +11,7 @@ export const store = reactive({
     filterModalOpen: false,
     menuMobileOpen: false,
     menuDesktopOpen: false,
+    servicesMenuOpen: false,
     overlayOpen: false,
     searchForm: {
         address: null,
@@ -36,13 +37,13 @@ export const store = reactive({
         this.overlayOpen = false;
         this.menuMobileOpen = false;
         this.menuDesktopOpen = false;
+        this.servicesMenuOpen = false;
         this.errors = [];
     },
 
-    setAutocomplete(fieldName) {
-        const address = document.querySelector(`#${fieldName}`)
-        let autocomplete = new google.maps.places.Autocomplete(address);
-        const self = this;
+    setAutocomplete(fieldName, self) {
+        const addressInput = document.querySelector(`#${fieldName}`)
+        let autocomplete = new google.maps.places.Autocomplete(addressInput);
         autocomplete.addListener('place_changed', function () {
             let place = autocomplete.getPlace();
             let address = place.formatted_address;
@@ -77,12 +78,16 @@ export const store = reactive({
         }
     },
     shakeInputs() {
+        const notShakingInput = ['services'];
+        
         if (this.errors.length > 0) {
             this.errors.forEach(error => {
-                document.querySelector(`#${error.field}`).classList.add('shake');
-                setTimeout(() => {
-                    document.querySelector(`#${error.field}`).classList.remove('shake');
-                }, 300)
+                if (!notShakingInput.includes(error.field)) {
+                    document.querySelector(`#${error.field}`).classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector(`#${error.field}`).classList.remove('shake');
+                    }, 300)
+                }
             });
         }
     },
@@ -286,7 +291,7 @@ export const store = reactive({
             addressInput.classList.add('invalid');
         }
     },
-    imageValidation(fieldName) {
+    imageValidation(fieldName, previewUrls) {
         const fileInput = document.querySelector(`#${fieldName}`)
         const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
         fileInput.classList.remove('invalid');
@@ -300,7 +305,7 @@ export const store = reactive({
             this.addError('L\'immagine deve essere in formato JPG, JPEG o PNG', 'images');
             fileInput.classList.add('invalid');
         }
-        else if (this.previewUrls.length > 3) {
+        else if (previewUrls.length > 3) {
             this.addError('Puoi selezionare fino a un massimo di tre immagini', 'images');
             fileInput.classList.add('invalid');
         }
@@ -416,10 +421,12 @@ export const store = reactive({
     visibilityValidation(fieldName) {
         const visibilityInput = document.querySelector(`#${fieldName}`)
 
+        console.log('VISIBILITY', visibilityInput.value)
+
         visibilityInput.classList.remove('invalid');
         this.deleteErrors('visibility');
 
-        if (this.form.visibility !== true && this.form.visibility !== false) {
+        if (visibilityInput.value != true && visibilityInput.value != false) {
             this.addError('Il campo visibilità non è valido', 'visibility');
             visibilityInput.classList.add('invalid');
         }

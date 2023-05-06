@@ -21,7 +21,6 @@ export default {
   },
   props: {
     to: String,
-    // param: undefined,
     action: Function,
     label: String,
     icon: String,

@@ -88,7 +88,7 @@ export default {
                         this.lastPageSponsored = response.data.apartments.last_page;
                         if (this.currentPageSponsored == this.lastPageSponsored) this.searchCompletedSponsored = true;
 
-                        // console.log('Index Appartamenti Sponsorizzati', response.data);
+                        console.log('Index Appartamenti Sponsorizzati', response.data);
                     }
                 })
                 .catch((response) => {
@@ -100,14 +100,14 @@ export default {
             if (this.currentPage < this.lastPage) {
                 this.currentPage++;
                 this.getApartments();
-                // console.log('Richiesti Altri Appartamenti');
+                console.log('Richiesti Altri Appartamenti');
             }
         },
         loadMoreSponsored() {
             if (this.currentPageSponsored < this.lastPageSponsored) {
                 this.currentPageSponsored++;
                 this.getSponsoredApartments();
-                // console.log('Richiesti Altri Appartamenti Sponsorizzati');
+                console.log('Richiesti Altri Appartamenti Sponsorizzati');
             }
         },
         applyInfiniteScroll() {
@@ -204,10 +204,9 @@ section {
     }
 
     >.cardsContainer {
-        @include flexSpaceBtwn;
-        flex-wrap: wrap;
+        @include cardsContainer (5, 280px, 3rem);
         gap: 2.5rem 3rem;
-        padding: 0 1rem;
+        margin: 0 auto;
         margin-bottom: 2.5rem;
     }
 

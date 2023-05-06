@@ -35,7 +35,7 @@ export default {
         },
         validateData() {
             // Front End Validation
-            // console.log('Validazione dati login...');
+            console.log('Validazione dati login...');
             this.store.errors = [];
             this.store.loadingWidth = 20;
 
@@ -49,7 +49,7 @@ export default {
             // Controlla se validazione e' andata a buon fine
             if (this.store.errors.length == 0) this.getCookie();
             else {
-                // console.log('Hai inserito dati non corretti. Riprova.');
+                console.log('Hai inserito dati non corretti. Riprova.');
                 this.store.loadingWidth = 0;
             }
         },
@@ -58,12 +58,12 @@ export default {
             // Richiesta Cookie CSRF
             axios.get('http://localhost:8000/sanctum/csrf-cookie')
                 .then((response) => {
-                    // console.log('Cookie CSRF ottenuto', response);
+                    console.log('Cookie CSRF ottenuto', response);
                     this.store.loadingWidth = 85;
                     this.postLoginData()
                 })
                 .catch((response) => {
-                    // console.log('Errore ottenimento Cookie CSRF', response);
+                    console.log('Errore ottenimento Cookie CSRF', response);
                     this.store.errors = response.data;
                     this.store.loadingWidth = 100;
                 })
@@ -79,13 +79,13 @@ export default {
                     // Emette ad App.vue l'evento per richiedere l'utente autenticato
                     this.$emit('getUserEvent', true);
 
-                    // console.log('Risposta Login', response);
+                    console.log('Risposta Login', response);
                 }
                 )
                 .catch((response) => {
-                    // console.log('Errore Invio Dati Login', response);
+                    console.log('Errore Invio Dati Login', response);
                     this.store.loadingWidth = 100;
-                    this.addError('Errore del server. Riprovare piú tardi', 'server_error');
+                    this.store.addError('Errore del server. Riprovare piú tardi', 'server_error');
                 })
         }
     },

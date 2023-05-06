@@ -45,7 +45,15 @@ export default {
             this.store.overlayOpen = value;
             if (value == true) document.body.style.overflow = 'hidden';
             else document.body.style.overflow = 'visible';
-        }
+        },
+        handleLogout() {
+            // Invia una richiesta di Logout
+            axios.post('http://localhost:8000/logout');
+            this.store.user = null;
+            this.store.overlayOpen = false;
+            router.push('/');
+            console.log('LogOut')
+        },
     }
 }
 </script>
